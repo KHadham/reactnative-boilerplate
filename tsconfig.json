@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "baseUrl": ".",
+    "module": "esnext",
+    "target": "esnext",
+    "moduleResolution": "node",
+    "jsx": "react-native",
+    "noEmit": true,
+    "strict": false,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "paths": {
+      "@app/*": ["./app/*"],
+      "@components/*": ["./app/components/*"],
+      "@screens/*": ["./app/screens/*"],
+      "@images*": ["./assets/images"],
+      "@svg/*": ["./assets/svgs/*"],
+      "@fonts/*": ["./assets/fonts/*"],
+      "@animation/*": ["./assets/animation/*"],
+      "@helper/*": ["./app/helper/*"],
+      "@router/*": ["./app/router/*"],
+      "@state*": ["./app/state"],
+    }
+  },
+  "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"],
+  "extends": "@tsconfig/react-native/tsconfig.json"
+}
