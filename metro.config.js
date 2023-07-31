@@ -6,6 +6,9 @@
  */
 
 module.exports = {
+  resolver: {
+    assetExts: ['ttf', 'otf', 'jpg', 'png', 'gif'], // Add any other required asset extensions
+  },
   transformer: {
     getTransformOptions: async () => ({
       transform: {

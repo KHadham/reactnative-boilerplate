@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "665786080620",
+    "project_id": "safa-outdoors",
+    "storage_bucket": "safa-outdoors.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:665786080620:android:d02851e1d58363e859a749",
+        "android_client_info": {
+          "package_name": "com.rnboilerplate"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "665786080620-g8prp4jn9l0ebc329q9c6i0g3j20ubr2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAKdjEl-oVhwh1zBL8qyC-AX1jtZUWEuew"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "665786080620-g8prp4jn9l0ebc329q9c6i0g3j20ubr2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

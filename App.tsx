@@ -1,20 +1,19 @@
-import { RecoilRoot } from 'recoil';
-import BaseAppRoute from '@router/Index';
+import BaseAppRoute from './src/router/Index';
 import Toast, {
   BaseToast,
   ErrorToast,
   ToastConfig,
 } from 'react-native-toast-message';
-import { View, Text } from 'react-native';
+import { View, Text, SafeAreaView } from 'react-native';
 import {
   COLOR_BACKGROUND,
   COLOR_BACKGROUND_ERROR,
   COLOR_BACKGROUND_SUCCESS,
   COLOR_EVENT_ERROR,
   COLOR_EVENT_SUCCESS,
-} from '@app/styles';
+} from '@themes/index';
 
-import { SnackBar } from '@components/index';
+import { SnackBar } from '@components';
 const toastConfig: ToastConfig = {
   /*
     Overwrite 'success' type,
@@ -68,13 +67,16 @@ const toastConfig: ToastConfig = {
   inactive: ({ text1, props }) => (
     <SnackBar text={text1} event="inactive" props={props} />
   ),
+  loading: ({ text1, props }) => (
+    <SnackBar text={text1} event="loading" props={props} />
+  ),
 };
 function App() {
   return (
-    <RecoilRoot>
+    <>
       <BaseAppRoute />
       <Toast position="bottom" config={toastConfig} />
-    </RecoilRoot>
+    </>
   );
 }
 
