@@ -40,8 +40,8 @@ export const useHooks = () => {
     try {
       console.log('login call :>> ');
       const response = await endpoint.pengumuman({ page: 1 });
-      console.log('response  getSlides:>> ', response);
-      if (response.status == 'success') {
+      console.log('response  getData pengunuman:>> ', response);
+      if (response.status) {
         setpengumumanData(response.data);
       }
     } catch (e) {

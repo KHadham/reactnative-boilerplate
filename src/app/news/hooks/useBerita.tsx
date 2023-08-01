@@ -35,7 +35,6 @@ export const useHooks = () => {
   const getData = async () => {
     try {
       const response = await endpoint.berita({ page: 1 });
-      console.log('response  getData berita:>> ', response);
       if (response.status) {
         setberitaData(response.data);
       }

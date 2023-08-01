@@ -12,13 +12,20 @@ import {
 } from '@components';
 import { spacing } from '@constants/spacing';
 import { goToPlaystore, navigate } from '@utils/navigation';
-import { COLOR_BACKGROUND_INFORMATION, COLOR_BACKGROUND_SUCCESS, COLOR_EVENT_ERROR, COLOR_GREY, COLOR_WHITE } from '@themes/index';
+import {
+  COLOR_BACKGROUND_INFORMATION,
+  COLOR_BACKGROUND_SUCCESS,
+  COLOR_EVENT_ERROR,
+  COLOR_GREY,
+  COLOR_WHITE,
+} from '@themes/index';
 import GradientBg from '../../../../assets/svgs/GradientBg';
 import { useProfile } from '../hooks/useProfile';
 import profilStore from '@profileApp/stores';
 import { openSettings } from 'react-native-permissions';
 import { FlashList } from '@shopify/flash-list';
 import { widthByScreen } from '@utils/dimensions';
+import LinearGradient from 'react-native-linear-gradient';
 
 const App: React.FC = () => {
   const { doVerifyToken } = useProfile();
@@ -36,7 +43,9 @@ const App: React.FC = () => {
       data: [
         {
           title: 'Data Pribadi',
-          right: () => {doVerifyToken()},
+          right: () => {
+            doVerifyToken();
+          },
         },
         // { title: 'Data Caleg', right: () => {} },
         { title: 'Keamanan Akun', right: () => {} },
@@ -76,20 +85,34 @@ const App: React.FC = () => {
   const header = () => {
     return (
       <View>
+        <LinearGradient
+          colors={['#E0F8D8', '#FFFFFF']}
+          style={{
+            position: 'absolute',
+            width: widthByScreen(100),
+            height: '100%',
+          }}
+        />
         {/* <View style={{position:'absolute',borderWidth:1,}}>
           <GradientBg color={COLOR_BACKGROUND_INFORMATION}/>
         </View> */}
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            padding: spacing.sm,
+          }}
+        >
           <Avatar
             source={user?.nama}
             size={spacing.xxl}
             badge={'online'}
             count={10}
-            avatarColor='white'
+            avatarColor="white"
           />
           <View
             style={{
-              margin: spacing.lg,
+              margin: spacing.md,
               justifyContent: 'center',
               alignContent: 'center',
               flex: 1,
@@ -103,11 +126,14 @@ const App: React.FC = () => {
         </View>
 
         <FlashList
-          data={[1, 2, 3]}
+          ListHeaderComponentStyle={{ marginLeft: spacing.md }}
+          ListFooterComponentStyle={{ marginLeft: spacing.md }}
+          data={[1, 2, 3, 4]}
           horizontal
           estimatedItemSize={10}
           ItemSeparatorComponent={() => <Spacer />}
           showsHorizontalScrollIndicator={false}
+          contentContainerStyle={{ paddingBottom: spacing.md }}
           renderItem={({ item, index }) => (
             <View
               style={{
@@ -115,8 +141,8 @@ const App: React.FC = () => {
                 borderRadius: 10,
                 borderColor: COLOR_GREY,
                 padding: 16,
-                minWidth: widthByScreen(35),
-                backgroundColor:'white'
+                minWidth: widthByScreen(40),
+                backgroundColor: 'white',
               }}
             >
               <Text size="desc">Total Pendukung</Text>
@@ -152,27 +178,34 @@ const App: React.FC = () => {
 
   return (
     <BaseView
-      style={{ marginHorizontal: spacing.md }}
+      // style={{ marginHorizontal: spacing.md }}
       baseModal={baseModal}
       onCloseBaseModal={() => setbaseModal('')}
     >
       <SectionList
+        ListFooterComponentStyle={{ margin: spacing.md }}
         stickySectionHeadersEnabled={true}
         ListHeaderComponent={() => header()}
         showsVerticalScrollIndicator={false}
         sections={DATA}
+        contentContainerStyle={{}}
         keyExtractor={(item, index) => item.title + index}
-        ItemSeparatorComponent={() => <Separator />}
+        ItemSeparatorComponent={() => <Separator margin={spacing.md} />}
         renderItem={({ item, index }) => (
-          <ItemList desc={item.title} rightAction={item.right} />
+          <ItemList
+            style={{ marginHorizontal: spacing.md }}
+            desc={item.title}
+            rightAction={item.right}
+          />
         )}
         renderSectionHeader={({ section: { title } }) => (
-          <View style={{ backgroundColor: COLOR_WHITE }}>
-            <Text
-              size="title"
-              weight="bold"
-              style={{ marginVertical: spacing.md }}
-            >
+          <View
+            style={{
+              backgroundColor: COLOR_WHITE,
+              padding: spacing.md,
+            }}
+          >
+            <Text size="title" weight="bold" style={{}}>
               {title}
             </Text>
           </View>
