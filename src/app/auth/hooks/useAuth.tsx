@@ -24,7 +24,7 @@ export const useLogin = () => {
     });
     try {
       console.log('login call :>> ');
-      const body = { username, password };
+      const body = { username: username, password: password };
       const response = await endpoint.loginCitata({
         data: body,
         headers: { 'app-key': APPKEY.CITATA_KEY },
@@ -64,16 +64,14 @@ export const useLogin = () => {
 
   const doLogout = () => {
     setLoading('auth');
-    // setIsLoading(true);
     Toast.show({
       type: 'loading',
       text1: 'Sedang Logout ...',
       autoHide: false,
     });
-    // storage.removeItem(STORAGE_KEY.LOGIN_TOKEN);
+    storage.removeItem(STORAGE_KEY.LOGIN_TOKEN);
     setTimeout(() => {
       setLoading('');
-      setIsLoading(false);
       Toast.show({
         type: 'success',
         text1: 'Berhasil Logout',

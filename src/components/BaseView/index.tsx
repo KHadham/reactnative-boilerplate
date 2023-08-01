@@ -46,7 +46,7 @@ type Props = {
 
 const BaseView = ({
   children,
-  style = { flex: 1 },
+  style,
   error = {},
   bg,
   baseModal,
@@ -167,7 +167,7 @@ const BaseView = ({
   return (
     <SafeAreaView style={{ backgroundColor: COLOR_WHITE, flex: 1 }}>
       {headerComponent}
-      {globalLoading && <View style={styles.loadingBackground} />}
+      {globalLoading == 'auth' && <View style={styles.loadingBackground} />}
       {bg && (
         <View style={{ flex: 1, position: 'absolute', bottom: 0 }}>
           <View
@@ -188,7 +188,7 @@ const BaseView = ({
           />
         </View>
       )}
-      <View style={style}>{children}</View>
+      <View style={[style, { flex: 1 }]}>{children}</View>
       {ModalLogout()}
     </SafeAreaView>
   );

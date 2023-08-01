@@ -11,7 +11,7 @@
     "skipLibCheck": true,
     "paths": {
       // "@src/*": ["src/*"],
-      "@themes/*": ["src/themes"],
+      "@themes/*": ["src/themes/*"],
       "@app/*": ["src/app/*"],
       "@components": ["src/components"],
       "@constants/*": ["src/constants/*"],
@@ -27,6 +27,7 @@
       "@homeApp/*": ["./src/app/home/*"],
       "@profileApp/*": ["./src/app/profile/*"],
       "@newsApp/*": ["./src/app/news/*"],
+      "@archiveApp/*": ["./src/app/archive/*"],
     }
   },
   "exclude": ["node_modules", "babel.config.js", "metro.config.js", "jest.config.js"],

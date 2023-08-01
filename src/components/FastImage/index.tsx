@@ -20,7 +20,6 @@ const App: React.FC<AppProps> = ({ style, source, resizeMode }) => {
         style={style}
         source={{
           uri: source,
-          priority: FastImage.priority.normal,
         }}
         resizeMode={resizeMode}
       />

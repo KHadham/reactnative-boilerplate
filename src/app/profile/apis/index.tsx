@@ -8,9 +8,10 @@ interface endpointParam {
 export const endpoint = {
   verifyTokens: async (params: endpointParam) =>
     get({
-      path: 'auth',
+      path: 'satuakses/service/auth',
       data: params.data,
       headers: params.headers,
     }),
+ 
 };
 export default { endpoint };

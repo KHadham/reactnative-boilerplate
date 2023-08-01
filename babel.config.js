@@ -21,6 +21,7 @@ module.exports = {
           '@homeApp': './src/app/home',
           '@profileApp': './src/app/profile',
           '@newsApp': './src/app/news',
+          '@archiveApp': './src/app/archive',
         },
       },
     ],

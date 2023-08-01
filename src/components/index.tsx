@@ -10,7 +10,7 @@ import Carousel from './Carousel/index';
 import Spacer from './Spacer';
 import Accordion from './Accordion';
 import ModalList from './ModalList';
-import SnackBar from './SnackBar';
+import SnackBar from './Overlay/SnackBar';
 import ModalFilter from './ModalFilter';
 import Icon from './Icon';
 import Switch from './Switch'

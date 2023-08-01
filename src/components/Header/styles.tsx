@@ -1,37 +1,39 @@
 import { StyleSheet } from 'react-native';
 
 import { COLOR_BLACK, COLOR_WHITE } from '@themes/index';
-
+import { spacing } from '@constants/spacing';
 
 export default StyleSheet.create({
-  container: {
-    flex: 1,
-    flexDirection: 'row',
-    backgroundColor: COLOR_WHITE,
-    borderRadius: 5,
-    paddingVertical: 0.5,
+  shadowing: {
     shadowColor: COLOR_BLACK,
     shadowOffset: {
-      width: 2,
-      height: 2
+      width: 0,
+      height: 2,
     },
-    shadowOpacity: 0.5,
-    shadowRadius: 4,
-    elevation: 2
+    shadowOpacity: 0.1,
+    shadowRadius: 1,
+    elevation: 3,
+  },
+  container: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    flexDirection: 'row',
+    backgroundColor: COLOR_WHITE,
+    padding:spacing.sm
   },
   photo: {
     width: 100,
     height: 100,
     marginRight: 15,
     borderBottomLeftRadius: 5,
-    borderTopLeftRadius: 5
+    borderTopLeftRadius: 5,
   },
   placeholder: {
-    height: 100
+    height: 100,
   },
   placeholderMedia: {
     width: 80,
     height: 80,
-    borderRadius: 5
-  }
+    borderRadius: 5,
+  },
 });

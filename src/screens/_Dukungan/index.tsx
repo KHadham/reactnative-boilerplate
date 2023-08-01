@@ -72,7 +72,7 @@ function MyTabBar({ state, descriptors, navigation, position }) {
 export default function TabScreen() {
   return (
     <BaseView>
-      <Header title="SiMPUS" />
+      <Header title="SiMPUS" left='' />
       <Tab.Navigator
         // tabBar={props => <MyTabBar {...props} />}
         initialRouteName="Dukungan"

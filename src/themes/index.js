@@ -70,7 +70,7 @@ export const FONT_SECONDARY_LIGHT = 'PlusJakartaSans-Italic';
 export const FONT_SECONDARY_BOLD = 'PlusJakartaSans-Bold';
 
 const getFontScale = PixelRatio.getFontScale();
-const fontSize = size => fontPixel(size) + fontPixel(size)* 0.25
+const fontSize = size => fontPixel(size) 
 
 export const FONT_SIZE_HEADER = fontSize(26);
 export const FONT_SIZE_TITLE = fontSize(21);

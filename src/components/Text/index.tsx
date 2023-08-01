@@ -9,9 +9,9 @@ import {
   FONT_SIZE_REGULAR,
 } from '@themes/index';
 import React from 'react';
-import { TextStyle, Text } from 'react-native';
+import { TextStyle, Text, TextProps } from 'react-native';
 
-type TextWrapProps = {
+type TextWrapProps = TextProps & {
   children: any,
   style?: TextStyle,
   onPress?: () => void,
@@ -52,8 +52,8 @@ function index({
   type,
   weight = 'regular',
   size = 'regular',
-}: // type,
-TextWrapProps) {
+  ...rest
+}: TextWrapProps) {
   const fontSize = size ? fontSizeMapping[size] : FONT_SIZE_REGULAR;
   const fontFamily = weight ? fontWeightMapping[weight] : 'Inter-Regular';
   return (
@@ -73,9 +73,11 @@ TextWrapProps) {
         },
       ]}
       onPress={onPress}
+      {...rest}
     >
       {children}
     </Text>
   );
 }
+
 export default index;

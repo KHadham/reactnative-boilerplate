@@ -15,7 +15,7 @@ export const checkInternetConnectivity = async (): Promise<boolean> => {
   }
 };
 
-export function measureNetworkBandwitdh(callback: (arg0: boolean, arg1: number, arg2: null) => void) {
+export function measureBandwitdh(callback: (arg0: boolean, arg1: number, arg2: null) => void) {
   const startTime = new Date().getTime();
   const imageUri =
     'http://chandra.harvard.edu/graphics/resources/desktops/2006/1e0657_1280.jpg';
@@ -35,7 +35,7 @@ export function measureNetworkBandwitdh(callback: (arg0: boolean, arg1: number, 
     });
 }
 
-export const subscribeToConnectivityChanges = (callback: (isConnected: boolean) => void): NetInfoSubscription => {
+export const networkListener = (callback: (isConnected: boolean) => void): NetInfoSubscription => {
   return NetInfo.addEventListener((state: NetInfoState) => {
     callback(state.isConnected ?? false);
   });
@@ -62,9 +62,8 @@ const handleRequest = async (
   try {
     // const setLoading = useGlobalLoading((state) => state.setLoading);
     // setLoading(true); 
-    // Check for internet connectivity
+
     const isConnected = await checkInternetConnectivity(); // Implement your own function to check for internet connectivity
-    // Handle offline mode here
     if (!isConnected) {
       if (method === 'POST') {
         // Cache the POST data for later resend
@@ -97,6 +96,7 @@ const handleRequest = async (
     if (headers && Object.keys(headers).length > 0) {
       config.headers = headers;
     }
+    console.log('config :>> ', config);
     const response = (await requestWithTimeout(config, TIMEOUT)) as AxiosResponse<any>;
 
     // Cache the response for future offline access

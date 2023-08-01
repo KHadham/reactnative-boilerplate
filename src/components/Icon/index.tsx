@@ -24,10 +24,19 @@ const App: React.FC<AppProps> = ({
   size = 30,
   color = COLOR_FONT_PRIMARY_DARK,
   style = {},
+  onPress,
 }) => {
   const [first, setfirst] = useState('');
 
-  return <Icon name={name} size={size} color={color} style={style} />;
+  return (
+    <Icon
+      name={name}
+      size={size}
+      color={color}
+      style={style}
+      onPress={onPress}
+    />
+  );
 };
 
 export default App;

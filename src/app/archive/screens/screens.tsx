@@ -34,7 +34,7 @@ const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
       <Text weight='bold' style={{}}>
         {props1}
         {props2}
-      </Text>
+      </Text.Bold>
     </BaseView>
   );
 };

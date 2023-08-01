@@ -1,7 +1,7 @@
 import React from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '@homeApp/screens/home';
-import Dukungan from '@homeApp/screens/dukungan';
+import Berita from '@newsApp/screens';
 import Statistik from '@homeApp/screens/statistik';
 import Profil from '@profileApp/screens/profile';
 import { Icon } from '@components';
@@ -71,7 +71,7 @@ const MainTabNavigator = () => {
       /> */}
       <Tab.Screen
         name="Berita"
-        component={Statistik}
+        component={Berita}
         options={({ route }) => ({
           tabBarIcon: ({ color, focused }) =>
             TabIcon('newspaper', color, focused),

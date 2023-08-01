@@ -2,7 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { Animated, TouchableOpacity, Text, View } from 'react-native';
 import PropTypes from 'prop-types';
 import { noop } from '@helper/';
-import NotifyServices from '../../utils/notify';
+import NotifyServices from '../../utils/other';
 import styles from './MessageInfo.styles';
 
 const DEFAULT_MESSAGE = 'Please try again.';

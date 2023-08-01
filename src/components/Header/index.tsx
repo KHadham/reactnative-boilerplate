@@ -9,6 +9,9 @@ import { Icon } from '@components';
 import Help from '../../../assets/svgs/Help';
 import { goBack } from '@utils/navigation';
 import { Text } from '@components';
+import styles from './styles';
+import { spacing } from '@constants/spacing';
+
 type Props = {
   left?: string,
   title?: string,
@@ -29,11 +32,14 @@ const Component: React.FC<Props> = ({
   const leftComponent = () => {
     if (left == 'back') {
       return (
-        <TouchableOpacity style={{ padding: 10 }} onPress={() => goBack()}>
+        <TouchableOpacity
+          style={{  }}
+          onPress={() => goBack()}
+        >
           <Icon name={'chevron-left'} size={30} />
         </TouchableOpacity>
       );
-    } 
+    } else return null;
     // else if (left == 'null') {
     //   return (
     //     <TouchableOpacity style={{ padding: 10 }} onPress={() => goBack()}>
@@ -44,8 +50,12 @@ const Component: React.FC<Props> = ({
   };
 
   const midComponent = () => (
-    <View style={{ flex: 5, justifyContent: 'center' }}>
-      {title && <Text size="header">{title}</Text>}
+    <View style={{ flex: 5, justifyContent: 'center',  }}>
+      {title && (
+        <Text size="header" weight="bold">
+          {title}
+        </Text>
+      )}
     </View>
   );
 
@@ -66,40 +76,14 @@ const Component: React.FC<Props> = ({
         </TouchableOpacity>
       );
   };
-  const shadowing = {
-    shadowColor: '#000',
-    shadowOffset: {
-      width: 0,
-      height: 2,
-    },
-    shadowOpacity: 0.1,
-    shadowRadius: 1,
-    elevation: 3,
-  };
 
   return (
-    <View
-      style={[
-        {
-          justifyContent: 'center',
-          alignItems: 'center',
-          flexDirection: 'row',
-          backgroundColor: COLOR_WHITE,
-        },
-        shadow && shadowing,
-      ]}
-    >
+    <View style={[styles.container, shadow && styles.shadowing]}>
       {leftComponent()}
       {midComponent()}
       {rightComponent()}
     </View>
   );
-};
-
-Component.defaultProps = {
-  left: 'back',
-  title: '',
-  right: '',
 };
 
 export default Component;
