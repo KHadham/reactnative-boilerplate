@@ -16,12 +16,13 @@ import { useHooks } from '@newsApp/hooks/useBerita';
 import { heightByScreen } from '@utils/dimensions';
 import { onShare, onPressLink } from '@utils/other';
 import { spacing } from '@constants/spacing';
+import ImageView from 'react-native-image-viewing';
 
 const Screen = () => {
   const { beritaData } = useHooks();
   const params = getParams();
 
-  const [first, setfirst] = useState('');
+  const [previewUri, setpreviewUri] = useState('');
 
   //   useEffect(() => {
   // Toast.show({
@@ -42,17 +43,19 @@ const Screen = () => {
         data={beritaData}
         renderItem={({ item, index }) => (
           <View style={{ padding: 20 }}>
-            <Button onPress={() => onPressLink({ url: item.link })}>
-              <FastImage
-                source={item.img}
-                style={{
-                  width: '100%',
-                  height: heightByScreen(20),
-                  borderRadius: 20,
-                }}
-              />
-            </Button>
+            <FastImage
+              isLoading
+              previewAble={true}
+              source={item.img}
+              style={{
+                width: '100%',
+                height: heightByScreen(20),
+                borderRadius: 20,
+              }}
+            />
             <Text
+              isLoading
+              onPress={() => onPressLink({ url: item.link })}
               size="title"
               weight="bold"
               style={{ marginVertical: spacing.sm }}
@@ -62,7 +65,9 @@ const Screen = () => {
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}
             >
-              <Text size="subTitle">{item.tanggal_upload}</Text>
+              <Text isLoading size="subTitle">
+                {item.tanggal_upload}
+              </Text>
               <Icon
                 onPress={() =>
                   onShare({
@@ -77,6 +82,12 @@ const Screen = () => {
           </View>
         )}
         ItemSeparatorComponent={() => <Separator />}
+      />
+      <ImageView
+        images={[{ uri: previewUri }]}
+        imageIndex={0}
+        visible={previewUri !== ''}
+        onRequestClose={() => setpreviewUri('')}
       />
     </BaseView>
   );

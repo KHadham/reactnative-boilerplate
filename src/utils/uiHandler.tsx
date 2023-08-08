@@ -89,7 +89,7 @@ export function colorToDarkMode(hexColor: string, darknessFactor = 0.5) {
  * @param {string} hex - The hexadecimal color value (e.g., "#RRGGBB").
  * @returns {{ r: number, g: number, b: number }} - An object containing the RGB values.
  */
-export function hexToRgb(hex: string): { r: number; g: number; b: number } {
+export function hexToRgb(hex: string): { r: number, g: number, b: number } {
   // Remove the '#' character from the hex if present
   hex = hex.replace('#', '');
 
@@ -121,9 +121,13 @@ export function toTransparent(color: string, transparency: number): string {
     b = parseInt(hexColor.slice(4, 6), 16);
   } else {
     // Parse RGB values from the input color
-    const rgbMatch = color.match(/rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*\d*\.\d+)?\)/);
+    const rgbMatch = color.match(
+      /rgba?\((\d+),\s*(\d+),\s*(\d+)(?:,\s*\d*\.\d+)?\)/
+    );
     if (!rgbMatch) {
-      throw new Error('Invalid input color format. Expected hex or RGB color string.');
+      throw new Error(
+        'Invalid input color format. Expected hex or RGB color string.'
+      );
     }
     r = parseInt(rgbMatch[1]);
     g = parseInt(rgbMatch[2]);
@@ -135,4 +139,36 @@ export function toTransparent(color: string, transparency: number): string {
 
   // Return the transparent color in "rgb(r, g, b, a)" format
   return `rgba(${r}, ${g}, ${b}, ${alpha})`;
+}
+/**
+ * @param {string} color - The hexadecimal or RGB color value.
+ */
+
+export function isColorDark(color: string) {
+  // Helper function to calculate relative luminance
+  function calculateRelativeLuminance(hexColor: string) {
+    const r = parseInt(hexColor.slice(1, 3), 16) / 255;
+    const g = parseInt(hexColor.slice(3, 5), 16) / 255;
+    const b = parseInt(hexColor.slice(5, 7), 16) / 255;
+
+    const gammaCorrect = (c: number) => {
+      return c <= 0.03928 ? c / 12.92 : Math.pow((c + 0.055) / 1.055, 2.4);
+    };
+
+    return (
+      0.2126 * gammaCorrect(r) +
+      0.7152 * gammaCorrect(g) +
+      0.0722 * gammaCorrect(b)
+    );
+  }
+
+  const threshold = 0.5; // Adjust this threshold as needed
+
+  const relativeLuminance = calculateRelativeLuminance(color);
+
+  if (relativeLuminance <= threshold) {
+    return 'light-content';
+  } else {
+    return 'dark-content';
+  }
 }

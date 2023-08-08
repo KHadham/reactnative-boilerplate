@@ -2,7 +2,7 @@ import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
 import NetInfo, { NetInfoState, NetInfoSubscription } from '@react-native-community/netinfo';
 import Toast from 'react-native-toast-message';
 import { storage } from '@utils/storage';
-import {APPKEY} from '@constants/appKey'
+import { APPKEY } from '@constants/appKey'
 // import {useGlobalLoading} from './state/globalLoading'; 
 const TIMEOUT = 15000;
 
@@ -21,12 +21,12 @@ export function measureBandwitdh(callback: (arg0: boolean, arg1: number, arg2: n
     'http://chandra.harvard.edu/graphics/resources/desktops/2006/1e0657_1280.jpg';
   axios
     .get(imageUri, {
-      responseType: 'arraybuffer', 
+      responseType: 'arraybuffer',
     })
     .then(response => {
       const endTime = new Date().getTime();
       const duration = (endTime - startTime) / 1000;
-      const dataArray = new Uint8Array(response.data); 
+      const dataArray = new Uint8Array(response.data);
       const speed = (dataArray.length * 8) / (1024 * 1024 * duration);
       callback(true, speed, null);
     })
@@ -58,6 +58,7 @@ const handleRequest = async (
   path: string,
   data: any,
   headers: any,
+  query: object
 ) => {
   try {
     // const setLoading = useGlobalLoading((state) => state.setLoading);
@@ -87,7 +88,7 @@ const handleRequest = async (
 
     const config: AxiosRequestConfig = {
       method,
-      url: `${APPKEY.BASE_URL}${path}`,
+      url: `${APPKEY.BASE_URL}${path}${toQueryString(query)}`,
       timeout: TIMEOUT,
     };
     if (data && Object.keys(data).length > 0) {
@@ -110,42 +111,60 @@ const handleRequest = async (
   }
 };
 
+function toQueryString(query: object) {
+  if (Object.keys(query).length !== 0) {
+    const queryString = Object.keys(query)
+      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+      .join('&');
+    return `?${queryString}`;
+  }
+  return ''
+}
+
 export const get = async ({
   path = '',
   data = {},
   headers = {},
+  query = {}
 }: {
   path: string,
   data?: object,
   headers?: object,
-}) => handleRequest('get', path, data, headers);
+  query?: object
+}) => handleRequest('get', path, data, headers, query);
 
 export const post = async ({
   path = '',
   data = {},
   headers = {},
+  query = {}
 }: {
   path: string,
   data?: object,
   headers?: object,
-}) => handleRequest('post', path, data, headers);
+  query?: object
+}) => handleRequest('post', path, data, headers, query,);
 
 export const put = async ({
   path = '',
   data = {},
   headers = {},
+  query = {}
 }: {
   path: string,
   data?: object,
   headers?: object,
-}) => handleRequest('put', path, data, headers);
+  query?: object
+}) => handleRequest('put', path, data, headers, query);
 
 export const remove = async ({
   path = '',
   data = {},
   headers = {},
+  query = {}
 }: {
   path: string,
   data?: object,
   headers?: object,
-}) => handleRequest('delete', path, data, headers);
+  query?: object
+}) => handleRequest('delete', path, data, headers, query);

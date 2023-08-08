@@ -17,6 +17,7 @@ import Switch from './Switch'
 import FastImage from './FastImage'
 import Separator from './Separator'
 import Avatar from './Avatar'
+import FocusAwareStatusBar from './FocusAwareStatusBar'
 
 export {
   BaseView,
@@ -37,5 +38,6 @@ export {
   Switch,
   FastImage,
   Separator,
-  Avatar
+  Avatar,
+  FocusAwareStatusBar
 };

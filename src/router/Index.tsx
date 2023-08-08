@@ -10,10 +10,7 @@ import TabNavigator from './TabNavigator';
 import Template from 'src/screens/Template';
 
 // import AuthRoute from '@router/AuthRoute';
-import ProfileRoute from 'src/router/ProfileRoute';
-import StatistikRoute from 'src/router/StatistikRoute';
-import DukunganRoute from 'src/router/DukunganRoute';
-import HomeRoute from 'src/router/HomeRoute';
+import ProfileRoute from './ProfileRoute';
 // import TabNavigator from 'src/router/TabNavigator';
 import { setNavigationRef } from '@utils/navigation';
 import {
@@ -38,6 +35,8 @@ const App = () => {
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Auth" component={AuthRoute} />
           <Stack.Screen name="Tab" component={TabNavigator} />
+          <Stack.Screen name="Profile" component={ProfileRoute} />
+
           {/* <Stack.Screen name="Home" component={HomeRoute} />
           <Stack.Screen name="Profile" component={ProfileRoute} />
           <Stack.Screen name="Statistik" component={StatistikRoute} />

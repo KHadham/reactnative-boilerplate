@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { StatusBar, View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import styles from './styles';
@@ -8,6 +8,7 @@ import { navigate } from '@utils/navigation';
 import { BaseView, Text } from '@components';
 import { useBearStore } from '../stores/stores';
 import { useHooks } from '@homeApp/hooks';
+import { isColorDark } from '@utils/uiHandler';
 
 const App: React.FC = () => {
   const { getSlides } = useHooks();
@@ -16,7 +17,8 @@ const App: React.FC = () => {
   const [first, setfirst] = useState('');
 
   return (
-    <BaseView style={{}}>
+    <BaseView >
+      
       <View style={{}}>
         <Icon name={'chevron-left'} size={30} />
         <Text weight="bold" style={{}}>

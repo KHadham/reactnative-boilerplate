@@ -1,5 +1,11 @@
 import React, { useEffect, useState } from 'react';
-import { View, StyleSheet, ScrollView, SectionList } from 'react-native';
+import {
+  View,
+  StyleSheet,
+  ScrollView,
+  SectionList,
+  StatusBar,
+} from 'react-native';
 import {
   BaseView,
   Text,
@@ -11,7 +17,7 @@ import {
   Spacer,
 } from '@components';
 import { spacing } from '@constants/spacing';
-import { goToPlaystore, navigate } from '@utils/navigation';
+import { goToPlaystore, navigate, navigates } from '@utils/navigation';
 import {
   COLOR_BACKGROUND_INFORMATION,
   COLOR_BACKGROUND_SUCCESS,
@@ -19,44 +25,60 @@ import {
   COLOR_GREY,
   COLOR_WHITE,
 } from '@themes/index';
-import GradientBg from '../../../../assets/svgs/GradientBg';
 import { useProfile } from '../hooks/useProfile';
-import profilStore from '@profileApp/stores';
+// import profilStore from '@profileApp/stores';
 import { openSettings } from 'react-native-permissions';
 import { FlashList } from '@shopify/flash-list';
 import { widthByScreen } from '@utils/dimensions';
 import LinearGradient from 'react-native-linear-gradient';
+import { useProfileStore } from '@profileApp/stores';
+import { isColorDark } from '@utils/uiHandler';
 
 const App: React.FC = () => {
-  const { doVerifyToken } = useProfile();
-  const { user } = profilStore();
+  const { doVerifyToken, getProfilDetail, data } = useProfile();
+  const { user, personal, employee } = useProfileStore();
 
   const [baseModal, setbaseModal] = useState('');
-
-  useEffect(() => {
-    console.log('user x:>> ', user);
-  }, []);
 
   const DATA = [
     {
       title: 'Akun',
       data: [
         {
-          title: 'Data Pribadi',
+          title: 'Informasi Personal',
           right: () => {
-            doVerifyToken();
+            navigate({ parent: 'Profile', screen: 'InformasiPersonal' });
           },
         },
-        // { title: 'Data Caleg', right: () => {} },
-        { title: 'Keamanan Akun', right: () => {} },
-        // { title: 'Kode Referal', right: () => {} },
+        {
+          title: 'Data Kepegawaian',
+          right: () => {
+            navigate({ parent: 'Profile', screen: 'DataKepegawaian' });
+          },
+        },
+        {
+          title: 'Ganti Password',
+          right: () => {
+            navigate({ parent: 'Profile', screen: 'GantiPassword' });
+          },
+        },
       ],
     },
     {
       title: 'Bantuan',
       data: [
-        { title: 'Pertanyaan Umum (F.A.Q)', right: () => {} },
-        { title: 'Chat Admin', right: () => {} },
+        {
+          title: 'Pertanyaan Umum (F.A.Q)',
+          right: () => {
+            doVerifyToken();
+          },
+        },
+        {
+          title: 'Chat Admin',
+          right: () => {
+            getProfilDetail();
+          },
+        },
         // { title: 'Kirim Tiket', right: () => {} },
       ],
     },
@@ -93,9 +115,6 @@ const App: React.FC = () => {
             height: '100%',
           }}
         />
-        {/* <View style={{position:'absolute',borderWidth:1,}}>
-          <GradientBg color={COLOR_BACKGROUND_INFORMATION}/>
-        </View> */}
         <View
           style={{
             flexDirection: 'row',
@@ -104,7 +123,7 @@ const App: React.FC = () => {
           }}
         >
           <Avatar
-            source={user?.nama}
+            source={employee?.foto}
             size={spacing.xxl}
             badge={'online'}
             count={10}
@@ -120,12 +139,21 @@ const App: React.FC = () => {
           >
             <Text size="title" weight="bold">
               {user?.nama}
+              <Text size="desc"> ({personal?.user_group})</Text>
             </Text>
-            <Text size="desc">{user?.email}</Text>
+
+            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+              <Icon name="phone" />
+              <Text size="desc"> {personal?.email}</Text>
+            </View>
+            <View style={{ flexDirection: 'row' }}>
+              <Icon name="email-outline" />
+              <Text size="desc"> {personal?.phone}</Text>
+            </View>
           </View>
         </View>
 
-        <FlashList
+        {/* <FlashList
           ListHeaderComponentStyle={{ marginLeft: spacing.md }}
           ListFooterComponentStyle={{ marginLeft: spacing.md }}
           data={[1, 2, 3, 4]}
@@ -171,16 +199,16 @@ const App: React.FC = () => {
               </View>
             </View>
           )}
-        />
+        /> */}
       </View>
     );
   };
 
   return (
     <BaseView
-      // style={{ marginHorizontal: spacing.md }}
       baseModal={baseModal}
       onCloseBaseModal={() => setbaseModal('')}
+      statusBarColor={'#E0F8D8'}
     >
       <SectionList
         ListFooterComponentStyle={{ margin: spacing.md }}

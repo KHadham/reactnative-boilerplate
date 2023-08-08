@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { View, StyleSheet, ViewStyle } from 'react-native';
+import Modal from 'react-native-modal';
 import { funcStyle, styles } from './styles';
-import { Icon, Text } from '@components';
+import { Button, Icon, Text } from '@components';
 import FastImage, { ImageStyle, ResizeMode } from 'react-native-fast-image';
 import IMAGES from '@images';
 import {
@@ -14,6 +15,7 @@ import {
   COLOR_GREY,
 } from '@themes/index';
 import { getInitials, isImageUrl } from '@utils/index';
+import ImageView from "react-native-image-viewing";
 
 interface AppProps {
   style?: ImageStyle;
@@ -36,10 +38,15 @@ const App: React.FC<AppProps> = ({
   avatarColor = COLOR_BACKGROUND_INFORMATION,
   count
 }) => {
-  const dimension = {
+
+  const [isVisible, setisVisible] = useState(false)
+
+  const container = {
     width: size,
     height: size,
     borderRadius: 100,
+    borderWidth:1,
+    borderColor:COLOR_GREY
   } as ImageStyle
 
   const badgeColoring = () => {
@@ -54,18 +61,20 @@ const App: React.FC<AppProps> = ({
   const baseImage = () => {
     if (isImageUrl(source)) {
       return (
-        <FastImage
-          style={[style, dimension]}
+       <Button onPress={()=>setisVisible(true)}>
+         <FastImage
+          style={[style, container]}
           source={{ uri: source }}
           resizeMode={resizeMode}
         />
+       </Button>
       );
     } else {
       return (
         <View
           style={[
-            funcStyle(size,avatarColor).initial,
-            dimension,
+            funcStyle(size, avatarColor).initial,
+            container,
           ]}
         >
           <Text size="header" weight="bold">
@@ -78,16 +87,26 @@ const App: React.FC<AppProps> = ({
 
   const badgeUi = () => {
     return (
-      <View style={funcStyle(size,badgeColoring()).badge}>
-        <Text weight="bold"  color='white'>{count > 9 ? '9+' :count}</Text>
+      <View style={funcStyle(size, badgeColoring()).badge}>
+        <Text weight="bold" color='white'>{count > 9 ? '9+' : count}</Text>
       </View>
     );
   };
+
+  const modalPreview = () => (
+    <ImageView
+      images={[{ uri: source }]}
+      imageIndex={0}
+      visible={isVisible}
+      onRequestClose={() => setisVisible(false)}
+    />
+  )
 
   return (
     <View style={styles.wrap}>
       {baseImage()}
       {badgeUi()}
+      {modalPreview()}
     </View>
   );
 };

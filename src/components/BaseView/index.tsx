@@ -15,6 +15,7 @@ import LottieView from 'lottie-react-native'; // if you have "esModuleInterop": 
 import {
   COLOR_BASE_PRIMARY_DARK,
   COLOR_BASE_PRIMARY_MAIN,
+  COLOR_BLACK,
   COLOR_FONT_PRIMARY_DARK,
   COLOR_REAL_TRANSPARENT,
   COLOR_TRANSPARENT,
@@ -25,9 +26,9 @@ import Loading from '../Loading';
 import Modal from 'react-native-modal';
 import { Icon } from '@components';
 import { heightByScreen, widthByScreen } from '@utils/dimensions';
-import { Text, Button, Spacer } from '@components';
+import { Text, Button, Spacer, FocusAwareStatusBar } from '@components';
 import Toast from 'react-native-toast-message';
-import { toTransparent } from '@utils/uiHandler';
+import { isColorDark, toTransparent } from '@utils/uiHandler';
 import { useLogin } from '@authApp/hooks/useAuth';
 import { useGlobalLoading } from '@utils/state/globalLoading';
 import styles from './styles';
@@ -42,6 +43,8 @@ type Props = {
   onCloseBaseModal?: Function,
   scrolling?: boolean,
   headerComponent?: any,
+  statusBarColor?: string,
+  containerColor?: string,
 };
 
 const BaseView = ({
@@ -53,6 +56,8 @@ const BaseView = ({
   onCloseBaseModal = () => {},
   scrolling,
   headerComponent,
+  statusBarColor = COLOR_WHITE,
+  containerColor = COLOR_WHITE,
 }: Props) => {
   const globalLoading = useGlobalLoading(state => state.isLoading);
 
@@ -163,9 +168,13 @@ const BaseView = ({
       </Modal>
     );
   };
-
   return (
-    <SafeAreaView style={{ backgroundColor: COLOR_WHITE, flex: 1 }}>
+    <SafeAreaView style={{ backgroundColor: statusBarColor, flex: 1 }}>
+      <FocusAwareStatusBar
+        backgroundColor={statusBarColor}
+        barStyle={isColorDark(statusBarColor)}
+      />
+
       {headerComponent}
       {globalLoading == 'auth' && <View style={styles.loadingBackground} />}
       {bg && (
@@ -188,7 +197,9 @@ const BaseView = ({
           />
         </View>
       )}
-      <View style={[style, { flex: 1 }]}>{children}</View>
+      <View style={[style, { flex: 1, backgroundColor: containerColor }]}>
+        {children}
+      </View>
       {ModalLogout()}
     </SafeAreaView>
   );

@@ -9,7 +9,9 @@ import {
   FONT_SIZE_REGULAR,
 } from '@themes/index';
 import React from 'react';
-import { TextStyle, Text, TextProps } from 'react-native';
+import { TextStyle, Text, TextProps, View } from 'react-native';
+import LinearGradient from 'react-native-linear-gradient';
+import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
 type TextWrapProps = TextProps & {
   children: any,
@@ -26,6 +28,7 @@ type TextWrapProps = TextProps & {
     | 'regular',
   weight?: 'bold' | 'regular' | 'thin',
   type?: Array<'italic' | 'underline'> | 'italic' | 'underline',
+  isLoading?: boolean,
 };
 
 const fontSizeMapping = {
@@ -52,14 +55,15 @@ function index({
   type,
   weight = 'regular',
   size = 'regular',
+  isLoading = false,
   ...rest
 }: TextWrapProps) {
   const fontSize = size ? fontSizeMapping[size] : FONT_SIZE_REGULAR;
   const fontFamily = weight ? fontWeightMapping[weight] : 'Inter-Regular';
-  return (
+
+  const coreText = () => (
     <Text
       style={[
-        style,
         {
           fontFamily,
           fontSize,
@@ -77,6 +81,16 @@ function index({
     >
       {children}
     </Text>
+  );
+
+  return (
+    <ShimmerPlaceHolder
+      visible={!isLoading}
+      LinearGradient={LinearGradient}
+      style={style}
+    >
+      {coreText()}
+    </ShimmerPlaceHolder>
   );
 }
 

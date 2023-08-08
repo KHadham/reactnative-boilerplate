@@ -14,6 +14,7 @@ const funcStyle = (size?: number, backgroundColor?: string) => {
       borderRadius: 100,
       bottom: 0,
       right: 0,
+      zIndex:10
     },
     initial: {
       backgroundColor: backgroundColor,

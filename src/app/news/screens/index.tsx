@@ -38,7 +38,7 @@ export default function TabScreen() {
       <Header title="Informasi" left="" />
       <Tab.Navigator
         // tabBar={props => <MyTabBar {...props} />}
-        initialRouteName="Pengumuman"
+        initialRouteName="Berita"
         screenOptions={{
           // tabBarGap: 100,
           tabBarAndroidRipple: { borderless: false },

@@ -7,6 +7,7 @@ import { endpoint } from '@authApp/apis';
 import { useProfile } from '@profileApp/hooks/useProfile';
 import { useGlobalLoading } from '@utils/state/globalLoading';
 import { APPKEY } from '@constants/appKey';
+import FastImage from 'react-native-fast-image';
 
 export const useLogin = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -69,6 +70,8 @@ export const useLogin = () => {
       text1: 'Sedang Logout ...',
       autoHide: false,
     });
+    FastImage.clearMemoryCache();
+    FastImage.clearDiskCache();
     storage.removeItem(STORAGE_KEY.LOGIN_TOKEN);
     setTimeout(() => {
       setLoading('');
