@@ -97,15 +97,15 @@ const handleRequest = async (
     if (headers && Object.keys(headers).length > 0) {
       config.headers = headers;
     }
-    console.log('config :>> ', config);
     const response = (await requestWithTimeout(config, TIMEOUT)) as AxiosResponse<any>;
 
     // Cache the response for future offline access
     // storage.setItem(`${method}-${path}-cache`, JSON.stringify(response.data));
-
+    console.log('path :>> ', path);
+    console.log('response.data :>> ', response.data);
     return response.data;
   } catch (error) {
-    console.error('Error in handleRequest:', error);
+    console.error('Error in handleRequest:', error + ` ${path}`);
     console.error('Error in message:', error.message);
     throw error;
   }

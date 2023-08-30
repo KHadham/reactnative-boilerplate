@@ -35,7 +35,7 @@ export default function TabScreen() {
   //   }, []);
   return (
     <BaseView>
-      <Header title="Informasi" left="" />
+      <Header left={IMAGES.iconCitata} title="Informasi"  />
       <Tab.Navigator
         // tabBar={props => <MyTabBar {...props} />}
         initialRouteName="Berita"

@@ -93,9 +93,9 @@ const Screen = () => {
         <Button title="Masuk" onPress={() => storeData()} />
         <View style={{ flexDirection: 'row', alignItems: 'center' }}>
           <View style={styles.line} />
-          <Text.Info style={{ margin: spacing.sm }}>
+          <Text style={{ margin: spacing.sm }}>
             Atau daftar sebagai
-          </Text.Info>
+          </Text>
           <View style={styles.line} />
         </View>
         <View

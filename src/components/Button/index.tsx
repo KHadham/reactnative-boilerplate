@@ -37,6 +37,10 @@ interface AppProps {
   onPress?: Function;
 }
 
+interface StylingItem extends ViewStyle {
+  type: string; // Custom data
+}
+
 const Component: React.FC<AppProps> = ({
   children,
   title,
@@ -56,45 +60,50 @@ const Component: React.FC<AppProps> = ({
     { colorName: 'default', colorCode: COLOR_BASE_PRIMARY_DARK },
   ].find(data => data.colorName == color).colorCode;
 
-  let baseStyle: ColorValue;
+  let baseStyle = disabled ? COLOR_EVENT_INACTIVE : colorFilter;
   let styling: any;
+
+  const dashedStyle: StylingItem = {
+    type: 'dashed',
+    borderStyle: 'dashed',
+    borderWidth: 1,
+    backgroundColor: COLOR_WHITE,
+    borderRadius: rippleRadius,
+    borderColor: baseStyle,
+    ...styles.buttonWrap,
+    ...containerStyle,
+  };
+
+  const outlineStyle: StylingItem = {
+    type: 'outline',
+    borderWidth: 1,
+    backgroundColor: COLOR_WHITE,
+    borderRadius: rippleRadius,
+    borderColor: baseStyle,
+    ...styles.buttonWrap,
+    ...containerStyle,
+  };
+
+  const underlineStyle: StylingItem = {
+    type: 'underline',
+    borderRadius: rippleRadius,
+    borderColor: baseStyle,
+    ...containerStyle,
+  };
+
+  const defaultStyle: StylingItem = {
+    type: 'default',
+    borderRadius: rippleRadius,
+    backgroundColor: baseStyle,
+    borderColor: baseStyle,
+    ...styles.buttonWrap,
+    ...containerStyle,
+  };
+
   if (children == undefined) {
-    baseStyle = disabled ? COLOR_EVENT_INACTIVE : colorFilter;
-    styling = [
-      {
-        type: 'dashed',
-        borderStyle: 'dashed',
-        borderWidth: 1,
-        backgroundColor: COLOR_WHITE,
-        borderRadius: rippleRadius,
-        borderColor: baseStyle,
-        ...styles.buttonWrap,
-        ...containerStyle,
-      },
-      {
-        type: 'outline',
-        borderWidth: 1,
-        backgroundColor: COLOR_WHITE,
-        borderRadius: rippleRadius,
-        borderColor: baseStyle,
-        ...styles.buttonWrap,
-        ...containerStyle,
-      },
-      {
-        type: 'underline',
-        borderRadius: rippleRadius,
-        borderColor: baseStyle,
-        ...containerStyle,
-      },
-      {
-        type: 'default',
-        borderRadius: rippleRadius,
-        backgroundColor: baseStyle,
-        borderColor: baseStyle,
-        ...styles.buttonWrap,
-        ...containerStyle,
-      },
-    ].find(data => data.type == type);
+    styling = [dashedStyle, outlineStyle, underlineStyle, defaultStyle].find(
+      data => data.type == type
+    );
   }
 
   const text = () => (
@@ -123,7 +132,7 @@ const Component: React.FC<AppProps> = ({
           rippleContainerBorderRadius={rippleRadius}
           style={[containerStyle, { zIndex: 1 }]}
         >
-          <View pointerEvents="box-only">{children}</View>
+          {children}
         </Ripple>
       );
     } else {

@@ -1,9 +1,9 @@
 import React, { useEffect, useRef, useState } from 'react';
-import { View, StatusBar } from 'react-native';
+import { View, StatusBar, Image } from 'react-native';
 import Toast from 'react-native-toast-message';
 import styles from './../styles';
 
-import { BaseView, Text, Input, Spacer, Button } from '@components';
+import { BaseView, Text, Input, Spacer, Button, FastImage } from '@components';
 
 import { spacing } from '@constants/spacing';
 import {
@@ -13,24 +13,24 @@ import {
 } from '@themes/index';
 import { navigate } from '@utils/navigation';
 import IMAGES from '@images';
-import { useLogin } from '../hooks/useAuth';
+import { useAuth } from '@authApp/hooks/useAuth';
 import { heightByScreen } from '@utils/dimensions';
 
 const Screen = () => {
-  const { doLogin } = useLogin();
-  const input1Ref = React.createRef();
-  const input2Ref = React.createRef();
+  const { doLogin, state, setState } = useAuth();
 
-  const [userName, setuserName] = useState('');
-  const [password, setpassword] = useState('');
+  // const [userName, setuserName] = useState('');
+  // const [errUserName, seterrUserName] = useState(null);
+  // const [password, setpassword] = useState('');
 
   const submit = () => {
-    if (userName == '') {
+    if (state.userName == '') {
       Toast.show({
         type: 'error',
         text1: 'Di isi dulu kolom nya ya ',
       });
-    } else doLogin(userName, password);
+      setState.seterrUserName('Username Tidak boleh kosong');
+    } else doLogin(state.userName, state.password);
   };
 
   return (
@@ -40,8 +40,22 @@ const Screen = () => {
         style={{
           padding: spacing.lg,
           paddingVertical: spacing.xxl,
+          gap: 10,
         }}
       >
+        <View
+          style={{
+            alignItems: 'center',
+            alignContent: 'center',
+          }}
+        >
+          <Image
+            source={IMAGES.iconCitata}
+            style={{ height: 100, width: 100 }}
+            resizeMode="contain"
+            resizeMethod="resize"
+          />
+        </View>
         <Text size="header" weight="bold" color={COLOR_WHITE}>
           Masuk Akun
         </Text>
@@ -49,20 +63,23 @@ const Screen = () => {
           Silakan masuk dengan Akun yang terdaftar
         </Text>
       </View>
-
       <View style={styles.botLoginWrap}>
         <Input
-          ref={input1Ref}
-          value={userName}
+          value={state.userName}
           placeholder="Username"
-          onInteract={(txt: React.SetStateAction<string>) => setuserName(txt)}
+          onInteract={(txt: React.SetStateAction<string>) => {
+            setState.setuserName(txt);
+            setState.seterrUserName(null);
+          }}
+          error={state.errUserName}
         />
         <Input
-          ref={input2Ref}
-          value={password}
+          value={state.password}
           placeholder="Password"
           type="password"
-          onInteract={(txt: React.SetStateAction<string>) => setpassword(txt)}
+          onInteract={(txt: React.SetStateAction<string>) =>
+            setState.setpassword(txt)
+          }
         />
         <View style={{ marginVertical: spacing.sm }}>
           <Button title="Masuk" onPress={() => submit()} />

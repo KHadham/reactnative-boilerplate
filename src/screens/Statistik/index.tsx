@@ -278,7 +278,7 @@ const Screen = () => {
   };
 
   return (
-    <BaseView headerComponent={<Header title="Statistik Dukungan" baseModal />}>
+    <BaseView headerComponent={<Header title="Statistik Dukungan"  />}>
       <View
         style={{
           flexDirection: 'row',
@@ -312,7 +312,7 @@ const Screen = () => {
                 >
                   {item.name}{' '}
                   {decimalToPercentage(dummyResponse.data.summary, item.value)}
-                </Text.Bold>
+                </Text>
               ) : (
                 <Text size='desc'
                   style={{
@@ -324,7 +324,7 @@ const Screen = () => {
                 >
                   {item.name}{' '}
                   {decimalToPercentage(dummyResponse.data.summary, item.value)}
-                </Text.Desc>
+                </Text>
               )}
             </View>
           )}
@@ -355,20 +355,20 @@ const Screen = () => {
               >
                 <Text weight='bold' style={{}}>
                   {dummyResponse.data.meta.title}
-                </Text.Bold>
+                </Text>
               </View>
-              <Text.Info style={{}}>
+              <Text style={{}}>
                 Grafik rekapitulasi pemilu DPR RI per partai
-              </Text.Info>
+              </Text>
             </View>
             <View style={{ margin: spacing.md }}>
               <PieChart style={{ height: 200 }} data={pieData} />
-              <Text.Info style={{ textAlign: 'center', marginTop: spacing.sm }}>
+              <Text style={{ textAlign: 'center', marginTop: spacing.sm }}>
                 {dummyResponse.data.meta.description}
-              </Text.Info>
+              </Text>
             </View>
-            <Text weight='bold'>Rincian Hasil Suara</Text.Bold>
-            <Text.Info>Rekapitulasi suara pemilu DPRI RI per partai</Text.Info>
+            <Text weight='bold'>Rincian Hasil Suara</Text>
+            <Text>Rekapitulasi suara pemilu DPRI RI per partai</Text>
             <FlatList
               showsHorizontalScrollIndicator={false}
               horizontal
@@ -377,8 +377,8 @@ const Screen = () => {
                 <View style={styles.partaiWrap}>
                   <View style={styles.dot(item.color)} />
                   <View>
-                    <Text size='desc'>{item.name}</Text.Desc>
-                    <Text weight='bold'>{item.value}</Text.Bold>
+                    <Text size='desc'>{item.name}</Text>
+                    <Text weight='bold'>{item.value}</Text>
                   </View>
                 </View>
               )}
@@ -404,14 +404,14 @@ const Screen = () => {
                       </View>
                       <Spacer />
                       <View style={{ justifyContent: 'center' }}>
-                        <Text weight='bold'>{item.name}</Text.Bold>
+                        <Text weight='bold'>{item.name}</Text>
                         {isExpand && (
                           <>
-                            <Text.Info>Perolehan {item.value} suara</Text.Info>
+                            <Text>Perolehan {item.value} suara</Text>
                             <TouchableOpacity onPress={() => alert('asdas')}>
-                              <Text.Underline color={COLOR_BASE_PRIMARY_MAIN}>
+                              <Text color={COLOR_BASE_PRIMARY_MAIN}>
                                 Statistik Partai
-                              </Text.Underline>
+                              </Text>
                             </TouchableOpacity>
                           </>
                         )}
@@ -428,8 +428,8 @@ const Screen = () => {
                         >
                           <Text weight='bold' color={COLOR_BASE_PRIMARY_MAIN}>
                             {item.name}
-                          </Text.Bold>
-                          <Text size='desc' style={{}}>{item.value} suara</Text.Desc>
+                          </Text>
+                          <Text size='desc' style={{}}>{item.value} suara</Text>
                         </TouchableOpacity>
                       )}
                       ItemSeparatorComponent={() => (

@@ -293,8 +293,8 @@ const Screen = () => {
                     <View style={styles.partaiWrap}>
                       <View style={styles.dot(item.color)} />
                       <View>
-                        <Text.Info>{item.name}</Text.Info>
-                        <Text size='desc'>{item.value}</Text.Desc>
+                        <Text>{item.name}</Text>
+                        <Text size='desc'>{item.value}</Text>
                       </View>
                     </View>
                   )}
@@ -309,7 +309,7 @@ const Screen = () => {
                     >
                       <Text weight='bold' style={{ margin: spacing.xs }}>
                         Kategori
-                      </Text.Bold>
+                      </Text>
                     </View>
                   </View>
                   <PieChart
@@ -328,8 +328,8 @@ const Screen = () => {
                     <View style={styles.partaiWrap}>
                       <View style={styles.dot(item.color)} />
                       <View>
-                        <Text.Info>{item.name}</Text.Info>
-                        <Text size='desc'>{item.value}</Text.Desc>
+                        <Text>{item.name}</Text>
+                        <Text size='desc'>{item.value}</Text>
                       </View>
                     </View>
                   )}
@@ -344,7 +344,7 @@ const Screen = () => {
                     >
                       <Text weight='bold' style={{ margin: spacing.xs }}>
                         Kategori
-                      </Text.Bold>
+                      </Text>
                     </View>
                   </View>
                   <PieChart

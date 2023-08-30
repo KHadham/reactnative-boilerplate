@@ -1,30 +1,94 @@
 import React, { useEffect, useState } from 'react';
-import { StatusBar, View } from 'react-native';
-import Toast from 'react-native-toast-message';
+import { Image, View, ImageSourcePropType } from 'react-native';
 import IMAGES from '@images';
-import styles from './styles';
-import { Icon } from '@components';
-import { navigate } from '@utils/navigation';
+import { FastImage, Header, Carousel, Button } from '@components';
+import { useNavigationHandler } from '@utils/navigation';
 import { BaseView, Text } from '@components';
-import { useBearStore } from '../stores/stores';
-import { useHooks } from '@homeApp/hooks';
-import { isColorDark } from '@utils/uiHandler';
+import { useHooks } from '@homeApp/hooks/useCarousel';
+import { useHooks as useApp } from '@homeApp/hooks/useSubApps';
+import { FlashList } from '@shopify/flash-list';
+import { heightByScreen, widthByScreen } from '@utils/dimensions';
+import { ScrollView } from 'react-native-gesture-handler';
+import { spacing } from '@constants/spacing';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+import styles from '@homeApp/styles';
+import { useProfileStore } from '@profileApp/stores';
 
 const App: React.FC = () => {
-  const { getSlides } = useHooks();
-  const bears = useBearStore(state => state.bears);
+  const { navigate } = useNavigationHandler();
+  const { user } = useProfileStore();
 
-  const [first, setfirst] = useState('');
+  const { data: carouselData, isLoading } = useHooks();
+  const { data: apps, isLoading: loadingApp } = useApp();
 
   return (
-    <BaseView >
-      
-      <View style={{}}>
-        <Icon name={'chevron-left'} size={30} />
-        <Text weight="bold" style={{}}>
-          home
-        </Text>
-      </View>
+    <BaseView>
+      <Header left={IMAGES.iconCitata} title="DCKTRP Mobile" shadow />
+      <ScrollView style={{ flex: 1 }}>
+        <Carousel
+          indicator
+          previewAble
+          mode="parallax"
+          width={widthByScreen(100)}
+          height={heightByScreen(20)}
+          data={carouselData}
+          autoPlay={true}
+          autoPlayInterval={2000}
+          renderItem={({ item, index }) => (
+            <View style={styles.sliderImageWrap} key={index}>
+              {isLoading ? (
+                <ShimmerPlaceholder
+                  LinearGradient={LinearGradient}
+                  style={styles.sliderImage}
+                />
+              ) : (
+                <Image source={{ uri: item.img }} style={styles.sliderImage} />
+              )}
+            </View>
+          )}
+        />
+        <View style={{ padding: spacing.md }}>
+          <FlashList
+            ListHeaderComponent={
+              <View style={{ marginBottom: spacing.lg }}>
+                <View style={{ flexDirection: 'row' }}>
+                  <Text size="subTitle">Selamat datang</Text>
+                  <Text size="subTitle" weight="bold">
+                    , {user?.nama}
+                  </Text>
+                </View>
+                <Text size="desc">Mau survey apa hari ini ?</Text>
+              </View>
+            }
+            data={apps}
+            estimatedItemSize={15}
+            numColumns={4}
+            renderItem={({ item, index }) => (
+              <Button
+                onPress={() => {
+                  //
+                  if (item.mobile_class_name == 'SimpusApp') {
+                    navigate({ screen: 'Simpus', params: { item } });
+                  } else if (item.mobile_class_name == 'SemeterApp') {
+                    navigate({ screen: 'Semeter', params: { item } });
+                  } else {
+                    navigate({ screen: 'WebView', params: { item } });
+                  }
+                }}
+                containerStyle={styles.appMenuWrap}
+              >
+                <View style={styles.appMenu}>
+                  <FastImage source={item?.icon} style={styles.appImage} />
+                </View>
+                <Text size="info" weight="bold" style={{ textAlign: 'center' }}>
+                  {item?.name}
+                </Text>
+              </Button>
+            )}
+          />
+        </View>
+      </ScrollView>
     </BaseView>
   );
 };

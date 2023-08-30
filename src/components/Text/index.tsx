@@ -6,7 +6,6 @@ import {
   FONT_SIZE_CAPTION,
   FONT_SIZE_INFO,
   FONT_SIZE_SUBTITLE,
-  FONT_SIZE_REGULAR,
 } from '@themes/index';
 import React from 'react';
 import { TextStyle, Text, TextProps, View } from 'react-native';
@@ -14,7 +13,7 @@ import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
 type TextWrapProps = TextProps & {
-  children: any,
+  children?: any,
   style?: TextStyle,
   onPress?: () => void,
   color?: string,
@@ -35,10 +34,9 @@ const fontSizeMapping = {
   header: FONT_SIZE_HEADER,
   title: FONT_SIZE_TITLE,
   desc: FONT_SIZE_DESC,
-  button: FONT_SIZE_CAPTION,
   info: FONT_SIZE_INFO,
   subTitle: FONT_SIZE_SUBTITLE,
-  regular: FONT_SIZE_REGULAR,
+  regular: FONT_SIZE_CAPTION,
 };
 
 const fontWeightMapping = {
@@ -58,12 +56,13 @@ function index({
   isLoading = false,
   ...rest
 }: TextWrapProps) {
-  const fontSize = size ? fontSizeMapping[size] : FONT_SIZE_REGULAR;
+  const fontSize = size ? fontSizeMapping[size] : FONT_SIZE_CAPTION;
   const fontFamily = weight ? fontWeightMapping[weight] : 'Inter-Regular';
 
   const coreText = () => (
     <Text
       style={[
+        style,
         {
           fontFamily,
           fontSize,

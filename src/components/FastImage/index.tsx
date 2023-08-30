@@ -2,13 +2,17 @@ import React, { useEffect, useState } from 'react';
 import { View, Text, StyleSheet } from 'react-native';
 import styles from './styles';
 import { Button, Icon } from '@components';
-import FastImage, { ImageStyle, ResizeMode } from 'react-native-fast-image';
+import FastImage, {
+  ImageStyle,
+  ResizeMode,
+  FastImageProps,
+} from 'react-native-fast-image';
 import IMAGES from '@images';
 import ImageView from 'react-native-image-viewing';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
-interface AppProps {
+interface AppProps extends FastImageProps {
   style?: ImageStyle;
   source: any;
   resizeMode?: ResizeMode;
@@ -21,11 +25,12 @@ const App: React.FC<AppProps> = ({
   source,
   resizeMode,
   previewAble,
-  isLoading
+  isLoading,
+  ...rest
 }) => {
-
   const [isVisible, setisVisible] = useState(false);
-  // const [isLoading, setisLoading] = useState(false);
+  // const [progress, setprogress] = useState(false);
+  // const [isloading, setisloading] = useState(false);
 
   const previewModal = () => (
     <ImageView
@@ -39,23 +44,29 @@ const App: React.FC<AppProps> = ({
   const coreImage = () => {
     if (typeof source === 'number') {
       return (
-        <FastImage style={style} source={source} resizeMode={resizeMode} />
+        <FastImage
+          style={style}
+          source={source}
+          resizeMode={resizeMode}
+          {...rest}
+        />
       );
     } else {
       return (
         <FastImage
-          // onLoadStart={() => setisLoading(true)}
-          // onLoadEnd={() => setisLoading(false)}
+          // onProgress={event => setprogress(event.nativeEvent.total)}
+          // onLoadStart={() => setisloading(true)}
+          // onLoadEnd={() => setisloading(false)}
           style={style}
           source={{
             uri: source,
           }}
           resizeMode={resizeMode}
+          {...rest}
         />
       );
     }
   };
-  console.log('isLoading :>> ', isLoading);
   return (
     <>
       <Button onPress={() => previewAble && !isLoading && setisVisible(true)}>

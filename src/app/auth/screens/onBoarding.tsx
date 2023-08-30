@@ -9,7 +9,7 @@ import { heightByScreen, widthByScreen } from '@utils/dimensions';
 import { STORAGE_KEY } from '@constants/index';
 import { requestPermission } from '@utils/permissions';
 
-import { navigate } from '@utils/navigation';
+import { useNavigationHandler } from '@utils/navigation';
 import { spacing } from '@constants/spacing';
 import {
   LayoutAnimationHandler,
@@ -60,6 +60,7 @@ const data = [
 ];
 
 function Screen() {
+  const { navigate } = useNavigationHandler();
   // const [storageValue, setStorageValue] = useRecoilState(onBoardState);
 
   const scrollViewRef = useRef(null);

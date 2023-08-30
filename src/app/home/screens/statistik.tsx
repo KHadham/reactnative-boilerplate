@@ -3,18 +3,15 @@ import { View } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import styles from './styles';
-import { Icon } from '@components';
 import { navigate } from '@utils/navigation';
-import { BaseView, Text } from '@components';
-import { useBearStore } from '../stores/stores';
+import { BaseView, Accordion, Header, Icon, Text } from '@components';
+import { FlashList } from '@shopify/flash-list';
 interface AppProps {
   props1: string;
   props2: number;
 }
 
 const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
-  const bears = useBearStore(state => state.bears);
-
   const [first, setfirst] = useState('');
 
   //   useEffect(() => {
@@ -30,10 +27,36 @@ const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
   //   }, []);
   return (
     <BaseView style={{}}>
-      <Icon name={'chevron-left'} size={30} />
-      <Text weight="bold" style={{}}>
-        home
-      </Text>
+      <Header left={IMAGES.iconCitata} title="F.A.Q" shadow />
+      <FlashList
+        data={[1, 2, 3, 4, 5]}
+        renderItem={({ index }) => (
+          <View style={{ padding: 20, paddingVertical: 10 }}>
+            <Accordion
+              keys={index}
+              content={(isExpand: boolean) => (
+                <View style={{ padding: 20 }}>
+                  <Text size='subTitle' weight='bold'>What is lorem ipsum mean ?</Text>
+                  {isExpand && (
+                    <Text>
+                      Lorem ipsum dolor sit amet, consectetur adipisici elit…’
+                      (complete text) is dummy text that is not meant to mean
+                      anything. It is used as a placeholder in magazine layouts,
+                      for example, in order to give an impression of the
+                      finished document. The text is intentionally
+                      unintelligible so that the viewer is not distracted by the
+                      content. The language is not real Latin and even the first
+                      word ‘Lorem’ does not exist. It is said that the lorem
+                      ipsum text has been common among typesetters since the
+                      16th century.{' '}
+                    </Text>
+                  )}
+                </View>
+              )}
+            />
+          </View>
+        )}
+      />
     </BaseView>
   );
 };

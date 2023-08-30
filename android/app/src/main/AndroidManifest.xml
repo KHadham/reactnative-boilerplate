@@ -24,9 +24,9 @@
       android:allowBackup="false"
       android:theme="@style/AppTheme">
       <!-- googlemap key -->
-      <!-- <meta-data
+      <meta-data
         android:name="com.google.android.geo.API_KEY"
-        android:value="AIzaSyAeNUnAXhZ1viX167KDY-17JUJHrWIgtOg"/> -->
+        android:value="AIzaSyAeNUnAXhZ1viX167KDY-17JUJHrWIgtOg"/>
       <activity
         android:name=".MainActivity"
         android:label="@string/app_name"

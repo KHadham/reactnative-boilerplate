@@ -1,92 +1,87 @@
 import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  StyleSheet,
-  ScrollView,
-  ToastAndroid,
-  ViewStyle,
-} from 'react-native';
-import Toast from 'react-native-toast-message';
-import IMAGES from '@images';
-import styles from './styles';
-import { Icon } from '@components';
-import { widthByScreen } from '@utils/dimensions';
-import { spacing } from '@constants/spacing';
+
+import { Button, Icon } from '@components';
 import { Text, Stepper, AutoImage } from '@components';
-import {
-  handleHorizontalScroll,
-  scrollToIndexHorizontal,
-} from '@utils/uiHandler';
+import Carousel, { TCarouselProps } from 'react-native-reanimated-carousel';
+import ImageView from 'react-native-image-viewing';
 
 interface AppProps {
-  data: Array<object>;
   indicator?: boolean;
-  renderItem: any;
-  containerStyle: ViewStyle;
-  // props?: TCarouselProps
+  previewAble?: boolean;
 }
-type TCarouselProps = /*unresolved*/ any;
 
-const App: React.FC<AppProps> = ({
-  indicator = true,
-  renderItem,
-  data = [
-    {
-      image: '',
-      title: '',
-      desc: '',
-    },
-  ],
-  containerStyle,
+type CombinedProps = AppProps & TCarouselProps;
+const App: React.FC<CombinedProps> = ({
+  indicator = false,
+  previewAble,
+  ...props
 }) => {
-  const CarouselRef = useRef(null);
-  const scrollViewRef = useRef(null);
+  const carouselRef = useRef(null);
 
-  const [step, setstep] = useState(1);
+  const [step, setstep] = useState(0);
+  const [isVisible, setisVisible] = useState(false);
 
   useEffect(() => {
-    scrollToIndexHorizontal(step, scrollViewRef);
-    // ToastAndroid.show(`step ${step}`, ToastAndroid.SHORT);
+    console.log('step :>> ', step);
   }, [step]);
 
-  //   useEffect(() => {
-  // Toast.show({
-  //   type: 'success',
-  //   text1: 'Hello',
-  //   text2: 'This is some something 👋'
-  // });
+  useEffect(() => {
+    // setstep(carouselRef.current.getCurrentIndex());
+  }, [carouselRef.current]);
 
-  //     return () => {
-  //       second;
-  //     };
-  //   }, []);
+  const footer = () => (
+    <Stepper
+      dataStep={props.data?.length}
+      currentStep={step + 1}
+      onPressStep={(id: number) =>
+        carouselRef.current.scrollTo({ index: id - 1, animated: true })
+      }
+    />
+  );
+
+  const previewModal = () => {
+    if (isVisible)
+      return (
+        <ImageView
+          onImageIndexChange={imageIndex => {
+            console.log('imageIndex :>> ', imageIndex);
+          }}
+          images={props.data?.map(item => ({
+            uri: item.img,
+          }))}
+          imageIndex={step}
+          visible={isVisible}
+          onRequestClose={() => setisVisible(false)}
+        />
+      );
+  };
 
   return (
-    <View style={containerStyle}>
-      <ScrollView
-        showsHorizontalScrollIndicator={false}
-        horizontal
-        pagingEnabled
-        ref={scrollViewRef}
-        onMomentumScrollEnd={event =>
-          handleHorizontalScroll(event).then(
-            (data: React.SetStateAction<number>) => setstep(data)
-          )
-        }
-      >
-        {data.map((item, index) => (
-          <View key={index} style={{ width: widthByScreen(100) }}>
-            {renderItem(item, index)}
-          </View>
-        ))}
-      </ScrollView>
-      <Stepper
-        containerStyle={{ marginHorizontal: 100 }}
-        dataStep={data?.length}
-        currentStep={step}
-        onPressStep={(index: React.SetStateAction<number>) => setstep(index)}
+    <>
+      <Carousel
+        ref={carouselRef}
+        {...props}
+        onProgressChange={(offsetProgress, absoluteProgress) => {
+          if (!absoluteProgress.toString().includes('.')) {
+            setstep(absoluteProgress);
+          }
+        }}
+        autoPlay={false}
+        style={{ alignContent: 'center' }}
+        loop={true}
+        renderItem={({ item, index }) => (
+          <Button disabled={!previewAble} onPress={() => setisVisible(true)}>
+            {props.renderItem({
+              item,
+              index,
+              animationValue: undefined,
+            })}
+          </Button>
+        )}
       />
-    </View>
+      {footer()}
+      {previewModal()}
+    </>
   );
 };
 

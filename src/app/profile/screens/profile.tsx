@@ -17,7 +17,11 @@ import {
   Spacer,
 } from '@components';
 import { spacing } from '@constants/spacing';
-import { goToPlaystore, navigate, navigates } from '@utils/navigation';
+import {
+  goToPlaystore,
+  navigates,
+  useNavigationHandler,
+} from '@utils/navigation';
 import {
   COLOR_BACKGROUND_INFORMATION,
   COLOR_BACKGROUND_SUCCESS,
@@ -35,12 +39,12 @@ import { useProfileStore } from '@profileApp/stores';
 import { isColorDark } from '@utils/uiHandler';
 
 const App: React.FC = () => {
-  const { doVerifyToken, getProfilDetail, data } = useProfile();
-  const { user, personal, employee } = useProfileStore();
+  const { navigate } = useNavigationHandler();
 
+  const { doVerifyToken, fetch, data } = useProfile();
+  const { user, employee } = useProfileStore();
   const [baseModal, setbaseModal] = useState('');
-
-  const DATA = [
+  const MENULIST = [
     {
       title: 'Akun',
       data: [
@@ -76,7 +80,7 @@ const App: React.FC = () => {
         {
           title: 'Chat Admin',
           right: () => {
-            getProfilDetail();
+            fetch();
           },
         },
         // { title: 'Kirim Tiket', right: () => {} },
@@ -108,7 +112,7 @@ const App: React.FC = () => {
     return (
       <View>
         <LinearGradient
-          colors={['#E0F8D8', '#FFFFFF']}
+          colors={[COLOR_BACKGROUND_INFORMATION, '#FFFFFF']}
           style={{
             position: 'absolute',
             width: widthByScreen(100),
@@ -139,67 +143,31 @@ const App: React.FC = () => {
           >
             <Text size="title" weight="bold">
               {user?.nama}
-              <Text size="desc"> ({personal?.user_group})</Text>
+              <Text size="desc"> ({data?.personal?.user_group})</Text>
             </Text>
 
-            <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: spacing.xs,
+              }}
+            >
               <Icon name="phone" />
-              <Text size="desc"> {personal?.email}</Text>
+              <Text size="desc"> {data?.personal?.email}</Text>
             </View>
-            <View style={{ flexDirection: 'row' }}>
+            <View
+              style={{
+                flexDirection: 'row',
+                alignItems: 'center',
+                gap: spacing.xs,
+              }}
+            >
               <Icon name="email-outline" />
-              <Text size="desc"> {personal?.phone}</Text>
+              <Text size="desc"> {data?.personal?.phone}</Text>
             </View>
           </View>
         </View>
-
-        {/* <FlashList
-          ListHeaderComponentStyle={{ marginLeft: spacing.md }}
-          ListFooterComponentStyle={{ marginLeft: spacing.md }}
-          data={[1, 2, 3, 4]}
-          horizontal
-          estimatedItemSize={10}
-          ItemSeparatorComponent={() => <Spacer />}
-          showsHorizontalScrollIndicator={false}
-          contentContainerStyle={{ paddingBottom: spacing.md }}
-          renderItem={({ item, index }) => (
-            <View
-              style={{
-                borderWidth: 1,
-                borderRadius: 10,
-                borderColor: COLOR_GREY,
-                padding: 16,
-                minWidth: widthByScreen(40),
-                backgroundColor: 'white',
-              }}
-            >
-              <Text size="desc">Total Pendukung</Text>
-              <Spacer />
-              <View
-                style={{
-                  flexDirection: 'row',
-                  alignItems: 'center',
-                  justifyContent: 'space-between',
-                }}
-              >
-                <Text size="title" weight="bold">
-                  32123
-                </Text>
-                <View
-                  style={{
-                    flexDirection: 'row',
-                    alignItems: 'center',
-                  }}
-                >
-                  <Icon name={'arrow-down-bold-circle'} color="red" size={25} />
-                  <Text size="desc" color="red">
-                    -5%
-                  </Text>
-                </View>
-              </View>
-            </View>
-          )}
-        /> */}
       </View>
     );
   };
@@ -208,20 +176,23 @@ const App: React.FC = () => {
     <BaseView
       baseModal={baseModal}
       onCloseBaseModal={() => setbaseModal('')}
-      statusBarColor={'#E0F8D8'}
+      statusBarColor={COLOR_BACKGROUND_INFORMATION}
     >
       <SectionList
         ListFooterComponentStyle={{ margin: spacing.md }}
         stickySectionHeadersEnabled={true}
         ListHeaderComponent={() => header()}
         showsVerticalScrollIndicator={false}
-        sections={DATA}
+        sections={MENULIST}
         contentContainerStyle={{}}
         keyExtractor={(item, index) => item.title + index}
         ItemSeparatorComponent={() => <Separator margin={spacing.md} />}
         renderItem={({ item, index }) => (
           <ItemList
-            style={{ marginHorizontal: spacing.md }}
+            style={{
+              paddingHorizontal: spacing.md,
+              backgroundColor: COLOR_WHITE,
+            }}
             desc={item.title}
             rightAction={item.right}
           />

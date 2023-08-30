@@ -17,7 +17,7 @@ import { onShare, onPressLink } from '@utils/other';
 import { spacing } from '@constants/spacing';
 
 const Screen = () => {
-  const { pengumumanData } = useHooks();
+  const { data, fetching, isLoading } = useHooks();
 
   const [first, setfirst] = useState('');
 
@@ -37,7 +37,7 @@ const Screen = () => {
     <BaseView>
       <FlashList
         estimatedItemSize={50}
-        data={pengumumanData}
+        data={data}
         renderItem={({ item, index }) => (
           <Button onPress={() => onPressLink({ url: item.link })}>
             <View style={{ padding: 20 }}>
@@ -70,6 +70,15 @@ const Screen = () => {
           </Button>
         )}
         ItemSeparatorComponent={() => <Separator />}
+        onEndReached={fetching}
+        ListFooterComponent={
+          <View style={{ padding: 20, gap: spacing.sm }}>
+            <Text isLoading style={{ width: '100%' }} />
+            <Text isLoading style={{ width: '90%' }} />
+            <Text isLoading style={{ width: '100%' }} />
+            <Text isLoading size="subTitle" />
+          </View>
+        }
       />
     </BaseView>
   );

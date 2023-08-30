@@ -19,7 +19,10 @@ import { toTitleCase } from '@utils';
 // import Toast from 'react-native-simple-toast';
 import { Circle } from 'react-native-svg';
 import { widthByScreen } from '@utils/dimensions';
-import { scrollToIndexHorizontal } from '@utils/uiHandler';
+import {
+  LayoutAnimationHandler,
+  scrollToIndexHorizontal,
+} from '@utils/uiHandler';
 import { Text } from '@components';
 type Props = {
   currentStep: number,
@@ -32,7 +35,7 @@ type Props = {
 const Component: React.FC<Props> = ({
   currentStep,
   dataStep,
-  onPressStep,
+  onPressStep = () => {},
   containerStyle,
   type = 'default',
 }) => {
@@ -53,6 +56,7 @@ const Component: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
+    LayoutAnimationHandler('opacity');
     barAnimating(currentStep);
   }, [animationValues, currentStep]);
 
@@ -157,7 +161,7 @@ const Component: React.FC<Props> = ({
                         }}
                       >
                         <View style={styles.txtInactive}>
-                          <Text size='desc' style={{ color: 'white' }}>
+                          <Text size="desc" style={{ color: 'white' }}>
                             {index + 1}
                           </Text>
                         </View>
@@ -173,7 +177,7 @@ const Component: React.FC<Props> = ({
                             },
                           ]}
                         >
-                          <Text size='desc' style={{ color: 'white' }}>
+                          <Text size="desc" style={{ color: 'white' }}>
                             {index + 1}
                           </Text>
                         </Animated.View>
@@ -193,7 +197,8 @@ const Component: React.FC<Props> = ({
                         ]}
                       />
                     </View>
-                    <Text weight='bold'
+                    <Text
+                      weight="bold"
                       onPress={() => onPressStep(index + 1)}
                       style={{
                         color:
@@ -233,7 +238,7 @@ const Component: React.FC<Props> = ({
                         }}
                       >
                         <View style={styles.txtInactive}>
-                          <Text weight='bold' style={{ color: 'white' }}>
+                          <Text weight="bold" style={{ color: 'white' }}>
                             {index + 1}
                           </Text>
                         </View>
@@ -249,7 +254,7 @@ const Component: React.FC<Props> = ({
                             },
                           ]}
                         >
-                          <Text weight='bold' style={{ color: 'white' }}>
+                          <Text weight="bold" style={{ color: 'white' }}>
                             {index + 1}
                           </Text>
                         </Animated.View>
@@ -331,19 +336,12 @@ const Component: React.FC<Props> = ({
               type !== 'bar' ? { width: 10 } : { flex: 1 },
               styles.barInactive,
             ]}
-            onPress={() => {
-              onPressStep(index + 1);
-            }}
+            onPress={() => onPressStep(index + 1)}
           >
-            <Animated.View
+            <View
               style={[
                 styles.barActive,
-                animationValues[index] && {
-                  width: animationValues[index].interpolate({
-                    inputRange: [0, 1],
-                    outputRange: ['0%', '100%'],
-                  }),
-                },
+                { width: index + 1 <= currentStep ? '100%' : '0%' },
               ]}
             />
           </TouchableOpacity>
@@ -362,11 +360,9 @@ const Component: React.FC<Props> = ({
           backgroundColor={COLOR_BASE_PRIMARY_DARK}
           rotation={0}
         >
-          {() => (
-            <Text size='title'>
-              {currentStep} / {totalStep}
-            </Text>
-          )}
+          <Text size="title">
+            {currentStep} / {totalStep}
+          </Text>
         </AnimatedCircularProgress>
         <Animated.View
           style={[
@@ -387,13 +383,13 @@ const Component: React.FC<Props> = ({
             },
           ]}
         >
-          <Text size='title' style={{ textAlign: 'right' }}>
+          <Text size="title" style={{ textAlign: 'right' }}>
             {toTitleCase(
               dataStep[currentStep - 1]?.title ?? dataStep[currentStep - 1]
             )}
           </Text>
           {dataStep[currentStep - 1]?.desc && (
-            <Text size='desc' style={{ textAlign: 'right' }}>
+            <Text size="desc" style={{ textAlign: 'right' }}>
               {toTitleCase(dataStep[currentStep - 1]?.desc)}
             </Text>
           )}

@@ -19,7 +19,7 @@ import { spacing } from '@constants/spacing';
 import ImageView from 'react-native-image-viewing';
 
 const Screen = () => {
-  const { beritaData } = useHooks();
+  const { data, fetching, isLoading } = useHooks();
   const params = getParams();
 
   const [previewUri, setpreviewUri] = useState('');
@@ -40,11 +40,10 @@ const Screen = () => {
     <BaseView>
       <FlashList
         estimatedItemSize={50}
-        data={beritaData}
+        data={data}
         renderItem={({ item, index }) => (
           <View style={{ padding: 20 }}>
             <FastImage
-              isLoading
               previewAble={true}
               source={item.img}
               style={{
@@ -54,20 +53,19 @@ const Screen = () => {
               }}
             />
             <Text
-              isLoading
               onPress={() => onPressLink({ url: item.link })}
               size="title"
               weight="bold"
               style={{ marginVertical: spacing.sm }}
+              numberOfLines={2}
+              lineBreakMode="tail"
             >
               {item.judul_berita.toUpperCase()}
             </Text>
             <View
               style={{ flexDirection: 'row', justifyContent: 'space-between' }}
             >
-              <Text isLoading size="subTitle">
-                {item.tanggal_upload}
-              </Text>
+              <Text size="subTitle">{item.tanggal_upload}</Text>
               <Icon
                 onPress={() =>
                   onShare({
@@ -82,6 +80,23 @@ const Screen = () => {
           </View>
         )}
         ItemSeparatorComponent={() => <Separator />}
+        onEndReached={fetching}
+        ListFooterComponent={
+          <View style={{ padding: 20, gap: spacing.sm }}>
+            <FastImage
+              isLoading
+              source={''}
+              style={{
+                width: '100%',
+                height: heightByScreen(20),
+                borderRadius: 20,
+              }}
+            />
+            <Text isLoading style={{ width: '100%' }} />
+            <Text isLoading style={{ width: '100%' }} />
+            <Text isLoading size="subTitle" />
+          </View>
+        }
       />
       <ImageView
         images={[{ uri: previewUri }]}

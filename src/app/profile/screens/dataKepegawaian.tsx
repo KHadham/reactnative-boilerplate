@@ -1,35 +1,37 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View ,TextInput} from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
-import styles from './styles';
+// import styles from './styles';
 import { navigate } from '@utils/navigation';
-import { BaseView, Text, Icon } from '@components';
+import { BaseView, Text, Icon, Header, Input } from '@components';
+import { FlashList,  } from '@shopify/flash-list';
+import { spacing } from '@constants/spacing';
+import { toTitleCase } from '@utils/index';
+import { useProfile } from '@profileApp/hooks/useProfile';
+import { unexpectedData } from '../stores/types';
+import { COLOR_BACKGROUND } from '@themes/index';
 // import { useBearStore } from './../stores/stores';
-interface AppProps {
-  props1: string;
-  props2: number;
-}
 
-const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
-//   const bears = useBearStore(state => state.bears);
+const App: React.FC = () => {
+  const { data } = useProfile();
 
-  const [first, setfirst] = useState('');
+  const renderItem = ({ item }: { item: [key: string, value: any] }) => (
+    <View style={{ paddingHorizontal:spacing.md }}>
+      <Input value={item[1]} label={toTitleCase(item[0])} />
+    </View>
+  );
+  // const filteredData = Object.keys(data.employee).reduce((result, key) => {
+  //   if (key in unexpectedData) {
+  //     return result;
+  //   }
+  //   return { ...result, [key]: data.employee[key] };
+  // }, {});
 
-  //   useEffect(() => {
-  // Toast.show({
-  //   type: 'success',
-  //   text1: 'Hello',
-  //   text2: 'This is some something 👋'
-  // });
-
-  //     return () => {
-  //       second;
-  //     };
-  //   }, []);
   return (
-    <BaseView style={{}}>
-      <Text>change password</Text>
+    <BaseView containerColor={COLOR_BACKGROUND}>
+      <Header title="Data Kepegawaian" />
+      <FlashList data={Object.entries(data.employee)} renderItem={renderItem} estimatedItemSize={80} />
     </BaseView>
   );
 };

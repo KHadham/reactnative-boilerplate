@@ -1,13 +1,6 @@
 import { useEffect, useState } from 'react';
-import Toast from 'react-native-toast-message';
-import { navigate, replace, reset } from '@utils/navigation';
-import { storage } from '@utils/storage';
-import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '@newsApp/apis';
-import { useProfile } from '@profileApp/hooks/useProfile';
-import { useGlobalLoading } from '@utils/state/globalLoading';
-import { APPKEY } from '@constants/appKey';
-
+import Toast from 'react-native-toast-message';
 
 interface pengumumanInterface {
   id_berita: string;
@@ -18,41 +11,49 @@ interface pengumumanInterface {
 }
 
 export const useHooks = () => {
-  const [pengumumanData, setpengumumanData] = useState<pengumumanInterface[]>([
-    {
-      id_berita: '',
-      img: '',
-      judul_berita: '',
-      link: '',
-      tanggal_upload: '',
-    },
-  ]);
+  const [data, setData] = useState<pengumumanInterface[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setpage] = useState(1);
   const [error, setError] = useState('');
 
-  const setLoading = useGlobalLoading(state => state.setLoading);
+  // const setLoading = useGlobalLoading(state => state.setLoading);
 
   useEffect(() => {
-    getData();
+    fetching();
   }, []);
 
-  const getData = async () => {
-    try {
-      console.log('login call :>> ');
-      const response = await endpoint.pengumuman({ page: 1 });
-      console.log('response  getData pengunuman:>> ', response);
-      if (response.status) {
-        setpengumumanData(response.data);
+  const fetching = async () => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      try {
+        const response = await endpoint.pengumuman({ page: page });
+        if (response.status == 'success' ||  response.status == true) {
+          setData(prevData => [...prevData, ...response.data]);
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: response.message,
+          });
+          setError(response.message);
+        }
+      } catch (e) {
+        Toast.show({
+          type: 'error',
+          text1: e,
+        });
+        setError(e);
+      } finally {
+        setIsLoading(false);
+        setpage(page + 1);
       }
-    } catch (e) {
-    } finally {
-      setLoading('');
-    }
+    }, 2000);
   };
 
   return {
-    pengumumanData,
+    data,
     error,
-    getData,
+    isLoading,
+    fetching,
   };
 };

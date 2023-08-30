@@ -1,7 +1,6 @@
 import { useEffect, useState } from 'react';
-
 import { endpoint } from '@newsApp/apis';
-import { useGlobalLoading } from '@utils/state/globalLoading';
+import Toast from 'react-native-toast-message';
 
 interface beritaInterface {
   id_berita: string;
@@ -13,40 +12,49 @@ interface beritaInterface {
 }
 
 export const useHooks = () => {
-  const [beritaData, setberitaData] = useState<beritaInterface[]>([
-    {
-      id_berita: '',
-      img: '',
-      isi: '',
-      judul_berita: '',
-      link: '',
-      tanggal_upload: '',
-    },
-  ]);
+  const [data, setData] = useState<beritaInterface[]>([]);
 
+  const [isLoading, setIsLoading] = useState(false);
+  const [page, setpage] = useState(1);
   const [error, setError] = useState('');
 
-  const setLoading = useGlobalLoading(state => state.setLoading);
+  // const setLoading = useGlobalLoading(state => state.setLoading);
 
   useEffect(() => {
-    getData();
+    fetching();
   }, []);
 
-  const getData = async () => {
-    try {
-      const response = await endpoint.berita({ page: 1 });
-      if (response.status) {
-        setberitaData(response.data);
+  const fetching = async () => {
+    setIsLoading(true);
+    setTimeout(async () => {
+      try {
+        const response = await endpoint.berita({ page: page });
+        if (response.status == 'success' ||  response.status == true) {
+          setData(prevData => [...prevData, ...response.data]);
+        } else {
+          Toast.show({
+            type: 'error',
+            text1: response.message,
+          });
+          setError(response.message);
+        }
+      } catch (e) {
+        Toast.show({
+          type: 'error',
+          text1: e,
+        });
+        setError(e);
+      } finally {
+        setIsLoading(false);
+        setpage(page + 1);
       }
-    } catch (e) {
-    } finally {
-      setLoading('');
-    }
+    }, 1000);
   };
 
   return {
-    beritaData,
+    data,
     error,
-    getData,
+    isLoading,
+    fetching,
   };
 };

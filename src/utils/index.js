@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-escape */
 // import moment from 'moment';
 import _ from 'lodash';
-// import { REGEX } from 'app/constants';
+import { Image } from 'react-native';
 
 export function isEmpty(value) {
   return value === null || value === undefined || String(value).trim() === '';
@@ -114,17 +114,24 @@ export const getLastCharacters = (value = '', numberOfCharacters = 0) => {
 /**
  * Return empty function
  */
-export const noop = () => {};
+export const noop = () => { };
 export const defaultValidate = () => null;
 
 /**
  * Convert String To Title Case <-- like this comment
  */
-export const toTitleCase = (str = '') =>
-  str.replace(
-    /\w\S*/g,
-    txt => txt.charAt(0).toUpperCase() + txt.substr(1).toLowerCase()
-  );
+export const toTitleCase = (input = '') => {
+  const words = input.split(/[^a-zA-Z0-9]+/);
+
+  const capitalizedWords = words.map(word => {
+    if (word.length > 0) {
+      return word.charAt(0).toUpperCase() + word.slice(1).toLowerCase();
+    }
+    return '';
+  });
+
+  return capitalizedWords.join(' ');
+}
 
 /**
  * to find item in collections by id
@@ -310,7 +317,7 @@ export const isImage = (fileName = '') => {
   return imageExt.includes(fileExt);
 };
 
-export function getInitials(name='') {
+export function getInitials(name = '') {
   console.log('name :>> ', name);
   const words = name.split(' ');
   const initials = words
@@ -323,4 +330,13 @@ export function getInitials(name='') {
 export function isImageUrl(url) {
   const imagePattern = /\.(jpeg|jpg|png|gif|bmp|webp)$/i;
   return imagePattern.test(url);
+}
+
+export function isImageAsset(variable) {
+  try {
+    const assetSource = Image.resolveAssetSource(variable);
+    return assetSource && assetSource.uri !== null;
+  } catch (error) {
+    return false;
+  }
 }

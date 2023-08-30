@@ -5,7 +5,6 @@ import { storage } from '@utils/storage';
 import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '@homeApp/apis';
 import { useProfile } from '@profileApp/hooks/useProfile';
-import { useGlobalLoading } from '@utils/state/globalLoading';
 import { APPKEY } from '@constants/appKey';
 
 // Define the interface for the component state
@@ -54,7 +53,6 @@ export const useHooks = () => {
 
   const [error, setError] = useState('');
 
-  const setLoading = useGlobalLoading(state => state.setLoading);
 
   useEffect(() => {
     getSlides();
@@ -65,12 +63,11 @@ export const useHooks = () => {
       console.log('login call :>> ');
       const response = await endpoint.homePengumuman({ page: 1 });
       console.log('response  getSlides:>> ', response);
-      if (response.status == 'success') {
+      if (response.status == 'success' ||  response.status == true) {
         setslidesData(response.data);
       }
     } catch (e) {
     } finally {
-      setLoading('');
     }
   };
 

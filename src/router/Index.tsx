@@ -7,19 +7,16 @@ import {
 import SplashScreen from '@authApp/screens/splash';
 import AuthRoute from './AuthRoute';
 import TabNavigator from './TabNavigator';
-import Template from 'src/screens/Template';
+import WebView from '../screens/WebView';
+import Simpus from '../screens/_Dukungan';
+import Semeter from '../screens/MapExample';
+import Faq from '../screens/Faq';
 
-// import AuthRoute from '@router/AuthRoute';
 import ProfileRoute from './ProfileRoute';
-// import TabNavigator from 'src/router/TabNavigator';
 import { setNavigationRef } from '@utils/navigation';
-import {
-  SafeAreaProvider,
-  useSafeAreaInsets,
-} from 'react-native-safe-area-context';
+import { SafeAreaProvider } from 'react-native-safe-area-context';
 
 const Stack = createStackNavigator();
-const isLoggedIn = true;
 const App = () => {
   return (
     <SafeAreaProvider>
@@ -31,16 +28,13 @@ const App = () => {
             cardStyleInterpolator: CardStyleInterpolators.forHorizontalIOS,
           }}
         >
-          {/* <Stack.Screen name="Template" component={Template} /> */}
           <Stack.Screen name="SplashScreen" component={SplashScreen} />
           <Stack.Screen name="Auth" component={AuthRoute} />
           <Stack.Screen name="Tab" component={TabNavigator} />
           <Stack.Screen name="Profile" component={ProfileRoute} />
-
-          {/* <Stack.Screen name="Home" component={HomeRoute} />
-          <Stack.Screen name="Profile" component={ProfileRoute} />
-          <Stack.Screen name="Statistik" component={StatistikRoute} />
-          <Stack.Screen name="Dukungan" component={DukunganRoute} /> */}
+          <Stack.Screen name="Simpus" component={Simpus} />
+          <Stack.Screen name="Semeter" component={Semeter} />
+          <Stack.Screen name="WebView" component={WebView} />
         </Stack.Navigator>
       </NavigationContainer>
     </SafeAreaProvider>

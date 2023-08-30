@@ -72,7 +72,7 @@ function MyTabBar({ state, descriptors, navigation, position }) {
 export default function TabScreen() {
   return (
     <BaseView>
-      <Header title="SiMPUS" left='' />
+      <Header title="SiMPUS"  />
       <Tab.Navigator
         // tabBar={props => <MyTabBar {...props} />}
         initialRouteName="Dukungan"
@@ -99,21 +99,7 @@ export default function TabScreen() {
           component={Laporan}
           options={{ tabBarLabel: 'Monitoring' }}
         />
-        <Tab.Screen
-          name="Penjadwalan"
-          component={Penjadwalan}
-          options={{ tabBarLabel: 'Penjadwalan' }}
-        />
-        <Tab.Screen
-          name="Laporan"
-          component={Laporan}
-          options={{ tabBarLabel: 'Laporan' }}
-        />
-        <Tab.Screen
-          name="Pengaduan"
-          component={Penjadwalan}
-          options={{ tabBarLabel: 'Pengaduan' }}
-        />
+       
       </Tab.Navigator>
     </BaseView>
   );

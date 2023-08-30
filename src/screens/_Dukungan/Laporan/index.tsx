@@ -116,7 +116,7 @@ const Screen = () => {
                 justifyContent: 'space-between',
               }}
             >
-              <Text weight='bold'>{item.subKategori}</Text.Bold>
+              <Text weight='bold'>{item.subKategori}</Text>
 
               {item.status == 'Sudah Divalidasi' ? (
                 <Icon
@@ -132,10 +132,10 @@ const Screen = () => {
                 />
               )}
             </View>
-            <Text.Info>
+            <Text>
               {dayjs(item.tanggal).format('dddd, DD/MMMM/YYYY')}
-            </Text.Info>
-            <Text size='desc'>{item.operator}</Text.Desc>
+            </Text>
+            <Text size='desc'>{item.operator}</Text>
           </Button>
         )}
       />

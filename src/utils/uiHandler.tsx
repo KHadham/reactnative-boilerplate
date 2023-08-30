@@ -4,6 +4,7 @@ import {
   Appearance,
   LayoutAnimation,
   LayoutAnimationProperties,
+  LayoutAnimationProperty,
   Platform,
   UIManager,
 } from 'react-native';
@@ -37,26 +38,22 @@ export const scrollToIndex = (
   ref.current?.scrollToIndex({ index, animated: true });
 };
 
-export const LayoutAnimationHandler = () =>
-  //   {
-  //   type, // Default value is 'spring'
-  // }: {
-  //   type?: LayoutAnimationProperties,
-  // }
-  {
-    if (Platform.OS === 'android') {
-      if (UIManager.setLayoutAnimationEnabledExperimental) {
-        UIManager.setLayoutAnimationEnabledExperimental(true);
-      }
+export const LayoutAnimationHandler = (
+  property: LayoutAnimationProperty = 'opacity'
+) => {
+  if (Platform.OS === 'android') {
+    if (UIManager.setLayoutAnimationEnabledExperimental) {
+      UIManager.setLayoutAnimationEnabledExperimental(true);
     }
+  }
 
-    LayoutAnimation.configureNext({
-      duration: 250,
-      create: { type: 'easeIn', property: 'opacity' },
-      update: { type: 'easeInEaseOut', springDamping: 0.4 },
-      delete: { type: 'easeOut', property: 'opacity' },
-    });
-  };
+  LayoutAnimation.configureNext({
+    duration: 250,
+    create: { type: 'easeIn', property: property },
+    update: { type: 'easeInEaseOut', springDamping: 0.4 },
+    delete: { type: 'easeOut', property: property },
+  });
+};
 
 export function colorToDarkMode(hexColor: string, darknessFactor = 0.5) {
   if (Appearance.getColorScheme() == 'dark') {

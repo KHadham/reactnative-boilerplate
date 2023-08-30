@@ -18,6 +18,7 @@ import FastImage from './FastImage'
 import Separator from './Separator'
 import Avatar from './Avatar'
 import FocusAwareStatusBar from './FocusAwareStatusBar'
+import ModalConfirmation from './ModalConfirmation'
 
 export {
   BaseView,
@@ -39,5 +40,6 @@ export {
   FastImage,
   Separator,
   Avatar,
-  FocusAwareStatusBar
+  FocusAwareStatusBar,
+  ModalConfirmation
 };

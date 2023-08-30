@@ -44,8 +44,8 @@ const App: React.FC<AppProps> = ({ title = '', desc = '', onPress, style }) => {
       onPress={() => onPress()}
     >
       <View>
-        {title && <Text weight='bold' style={{}}>{title}</Text.Bold>}
-        {desc && <Text size='desc' style={{}}>{desc}</Text.Desc>}
+        {title && <Text weight='bold' style={{}}>{title}</Text>}
+        {desc && <Text size='desc' style={{}}>{desc}</Text>}
       </View>
       <Icon name={'chevron-right'} size={30} />
     </Button>

@@ -63,6 +63,7 @@ type Props = {
   borderRadius?: number,
   style?: ViewStyle,
   ref?: any,
+  editable?: boolean,
 };
 
 const Component = ({
@@ -76,11 +77,12 @@ const Component = ({
   length,
   borderRadius = 10,
   style,
-  ref
+  ref,
+  editable,
 }: Props) => {
-  if (type === 'select' && (!data || !placeholder)) {
-    throw new Error('data and placeholder are required');
-  }
+  // if (type === 'select' && (!data || !placeholder)) {
+  //   throw new Error('data and placeholder are required');
+  // }
   const scrollY = useRef(new Animated.Value(0)).current;
   const switchAnim = useRef(new Animated.Value(0)).current;
   const listPhotoRef = useRef(null);
@@ -399,6 +401,7 @@ const Component = ({
           flexDirection: 'row',
           height: type == 'area' ? 120 : heightByScreen(8),
           minHeight: 40,
+          backgroundColor: COLOR_WHITE,
         }}
       >
         {prefix()}
@@ -419,7 +422,7 @@ const Component = ({
           textAlignVertical={type == 'area' ? 'top' : 'center'}
           onFocus={() => setisFocus(true)}
           onBlur={() => setisFocus(false)}
-          editable={typeListConfig?.editable == true}
+          editable={editable && typeListConfig?.editable == true}
           secureTextEntry={type == 'password' && showPass}
           keyboardType={type == 'number' ? 'number-pad' : 'default'}
         />
@@ -513,6 +516,7 @@ const Component = ({
                 onKeyPress={({ nativeEvent }) =>
                   handleOtpInput(nativeEvent, index)
                 }
+                editable={editable}
                 ref={ref => (otpInputsRef.current[index] = ref)}
               />
             </View>

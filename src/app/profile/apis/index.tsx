@@ -20,5 +20,11 @@ export const endpoint = {
       headers: params.headers,
       query: params.query,
     }),
+  changePassword: async (params: endpointParam) =>
+    post({
+      path: 'sso/service/user/change-password',
+      data: params.data,
+      headers: params.headers,
+    }),
 };
 export default { endpoint };
