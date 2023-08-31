@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '@homeApp/screens/home';
 import Berita from '@newsApp/screens';
-import Statistik from '@homeApp/screens/statistik';
+import Faq from '../app/others/screens/faq';
 import Profil from '@profileApp/screens/profile';
 import { Icon, Text } from '@components';
 import {
@@ -185,10 +185,11 @@ const MainTabNavigator = () => {
         })}
       />
       <Tab.Screen
-        name="Notifikasi"
-        component={Statistik}
+        name="F.A.Q"
+        component={Faq}
         options={({ route }) => ({
-          tabBarIcon: ({ color, focused }) => TabIcon('bell', color, focused),
+          tabBarIcon: ({ color, focused }) =>
+            TabIcon('frequently-asked-questions', color, focused),
         })}
       />
       <Tab.Screen

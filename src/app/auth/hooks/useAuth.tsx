@@ -40,7 +40,7 @@ export const useAuth = () => {
       });
 
       setTimeout(() => {
-        if (response.status == 'success' || response.status == true) {
+        if (response.status == 'success' || response.status == true || response.status == 200) {
           setIsLoading(false);
           storage.setItem(STORAGE_KEY.LOGIN_TOKEN, response.token);
           Toast.show({

@@ -256,7 +256,7 @@
 //         singleStep={true}
 //       /> */
 // }
-import { widthByScreen } from "@app/utils/dimensions";
+import { widthByScreen } from "@utils/dimensions";
 import * as React from "react";
 import { View,Button as SButton, Text } from "react-native";
 import Animated, {

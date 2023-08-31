@@ -31,7 +31,7 @@ export const useHooks = () => {
         },
       });
       setTimeout(() => {
-        if (response.status == 'success' || response.status == true) {
+        if (response.status == 'success' || response.status == true || response.status == 200) {
           doLogout();
           setIsLoading(false);
           Toast.show({

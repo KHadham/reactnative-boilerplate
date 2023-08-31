@@ -3,7 +3,8 @@ import NetInfo, { NetInfoState, NetInfoSubscription } from '@react-native-commun
 import Toast from 'react-native-toast-message';
 import { storage } from '@utils/storage';
 import { APPKEY } from '@constants/appKey'
-// import {useGlobalLoading} from './state/globalLoading'; 
+import { useEffect, useState } from 'react';
+
 const TIMEOUT = 15000;
 
 export const checkInternetConnectivity = async (): Promise<boolean> => {
@@ -61,8 +62,6 @@ const handleRequest = async (
   query: object
 ) => {
   try {
-    // const setLoading = useGlobalLoading((state) => state.setLoading);
-    // setLoading(true); 
 
     const isConnected = await checkInternetConnectivity(); // Implement your own function to check for internet connectivity
     if (!isConnected) {
@@ -86,9 +85,10 @@ const handleRequest = async (
       }
     }
 
+    const realPath = path.includes('http') ? path : `${APPKEY.BASE_URL}${path}${toQueryString(query)}`
     const config: AxiosRequestConfig = {
       method,
-      url: `${APPKEY.BASE_URL}${path}${toQueryString(query)}`,
+      url: realPath,
       timeout: TIMEOUT,
     };
     if (data && Object.keys(data).length > 0) {
@@ -168,3 +168,73 @@ export const remove = async ({
   headers?: object,
   query?: object
 }) => handleRequest('delete', path, data, headers, query);
+
+/**
+ * Custom hook for fetching data from API. 
+ * This hook is designed to work with APIs that use a token based system and respond with a status and data.
+ * 
+ * @param {Object} config - The configuration object for the fetching function.
+ * The config object has properties `token`, `endpoint`, `successStatuses`, and `errorMessage`.
+ * 
+ * @returns {Object} The state of the request (data, isLoading, error):
+ * - data: Response data from the request.
+ * - isLoading: A boolean representing whether the request is in progress.
+ * - error: Error message if the request fails, or is not successful as per successStatuses.
+ *
+ * Example usage:
+ * 
+ * const Component = () => {
+ *   const { data, isLoading, error } = useFetch({
+ *     token: '9998fd04-6ebb-45f8-a694-28a284e156aa',
+ *     endpoint: endpoint.getFaq,
+ *     successStatuses: ['success', true, 200],
+ *     errorMessage: 'Error fetching data',
+ *   });
+ *
+ * };
+ */
+
+interface FetchConfig {
+  token: string;
+  endpoint: (params: any) => Promise<any>;
+  onSuccess?: (data: any) => void;
+  onError?: (e: any) => void;
+  successStatuses?: (string | boolean | number)[];
+  errorMessage?: string;
+}
+
+const useFetch = (config: FetchConfig) => {
+  const {
+    token,
+    endpoint,
+    onSuccess = () => {},
+    onError = () => {},
+    successStatuses = ['success', true, 200],
+  } = config;
+
+  const [isLoading, setIsLoading] = useState(false);
+
+  useEffect(() => {
+    const fetchData = async () => {
+      setIsLoading(true);
+      try {
+        const response = await endpoint({ data: { token } });
+        if (successStatuses.includes(response.status)) {
+          onSuccess(response.data);
+        } else {
+          onError(response);
+        }
+      } catch (e) {
+        onError(e);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchData();
+  }, [endpoint, token, onSuccess, onError]);
+
+  return { isLoading };
+};
+
+export default useFetch;

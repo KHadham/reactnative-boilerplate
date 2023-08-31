@@ -2,7 +2,7 @@ import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
 import SplashScreen from '@screens/Splash';
-import HomeScreen from '@screens/Faq';
+import HomeScreen from '@screens/FAQ';
 import DetailsScreen from '@screens/MapExample';
 import Login from 'src/screens/Template/Login';
 import Button from 'src/screens/Template/Button';

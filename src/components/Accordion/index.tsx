@@ -1,5 +1,5 @@
 import React, { useRef, useState } from 'react';
-import { View, Animated, TouchableOpacity } from 'react-native';
+import { View, Animated, TouchableOpacity, ViewStyle } from 'react-native';
 import { Icon } from '@components';
 import { COLOR_BASE_PRIMARY_MAIN } from '@themes/index';
 import { LayoutAnimationHandler } from '@utils/uiHandler';
@@ -9,9 +9,10 @@ interface AppProps {
   arrow?: Boolean;
   content: any;
   keys: number;
+  style?: ViewStyle;
 }
 
-const App: React.FC<AppProps> = ({ arrow = true, content, keys }) => {
+const App: React.FC<AppProps> = ({ arrow = true, content, keys, style }) => {
   const [isExpand, setisExpand] = useState(false);
   const rotateAnim = useRef(new Animated.Value(0)).current; // Initial opacity: 0
 
@@ -31,7 +32,10 @@ const App: React.FC<AppProps> = ({ arrow = true, content, keys }) => {
     return (
       <View style={styles.arrowWrap}>
         <Animated.View
-          style={{ transform: [{ rotate: interpolatedRotation }],margin:spacing.md }}
+          style={{
+            transform: [{ rotate: interpolatedRotation }],
+            margin: spacing.md,
+          }}
         >
           <Icon
             name={'chevron-down'}
@@ -51,7 +55,7 @@ const App: React.FC<AppProps> = ({ arrow = true, content, keys }) => {
         setisExpand(!isExpand);
         rotating();
       }}
-      style={styles.container}
+      style={[styles.container, style]}
     >
       {content(isExpand)}
       {arrow && arrowComponent()}

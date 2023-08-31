@@ -37,7 +37,7 @@ export const useProfile = () => {
         },
       });
       console.log('response :>> ', response);
-      if (response.status == 'success' || response.status == true) {
+      if (response.status == 'success' || response.status == true || response.status == 200) {
         setUserDetail(response.payload);
         setTimeout(() => {
           fetch();
@@ -74,7 +74,7 @@ export const useProfile = () => {
         },
         query: { username: user.username },
       });
-      if (response.status == 'success' || response.status == true) {
+      if (response.status == 'success' || response.status == true || response.status == 200) {
         setEmployeeDetail(response.data.siadik);
         setPersonalDetail(response.data.sso); // useProfileStore().setPersonalDetail(response);
         // useProfileStore().setEmployeeDetail();

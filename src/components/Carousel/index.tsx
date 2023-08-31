@@ -21,14 +21,6 @@ const App: React.FC<CombinedProps> = ({
   const [step, setstep] = useState(0);
   const [isVisible, setisVisible] = useState(false);
 
-  useEffect(() => {
-    console.log('step :>> ', step);
-  }, [step]);
-
-  useEffect(() => {
-    // setstep(carouselRef.current.getCurrentIndex());
-  }, [carouselRef.current]);
-
   const footer = () => (
     <Stepper
       dataStep={props.data?.length}
@@ -61,11 +53,7 @@ const App: React.FC<CombinedProps> = ({
       <Carousel
         ref={carouselRef}
         {...props}
-        onProgressChange={(offsetProgress, absoluteProgress) => {
-          if (!absoluteProgress.toString().includes('.')) {
-            setstep(absoluteProgress);
-          }
-        }}
+        onScrollEnd={index => setstep(index)}
         autoPlay={false}
         style={{ alignContent: 'center' }}
         loop={true}
