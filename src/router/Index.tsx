@@ -9,7 +9,7 @@ import AuthRoute from './AuthRoute';
 import TabNavigator from './TabNavigator';
 import WebView from '@othersApp/screens/webView';
 import Simpus from '../screens/_Dukungan';
-import Semeter from '../screens/MapExample';
+import Semeter from '@semeterApp/screens';
 
 import ProfileRoute from './ProfileRoute';
 import { setNavigationRef } from '@utils/navigation';

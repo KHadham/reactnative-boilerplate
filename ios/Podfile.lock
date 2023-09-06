@@ -462,6 +462,8 @@ PODS:
     - glog
   - react-native-background-timer (2.4.1):
     - React-Core
+  - react-native-compass-heading (1.5.0):
+    - React-Core
   - react-native-geolocation (3.0.6):
     - React-Core
   - react-native-maps (1.7.1):
@@ -571,6 +573,8 @@ PODS:
     - React-Core
   - RNDateTimePicker (7.1.0):
     - React-Core
+  - RNDeviceInfo (10.9.0):
+    - React-Core
   - RNFastImage (8.6.3):
     - React-Core
     - SDWebImage (~> 5.11.1)
@@ -630,6 +634,8 @@ PODS:
   - RNScreens (3.21.1):
     - React-Core
     - React-RCTImage
+  - RNSensors (7.3.6):
+    - React-Core
   - RNSVG (13.9.0):
     - React-Core
   - RNVectorIcons (9.2.0):
@@ -698,6 +704,7 @@ DEPENDENCIES:
   - React-jsinspector (from `../node_modules/react-native/ReactCommon/jsinspector`)
   - React-logger (from `../node_modules/react-native/ReactCommon/logger`)
   - react-native-background-timer (from `../node_modules/react-native-background-timer`)
+  - react-native-compass-heading (from `../node_modules/react-native-compass-heading`)
   - "react-native-geolocation (from `../node_modules/@react-native-community/geolocation`)"
   - react-native-maps (from `../node_modules/react-native-maps`)
   - react-native-mmkv (from `../node_modules/react-native-mmkv`)
@@ -721,6 +728,7 @@ DEPENDENCIES:
   - ReactCommon/turbomodule/core (from `../node_modules/react-native/ReactCommon`)
   - "RNCClipboard (from `../node_modules/@react-native-clipboard/clipboard`)"
   - "RNDateTimePicker (from `../node_modules/@react-native-community/datetimepicker`)"
+  - RNDeviceInfo (from `../node_modules/react-native-device-info`)
   - RNFastImage (from `../node_modules/react-native-fast-image`)
   - "RNFBApp (from `../node_modules/@react-native-firebase/app`)"
   - "RNFBMessaging (from `../node_modules/@react-native-firebase/messaging`)"
@@ -730,6 +738,7 @@ DEPENDENCIES:
   - RNPermissions (from `../node_modules/react-native-permissions`)
   - RNReanimated (from `../node_modules/react-native-reanimated`)
   - RNScreens (from `../node_modules/react-native-screens`)
+  - RNSensors (from `../node_modules/react-native-sensors`)
   - RNSVG (from `../node_modules/react-native-svg`)
   - RNVectorIcons (from `../node_modules/react-native-vector-icons`)
   - Yoga (from `../node_modules/react-native/ReactCommon/yoga`)
@@ -818,6 +827,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native/ReactCommon/logger"
   react-native-background-timer:
     :path: "../node_modules/react-native-background-timer"
+  react-native-compass-heading:
+    :path: "../node_modules/react-native-compass-heading"
   react-native-geolocation:
     :path: "../node_modules/@react-native-community/geolocation"
   react-native-maps:
@@ -864,6 +875,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/@react-native-clipboard/clipboard"
   RNDateTimePicker:
     :path: "../node_modules/@react-native-community/datetimepicker"
+  RNDeviceInfo:
+    :path: "../node_modules/react-native-device-info"
   RNFastImage:
     :path: "../node_modules/react-native-fast-image"
   RNFBApp:
@@ -882,6 +895,8 @@ EXTERNAL SOURCES:
     :path: "../node_modules/react-native-reanimated"
   RNScreens:
     :path: "../node_modules/react-native-screens"
+  RNSensors:
+    :path: "../node_modules/react-native-sensors"
   RNSVG:
     :path: "../node_modules/react-native-svg"
   RNVectorIcons:
@@ -942,6 +957,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
+  react-native-compass-heading: 1b4403d1c99dfd8311073ca8fc52bfc8e365cfac
   react-native-geolocation: 0f7fe8a4c2de477e278b0365cce27d089a8c5903
   react-native-maps: 667f9b975549c6fa9b1631bf859440f68ebd3b8f
   react-native-mmkv: dea675cf9697ad35940f1687e98e133e1358ef9f
@@ -965,6 +981,7 @@ SPEC CHECKSUMS:
   ReactCommon: 08723d2ed328c5cbcb0de168f231bc7bae7f8aa1
   RNCClipboard: 3f0451a8100393908bea5c5c5b16f96d45f30bfc
   RNDateTimePicker: 7ecd54a97fc3749f38c3c89a171f6cbd52f3c142
+  RNDeviceInfo: 02ea8b23e2280fa18e00a06d7e62804d74028579
   RNFastImage: 5c9c9fed9c076e521b3f509fe79e790418a544e8
   RNFBApp: fdbde65110240cd843e644270e974e9b455b0fc1
   RNFBMessaging: 3aca7a5b3b1f79a9ee75026662ea57693436a338
@@ -974,6 +991,7 @@ SPEC CHECKSUMS:
   RNPermissions: a884af79844eddeae37213d8a8bcdc53537aad3c
   RNReanimated: 49cdb63e767bb7e743ff4c12f7d85722c0d008f2
   RNScreens: d3675ab2878704de70c9dae57fa5d024802404cc
+  RNSensors: 117ba71c7eeeea0407ea0c0bb79e3495d602049b
   RNSVG: 53c661b76829783cdaf9b7a57258f3d3b4c28315
   RNVectorIcons: fcc2f6cb32f5735b586e66d14103a74ce6ad61f8
   SDWebImage: a7f831e1a65eb5e285e3fb046a23fcfbf08e696d

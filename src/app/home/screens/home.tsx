@@ -24,7 +24,20 @@ const App: React.FC = () => {
 
   return (
     <BaseView>
-      <Header left={IMAGES.iconCitata} title="DCKTRP Mobile" shadow />
+      <Header
+        left={
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Image
+              source={IMAGES.iconCitata}
+              style={{ height: 50, width: 50, position: 'absolute' }}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+          </View>
+        }
+        title="DCKTRP Mobile"
+        shadow
+      />
       <ScrollView style={{ flex: 1 }}>
         <Carousel
           indicator

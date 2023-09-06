@@ -1,7 +1,26 @@
 /* eslint-disable no-useless-escape */
 // import moment from 'moment';
+import { COLOR_BLACK, COLOR_FONT_PRIMARY_DARK, COLOR_FONT_PRIMARY_LIGHT } from '@themes/index';
 import _ from 'lodash';
-import { Image } from 'react-native';
+import { Image, Text } from 'react-native';
+
+export function formatBoldSubstring(fullString, substring) {
+  const indexOfSubstring = fullString.toLowerCase().indexOf(substring.toLowerCase());
+
+  if (indexOfSubstring === -1) {
+    return fullString; // Return the original string if the substring is not found
+  }
+
+  const start = fullString.substring(0, indexOfSubstring);
+  const boldText = fullString.substring(indexOfSubstring, indexOfSubstring + substring.length);
+  const end = fullString.substring(indexOfSubstring + substring.length);
+
+  return (
+    <Text style={{ fontFamily: 'Inter-Regular', color: COLOR_FONT_PRIMARY_DARK }}>
+      {start}<Text style={{ fontFamily: 'Inter-Bold', color: COLOR_BLACK }}>{boldText}</Text>{end}
+    </Text>
+  );
+}
 
 export function isEmpty(value) {
   return value === null || value === undefined || String(value).trim() === '';

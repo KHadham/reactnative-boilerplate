@@ -12,6 +12,7 @@ interface AppProps {
   isVisible: boolean;
   onClose: Function;
   onSuccess: Function;
+  successText: string;
 }
 
 const App: React.FC<AppProps> = ({
@@ -20,6 +21,7 @@ const App: React.FC<AppProps> = ({
   isVisible = false,
   onClose,
   onSuccess,
+  successText = 'Yakin',
 }) => {
   return (
     <Modal
@@ -46,7 +48,7 @@ const App: React.FC<AppProps> = ({
             />
             <Button
               color={'success'}
-              title="Yakin"
+              title={successText}
               containerStyle={{ flex: 1 }}
               onPress={() => {
                 onClose();

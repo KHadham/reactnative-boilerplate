@@ -7,6 +7,7 @@ const storageKey = {
   PROFIL_DETAIL: '@Profil',
   EMPLOYEE_DETAIL: '@Employee',
   HOME_APPS: '@HomeApps',
+  LOCATION: '@LocationDetails',
 };
 
 export default storageKey;

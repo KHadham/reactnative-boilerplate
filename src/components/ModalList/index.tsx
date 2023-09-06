@@ -24,10 +24,10 @@ import { spacing } from '@constants/spacing';
 
 interface AppProps {
   title: string;
-  subTitle: string;
+  subTitle?: string;
   isVisible: boolean;
-  onClose?: Function;
-  data?: Array<object>;
+  onClose: Function;
+  data?: Array<object | string>;
   selectedValue: object;
   onSelect?: Function;
   isSearch?: boolean;
@@ -37,7 +37,7 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({
   title = 'judul',
-  subTitle = 'judul',
+  subTitle ,
   isVisible = false,
   onClose,
   data = [],
@@ -134,11 +134,11 @@ const App: React.FC<AppProps> = ({
           <View style={styles.headerHandle} />
         </View> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text size="title">Pilih {title}</Text>
+          <Text size="title" weight='bold'>Pilih {title}</Text>
           <Icon name={'close'} size={22} onPress={() => onClose()} />
         </View>
         <Text size="desc">{subTitle}</Text>
-        {!isSearch && (
+        {isSearch && (
           <View style={styles.inputWrap}>
             <View style={styles.icon}>
               <Icon name={'magnify'} size={22} />
@@ -182,6 +182,8 @@ const App: React.FC<AppProps> = ({
             <View style={{ marginVertical: spacing.xxs }} />
           )}
           renderItem={({ item, index }) => {
+            console.log('selectedValue :>> ', selectedValue.name);
+            console.log('item :>> ', item.name);
             return (
               <Button
                 onPress={() => {
@@ -194,7 +196,7 @@ const App: React.FC<AppProps> = ({
                   styles.listWrap,
                   {
                     borderColor:
-                      selectedValue == item
+                      selectedValue.name == item.name
                         ? COLOR_EVENT_SUCCESS
                         : COLOR_EVENT_INACTIVE,
                   },
@@ -225,12 +227,12 @@ const App: React.FC<AppProps> = ({
                 <View style={styles.icon}>
                   <Icon
                     name={
-                      selectedValue == item
+                      selectedValue.name == item.name
                         ? 'radiobox-marked'
                         : 'radiobox-blank'
                     }
                     size={22}
-                    color={selectedValue == item && COLOR_EVENT_SUCCESS}
+                    color={selectedValue.name == item.name && COLOR_EVENT_SUCCESS}
                   />
                 </View>
               </Button>

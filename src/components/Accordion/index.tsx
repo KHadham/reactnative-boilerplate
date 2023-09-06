@@ -5,14 +5,24 @@ import { COLOR_BASE_PRIMARY_MAIN } from '@themes/index';
 import { LayoutAnimationHandler } from '@utils/uiHandler';
 import styles from './styles';
 import { spacing } from '@constants/spacing';
+import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
+import LinearGradient from 'react-native-linear-gradient';
+
 interface AppProps {
   arrow?: Boolean;
   content: any;
   keys: number;
   style?: ViewStyle;
+  isLoading?: boolean;
 }
 
-const App: React.FC<AppProps> = ({ arrow = true, content, keys, style }) => {
+const App: React.FC<AppProps> = ({
+  arrow = true,
+  content,
+  keys,
+  style,
+  isLoading = false,
+}) => {
   const [isExpand, setisExpand] = useState(false);
   const rotateAnim = useRef(new Animated.Value(0)).current; // Initial opacity: 0
 

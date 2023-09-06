@@ -21,7 +21,6 @@ export const useHooks = () => {
     setIsLoading(true);
     try {
       const response = await endpoint.homeSlider();
-      console.log('response slider :>> ', response);
       if (response.status == 'success' ||  response.status == true) {
         setData(response.data);
       } else {

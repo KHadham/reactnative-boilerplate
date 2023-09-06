@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@newsApp/apis';
 import Toast from 'react-native-toast-message';
+import useFetch from '@utils/networking';
 
 interface beritaInterface {
   id_berita: string;
@@ -25,30 +26,21 @@ export const useHooks = () => {
   }, []);
 
   const fetching = async () => {
-    setIsLoading(true);
-    setTimeout(async () => {
-      try {
-        const response = await endpoint.berita({ page: page });
-        if (response.status == 'success' ||  response.status == true) {
-          setData(prevData => [...prevData, ...response.data]);
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: response.message,
-          });
-          setError(response.message);
-        }
-      } catch (e) {
+    useFetch({
+      endpoint: endpoint.berita({ page: page }),
+      onSuccess: data => {
+        setData(prevData => [...prevData, ...data.data]);
+        setpage(page + 1);
+      },
+      onProgress(progress) {},
+      onError: error => {
+        console.log('error :>> ', error);
         Toast.show({
           type: 'error',
-          text1: e,
+          text1: error.message,
         });
-        setError(e);
-      } finally {
-        setIsLoading(false);
-        setpage(page + 1);
-      }
-    }, 1000);
+      },
+    });
   };
 
   return {

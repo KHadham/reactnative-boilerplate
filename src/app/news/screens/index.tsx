@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View ,Image} from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 // import styles from './styles';
@@ -35,7 +35,16 @@ export default function TabScreen() {
   //   }, []);
   return (
     <BaseView>
-      <Header left={IMAGES.iconCitata} title="Informasi"  />
+      <Header left={
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Image
+              source={IMAGES.iconCitata}
+              style={{ height: 50, width: 50, position: 'absolute' }}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+          </View>
+        } title="Informasi"  />
       <Tab.Navigator
         // tabBar={props => <MyTabBar {...props} />}
         initialRouteName="Berita"

@@ -13,6 +13,7 @@ import { useProfile } from '@profileApp/hooks/useProfile';
 import { APPKEY } from '@constants/appKey';
 import FastImage from 'react-native-fast-image';
 import { useProfileStore } from '@profileApp/stores';
+import useFetch from '@utils/networking';
 
 export const useAuth = () => {
   const { navigate } = useNavigationHandler();
@@ -26,48 +27,80 @@ export const useAuth = () => {
   const [password, setpassword] = useState('');
 
   const doLogin = async (username: string, password: string) => {
-    Toast.show({
-      type: 'loading',
-      text1: 'Memproses Login ...',
-      autoHide: false,
-    });
-    try {
-      console.log('login call :>> ');
-      const body = { username: username, password: password };
-      const response = await endpoint.loginCitata({
+    const body = { username: username, password: password };
+    useFetch({
+      endpoint: endpoint.loginCitata({
         data: body,
         headers: { 'app-key': APPKEY.CITATA_KEY },
-      });
+      }),
+      onSuccess: data => {
+        console.log('data login :>> ', data);
+        storage.setItem(STORAGE_KEY.LOGIN_TOKEN, data.token);
+        Toast.show({
+          type: 'success',
+          text1: 'Berhasil Login',
+        });
+      },
+      onProgress(progress) {
+        progress &&
+          Toast.show({
+            type: 'loading',
+            text1: 'Memproses Login ...',
+            autoHide: false,
+          });
+      },
+      onError: error => {
+        setError(error);
+      },
+    });
 
-      setTimeout(() => {
-        if (response.status == 'success' || response.status == true || response.status == 200) {
-          setIsLoading(false);
-          storage.setItem(STORAGE_KEY.LOGIN_TOKEN, response.token);
-          Toast.show({
-            type: 'success',
-            text1: 'Berhasil Login',
-          });
-          navigate({
-            screen: 'Tab',
-          });
-          doVerifyToken();
-          fetch();
-        } else {
-          setIsLoading(false);
-          Toast.show({
-            type: 'error',
-            text1: response.msg,
-          });
-        }
-      }, 1000);
-    } catch (e) {
-      Toast.show({
-        type: 'error',
-        text1: 'Terjadi error saat Login',
-      });
-    } finally {
-      Toast.hide();
-    }
+    // Toast.show({
+    //   type: 'loading',
+    //   text1: 'Memproses Login ...',
+    //   autoHide: false,
+    // });
+    // try {
+    //   console.log('login call :>> ');
+    //   const body = { username: username, password: password };
+    //   const response = await endpoint.loginCitata({
+    //     data: body,
+    //     headers: { 'app-key': APPKEY.CITATA_KEY },
+    //   });
+
+    //   setTimeout(() => {
+    //     if (
+    //       response.status == 'success' ||
+    //       response.status == true ||
+    //       response.status == 200
+    //     ) {
+    //       setIsLoading(false);
+    //       console.log('response.token :>> ', response);
+    //       // storage.setItem(STORAGE_KEY.LOGIN_TOKEN, response.token);
+    //       Toast.show({
+    //         type: 'success',
+    //         text1: 'Berhasil Login',
+    //       });
+    //       navigate({
+    //         screen: 'Tab',
+    //       });
+    //       doVerifyToken();
+    //       fetch();
+    //     } else {
+    //       setIsLoading(false);
+    //       Toast.show({
+    //         type: 'error',
+    //         text1: response.msg,
+    //       });
+    //     }
+    //   }, 1000);
+    // } catch (e) {
+    //   Toast.show({
+    //     type: 'error',
+    //     text1: 'Terjadi error saat Login',
+    //   });
+    // } finally {
+    //   Toast.hide();
+    // }
   };
 
   const doLogout = () => {

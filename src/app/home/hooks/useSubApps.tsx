@@ -5,6 +5,7 @@ import { useProfileStore } from '@homeApp/stores';
 import { APPKEY } from '@constants/appKey';
 import { storage } from '@utils/storage';
 import { STORAGE_KEY } from '@constants/index';
+import useFetch from '@utils/networking';
 
 export const useHooks = () => {
   const { apps, setApp } = useProfileStore();
@@ -16,35 +17,27 @@ export const useHooks = () => {
   }, []);
 
   const fetching = async () => {
-    setIsLoading(true);
-    setTimeout(async () => {
-      try {
-        const response = await endpoint.homeApp({
-          headers: {
-            'app-key': APPKEY.CITATA_KEY,
-            authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
-          },
-        });
-        if (response.status == 'success' ||  response.status == true) {
-          setApp(response.app_list);
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: response.message,
-          });
-          setError(response.message);
-        }
-      } catch (e) {
-        console.log('e eee :>> ', e);
+    useFetch({
+      endpoint: endpoint.homeApp({
+        headers: {
+          'app-key': APPKEY.CITATA_KEY,
+          authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
+        },
+      }),
+      onSuccess: data => {
+        setApp(data.app_list);
+      },
+      onProgress(progress) {
+        
+      },
+      onError: error => {
+        console.log('error :>> ', error);
         Toast.show({
           type: 'error',
-          text1: 'Terjadi kesalahan saat mengambil data',
+          text1: error.message,
         });
-        setError(e);
-      } finally {
-        setIsLoading(false);
-      }
-    }, 1000);
+      },
+    });
   };
 
   return {

@@ -93,20 +93,21 @@ const handleRequest = async (
     };
     if (data && Object.keys(data).length > 0) {
       config.data = data;
+      console.log('ada data :>> ');
     }
     if (headers && Object.keys(headers).length > 0) {
       config.headers = headers;
+      console.log('ada header :>> ')
     }
     const response = (await requestWithTimeout(config, TIMEOUT)) as AxiosResponse<any>;
 
     // Cache the response for future offline access
     // storage.setItem(`${method}-${path}-cache`, JSON.stringify(response.data));
-    console.log('path :>> ', path);
-    console.log('response.data :>> ', response.data);
-    return response.data;
+    // console.log('path :>> ', path);
+    // console.log('response.data :>> ', response);
+    return response;
   } catch (error) {
-    console.error('Error in handleRequest:', error + ` ${path}`);
-    console.error('Error in message:', error.message);
+    // console.error('Error in handleRequest:', error + ` ${path}`);
     throw error;
   }
 };
@@ -195,46 +196,36 @@ export const remove = async ({
  */
 
 interface FetchConfig {
-  token: string;
-  endpoint: (params: any) => Promise<any>;
+  endpoint: any;
   onSuccess?: (data: any) => void;
   onError?: (e: any) => void;
+  onProgress?: (e: any) => void;
   successStatuses?: (string | boolean | number)[];
-  errorMessage?: string;
 }
 
-const useFetch = (config: FetchConfig) => {
+const useFetch = async (config: FetchConfig) => {
   const {
-    token,
     endpoint,
-    onSuccess = () => {},
-    onError = () => {},
+    onSuccess = () => { },
+    onError = () => { },
+    onProgress = () => { },
     successStatuses = ['success', true, 200],
   } = config;
-
-  const [isLoading, setIsLoading] = useState(false);
-
-  useEffect(() => {
-    const fetchData = async () => {
-      setIsLoading(true);
-      try {
-        const response = await endpoint({ data: { token } });
-        if (successStatuses.includes(response.status)) {
-          onSuccess(response.data);
-        } else {
-          onError(response);
-        }
-      } catch (e) {
-        onError(e);
-      } finally {
-        setIsLoading(false);
-      }
-    };
-
-    fetchData();
-  }, [endpoint, token, onSuccess, onError]);
-
-  return { isLoading };
+  onProgress(true);
+  try {
+    const response = await endpoint;
+    if (successStatuses.includes(response.status)) {
+      onSuccess(response.data);
+    } else {
+      console.log(`error false on api ${endpoint} :>> `, response );
+      onError(response);
+    }
+  } catch (e) {
+    console.log(`error code on api ${endpoint} :>> `, e );
+    onError(e);
+  } finally {
+    onProgress(false);
+  }
 };
 
 export default useFetch;

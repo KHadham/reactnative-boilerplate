@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import { navigate } from '@utils/navigation';
@@ -10,69 +10,79 @@ import { WebView } from 'react-native-webview';
 import RenderHtml from 'react-native-render-html';
 import { widthByScreen } from '@utils/dimensions';
 import { spacing } from '@constants/spacing';
-import { COLOR_FONT_PRIMARY_DARK, FONT_SIZE_SUBTITLE } from '@themes/index';
+import styles from '@othersApp/styles';
 
 const App: React.FC = () => {
-  const { data } = useHooks();
-  const [first, setfirst] = useState('');
+  const { data, isLoading } = useHooks();
 
-  console.log('data xxx :>> ', data);
+  useEffect(() => {
+    console.log('isLoading outer :>> ', isLoading);
+    console.log('datassss :>> ', data);
+  }, [data]);
+
   return (
-    <BaseView style={{}}>
-      <Header left={IMAGES.iconCitata} title="F.A.Q" shadow />
+    <BaseView>
+      <Header
+        left={
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Image
+              source={IMAGES.iconCitata}
+              style={{ height: 50, width: 50, position: 'absolute' }}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+          </View>
+        }
+        title="F.A.Q"
+        shadow
+      />
       <FlashList
         estimatedItemSize={4}
         data={data}
         renderItem={({ index, item }) => (
-          <View style={{ padding: 20, paddingVertical: 10 }}>
-            <Accordion
-              keys={index}
-              content={(isExpand: boolean) => (
-                <View style={{ padding: 20, gap: 10 }}>
-                  <Text size="title" weight="bold">
-                    {item.kategori}
-                  </Text>
-                  {isExpand && (
-                    <FlashList
-                      estimatedItemSize={4}
-                      data={item.child}
-                      renderItem={({ index, item }) => (
-                        <Accordion
-                          style={{
-                            padding: spacing.md,
-                            marginVertical: spacing.md,
-                          }}
-                          keys={index}
-                          content={(isExpand: boolean) => (
-                            <View style={{}}>
-                              <Text
-                                size="title"
-                                weight="bold"
-                                style={{ marginRight: spacing.md }}
-                              >
-                                {item.nama_faq}
-                              </Text>
-                              {isExpand && (
-                                <RenderHtml
-                                  baseStyle={{
-                                    fontFamily: 'Inter-Regular',
-                                    color: COLOR_FONT_PRIMARY_DARK,
-                                    fontSize: FONT_SIZE_SUBTITLE,
-                                  }}
-                                  contentWidth={widthByScreen(100)}
-                                  source={{ html: item.isi }}
-                                />
-                              )}
-                            </View>
-                          )}
-                        />
-                      )}
-                    />
-                  )}
-                </View>
-              )}
-            />
-          </View>
+          <Accordion
+            isLoading={isLoading}
+            style={{ margin: spacing.md }}
+            keys={index}
+            content={(isExpand: boolean) => (
+              <View style={styles.acordionContent}>
+                <Text size="title" weight="bold">
+                  {item.kategori}
+                </Text>
+                {isExpand && (
+                  <FlashList
+                    estimatedItemSize={4}
+                    data={item.child}
+                    renderItem={({ index, item }) => (
+                      <Accordion
+                        isLoading={isLoading}
+                        style={{ marginTop: spacing.md }}
+                        keys={index}
+                        content={(isExpand: boolean) => (
+                          <View style={styles.acordionContent}>
+                            <Text
+                              size="title"
+                              weight="bold"
+                              style={{ marginRight: spacing.md }}
+                            >
+                              {item.nama_faq}
+                            </Text>
+                            {isExpand && (
+                              <RenderHtml
+                                baseStyle={styles.baseStyleHtml}
+                                contentWidth={widthByScreen(100)}
+                                source={{ html: item.isi }}
+                              />
+                            )}
+                          </View>
+                        )}
+                      />
+                    )}
+                  />
+                )}
+              </View>
+            )}
+          />
         )}
       />
     </BaseView>

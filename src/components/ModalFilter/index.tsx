@@ -125,23 +125,6 @@ const App: React.FC<AppProps> = ({
     </View>
   );
 
-  // const selectedData = [
-  //   { title: 'Kategori', items: ['jaringan', 'server'] },
-  //   {
-  //     title: 'SubKategori',
-  //     items: ['database IMB baru'],
-  //   },
-  //   { title: 'Status', items: ['belum validasi', 'sudah validasi'] },
-  //   { title: 'Tahun', items: ['2021'] },
-  // ];
-
-  // const isItemSelected = (item: Item): boolean => {
-  //   const selectedItem = selectedData.find(
-  //     selectedItem => selectedItem.title === item.title
-  //   );
-  //   return selectedItem && selectedItem.items.includes(item.items);
-  // };
-
   const isItemSelected = (item: Item, itemText: string): boolean => {
     const selectedItem = selectedData.find(
       selectedItem => selectedItem.title === item.title

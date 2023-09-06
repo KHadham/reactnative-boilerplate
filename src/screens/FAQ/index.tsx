@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import { navigate } from '@utils/navigation';
@@ -9,11 +9,22 @@ import { FlashList } from '@shopify/flash-list';
 const App: React.FC = () => {
   const [first, setfirst] = useState('');
 
-
-  
   return (
     <BaseView style={{}}>
-      <Header left={IMAGES.iconCitata} title="F.A.Q" shadow />
+      <Header
+        left={
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Image
+              source={IMAGES.iconCitata}
+              style={{ height: 50, width: 50, position: 'absolute' }}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+          </View>
+        }
+        title="F.A.Q"
+        shadow
+      />
       <FlashList
         estimatedItemSize={4}
         data={[1, 2, 3, 4, 5]}

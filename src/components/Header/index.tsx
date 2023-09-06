@@ -3,16 +3,16 @@ import {
   COLOR_FONT_PRIMARY_DARK,
   COLOR_WHITE,
 } from '@themes/index';
-import React, { ReactNode } from 'react';
+import React, { ReactNode, useState } from 'react';
 import {
   TouchableOpacity,
   View,
   Image,
   ImageSourcePropType,
 } from 'react-native';
-import { FastImage, Icon } from '@components';
+import { FastImage, Icon, Input, ModalSearch } from '@components';
 import Help from '../../../assets/svgs/Help';
-import { goBack,useNavigationHandler } from '@utils/navigation';
+import { goBack, useNavigationHandler } from '@utils/navigation';
 import { Text } from '@components';
 import styles from './styles';
 import { spacing } from '@constants/spacing';
@@ -21,9 +21,8 @@ import { isImageAsset, isImageUrl } from '@utils/index';
 type Props = {
   left?: ImageSourcePropType | string | ReactNode,
   title?: string,
-  right?: string,
+  right?: ReactNode,
   shadow?: boolean,
-  onPressRight?: Function,
 };
 
 const Component: React.FC<Props> = ({
@@ -31,14 +30,29 @@ const Component: React.FC<Props> = ({
   title,
   right,
   shadow,
-  onPressRight,
 }) => {
   const { goBack } = useNavigationHandler();
 
   // const isReactNode = (value: any): value is ReactNode => {
   //   return typeof value === 'object' && value !== null;
   // };
+
   const leftComponent = () => {
+    if (left == 'back') {
+      return (
+        <TouchableOpacity style={{}} onPress={() => goBack()}>
+          <Icon name={'chevron-left'} size={30} />
+        </TouchableOpacity>
+      );
+    } 
+    if (left == undefined) {
+      return null
+    }
+    else return left
+  };
+
+  const leftComponentx = () => {
+
     if (left == 'back') {
       return (
         <TouchableOpacity style={{}} onPress={() => goBack()}>
@@ -47,20 +61,17 @@ const Component: React.FC<Props> = ({
       );
     } else if (isImageAsset(left) || isImageUrl(left)) {
       return (
-        <View style={{ flex:1,justifyContent:'center' }}>
+        <View style={{ flex: 1, justifyContent: 'center' }}>
           <Image
             source={left as ImageSourcePropType}
-            style={{ height: 50, width: 50,position:'absolute' }}
+            style={{ height: 50, width: 50, position: 'absolute' }}
             resizeMode="contain"
             resizeMethod="resize"
           />
         </View>
       );
     }
-    // else if (typeof left === 'object' && left !== null) {
-    //   return left
-    // }
-    else return null;
+    else return null
   };
 
   const midComponent = () => (
@@ -74,21 +85,10 @@ const Component: React.FC<Props> = ({
   );
 
   const rightComponent = () => {
-    if (right == 'bantuan') {
-      return (
-        <TouchableOpacity style={{ padding: 10 }}>
-          <Help />
-        </TouchableOpacity>
-      );
-    } else
-      return (
-        <TouchableOpacity
-          onPress={() => onPressRight()}
-          style={{ padding: 10 }}
-        >
-          <Text size="desc">{right}</Text>
-        </TouchableOpacity>
-      );
+    if (right == undefined) {
+      return null
+    }
+    else return right
   };
 
   return (

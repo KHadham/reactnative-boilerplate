@@ -19,6 +19,8 @@ import Separator from './Separator'
 import Avatar from './Avatar'
 import FocusAwareStatusBar from './FocusAwareStatusBar'
 import ModalConfirmation from './ModalConfirmation'
+import GpsMarker from './GpsMarker'
+import ModalSearch from './ModalSearch'
 
 export {
   BaseView,
@@ -41,5 +43,7 @@ export {
   Separator,
   Avatar,
   FocusAwareStatusBar,
-  ModalConfirmation
+  ModalConfirmation,
+  GpsMarker,
+  ModalSearch
 };

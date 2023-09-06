@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@othersApp/apis';
 import Toast from 'react-native-toast-message';
+import useFetch from '@utils/networking';
 
 interface FAQInterface {
   kategori: string;
@@ -16,46 +17,45 @@ interface FAQItem {
   updated_at: string;
 }
 
-
 export const useHooks = () => {
-  const [data, setData] = useState<FAQInterface[]>([]);
+  const [data, setData] = useState<FAQInterface[]>([
+    {
+      kategori: '',
+      child: [
+        {
+          id_faq: 0,
+          id_kategori_faq: '',
+          nama_faq: '',
+          isi: '',
+          created_at: '',
+          updated_at: '',
+        },
+      ],
+    },
+  ]);
+
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
-  // const setLoading = useGlobalLoading(state => state.setLoading);
-
   useEffect(() => {
-    fetching();
-  }, []);
-
-  const fetching = async () => {
-    setIsLoading(true);
-    try {
-      const params = {
-        token: '9998fd04-6ebb-45f8-a694-28a284e156aa',
-      };
-      const response = await endpoint.getFaq({ data: params });
-      console.log('response faq :>> ', response);
-      if (response.status == 'success' || response.status == true || response.status == 200) {
-        setData(response.data);
-      } else {
-        Toast.show({
-          type: 'error',
-          text1: response.message,
-        });
-        setError(response.message);
-      }
-      console.log('response :>> ', response.data);
-    } catch (e) {
-      Toast.show({
-        type: 'error',
-        text1: 'Terjadi kesalahan saat mengambil data faq',
+    setTimeout(() => {
+      useFetch({
+        endpoint: endpoint.getFaq({
+          data: { token: '9998fd04-6ebb-45f8-a694-28a284e156aa' },
+        }),
+        onSuccess: data => {
+          console.log('data faq :>> ', data);
+          setData(data.data);
+        },
+        onProgress(progress) {
+          setIsLoading(progress);
+        },
+        onError: error => {
+          setError(error);
+        },
       });
-      setError(e);
-    } finally {
-      setIsLoading(false);
-    }
-  };
+    }, 2000);
+  }, []);
 
   return {
     data,

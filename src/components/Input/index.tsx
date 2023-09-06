@@ -24,6 +24,7 @@ import {
   Easing,
   TouchableWithoutFeedback,
   ViewStyle,
+  TextInputProps,
 } from 'react-native';
 import dayjs from 'dayjs';
 import { Icon } from '@components';
@@ -37,8 +38,9 @@ import ImagePicker from 'react-native-image-crop-picker';
 import { openImagePicker } from '@utils/permissions';
 
 import { heightByScreen } from '@utils/dimensions';
+// type TextWrapProps = TextProps & {
 
-type Props = {
+type Props = TextInputProps & {
   label?: string,
   error?: any,
   value: any,
@@ -79,6 +81,7 @@ const Component = ({
   style,
   ref,
   editable,
+  ...rest
 }: Props) => {
   // if (type === 'select' && (!data || !placeholder)) {
   //   throw new Error('data and placeholder are required');
@@ -406,6 +409,7 @@ const Component = ({
       >
         {prefix()}
         <TextInput
+              {...rest}
           pointerEvents="auto"
           value={usrInput}
           placeholder={placeholder}

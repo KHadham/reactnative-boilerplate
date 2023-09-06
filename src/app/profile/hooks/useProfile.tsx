@@ -5,6 +5,7 @@ import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '../apis';
 import { useProfileStore } from '@profileApp/stores';
 import { APPKEY } from '@constants/appKey';
+import useFetch from '@utils/networking';
 
 export const useProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
@@ -23,75 +24,48 @@ export const useProfile = () => {
   }, []);
 
   const doVerifyToken = async () => {
-    Toast.show({
-      type: 'loading',
-      text1: 'Loading ...',
-      autoHide: false,
-      props: true,
-    });
-    try {
-      const response = await endpoint.verifyTokens({
+    useFetch({
+      endpoint: endpoint.verifyTokens({
         headers: {
           'app-key': APPKEY.CITATA_KEY,
           authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
         },
-      });
-      console.log('response :>> ', response);
-      if (response.status == 'success' || response.status == true || response.status == 200) {
+      }),
+      onSuccess: response => {
         setUserDetail(response.payload);
         setTimeout(() => {
           fetch();
         }, 2000);
-      } else {
-        // setError(response.message);
-      }
-    } catch (e) {
-      console.log('error verify:>>  ', e);
-      setIsLoading(false);
-      // setError(e);
-      Toast.show({
-        type: 'error',
-        text1: 'Terjadi kesalahan saat verifikasi token',
-        props: true,
-      });
-    } finally {
-      // Toast.hide();
-    }
+      },
+      onProgress(progress) {
+        setIsLoading(progress);
+      },
+      onError: error => {
+        setError(error);
+      },
+    });
   };
 
   const fetch = async () => {
-    Toast.show({
-      type: 'loading',
-      text1: 'Mengambil info user ...',
-      autoHide: false,
-      props: true,
-    });
-    try {
-      const response = await endpoint.getProfile({
+    useFetch({
+      endpoint: endpoint.getProfile({
         headers: {
           'app-key': APPKEY.CITATA_KEY,
           authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
         },
         query: { username: user.username },
-      });
-      if (response.status == 'success' || response.status == true || response.status == 200) {
+      }),
+      onSuccess: response => {
         setEmployeeDetail(response.data.siadik);
-        setPersonalDetail(response.data.sso); // useProfileStore().setPersonalDetail(response);
-        // useProfileStore().setEmployeeDetail();
-        console.log('success fetch:>> ', response);
-        // console.log('get profil data :>> ', response.payload);
-        // storage.getItem(STORAGE_KEY.LOGIN_TOKEN);
-      }
-    } catch (e) {
-      console.log('error fetch:>> ', e);
-      setIsLoading(false);
-      Toast.show({
-        type: 'error',
-        text1: 'Terjadi kesalahan saat mengambil info user',
-      });
-    } finally {
-      // Toast.hide();
-    }
+        setPersonalDetail(response.data.sso);
+      },
+      onProgress(progress) {
+        setIsLoading(progress);
+      },
+      onError: error => {
+        setError(error);
+      },
+    });
   };
 
   return {

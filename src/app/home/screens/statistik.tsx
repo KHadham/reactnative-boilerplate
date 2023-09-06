@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View } from 'react-native';
+import { View, Image } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import styles from './styles';
@@ -27,7 +27,20 @@ const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
   //   }, []);
   return (
     <BaseView style={{}}>
-      <Header left={IMAGES.iconCitata} title="F.A.Q" shadow />
+      <Header
+        left={
+          <View style={{ flex: 1, justifyContent: 'center' }}>
+            <Image
+              source={IMAGES.iconCitata}
+              style={{ height: 50, width: 50, position: 'absolute' }}
+              resizeMode="contain"
+              resizeMethod="resize"
+            />
+          </View>
+        }
+        title="F.A.Q"
+        shadow
+      />
       <FlashList
         data={[1, 2, 3, 4, 5]}
         renderItem={({ index }) => (
@@ -36,7 +49,9 @@ const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
               keys={index}
               content={(isExpand: boolean) => (
                 <View style={{ padding: 20 }}>
-                  <Text size='subTitle' weight='bold'>What is lorem ipsum mean ?</Text>
+                  <Text size="subTitle" weight="bold">
+                    What is lorem ipsum mean ?
+                  </Text>
                   {isExpand && (
                     <Text>
                       Lorem ipsum dolor sit amet, consectetur adipisici elit…’

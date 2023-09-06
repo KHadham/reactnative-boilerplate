@@ -186,7 +186,7 @@ const App: React.FC = () => {
         sections={MENULIST}
         contentContainerStyle={{}}
         keyExtractor={(item, index) => item.title + index}
-        ItemSeparatorComponent={() => <Separator margin={spacing.md} />}
+        ItemSeparatorComponent={() => <Separator marginHorizontal={spacing.md} />}
         renderItem={({ item, index }) => (
           <ItemList
             style={{

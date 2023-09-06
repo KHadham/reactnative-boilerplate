@@ -8,6 +8,7 @@ import {
   Appearance,
   ColorValue,
   TextStyle,
+  ActivityIndicator,
 } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import PropTypes from 'prop-types';
@@ -24,17 +25,21 @@ import {
 } from '@themes/index';
 import { widthByScreen } from '@utils/dimensions';
 import styles from './styles';
+import { Icon } from '@components';
 
 interface AppProps {
   children?: React.ReactNode;
   title?: string;
   disabled?: boolean;
-  type?: 'outline' | 'default' | 'dashed' | 'underlined';
+  type?: 'outline' | 'default' | 'dashed' | 'underlined' | 'fab';
+  position?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'
   color?: 'danger' | 'warning' | 'success' | 'info' | 'default';
   containerStyle?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle[] | TextStyle;
   rippleRadius?: number;
   onPress?: Function;
+  iconName?: string;
+  isLoading?: boolean;
 }
 
 interface StylingItem extends ViewStyle {
@@ -51,6 +56,9 @@ const Component: React.FC<AppProps> = ({
   color = 'default',
   onPress = () => {},
   textStyle = {},
+  iconName,
+  isLoading,
+  position = 'bottom-right'
 }) => {
   const colorFilter = [
     { colorName: 'danger', colorCode: COLOR_EVENT_ERROR },
@@ -100,10 +108,28 @@ const Component: React.FC<AppProps> = ({
     ...containerStyle,
   };
 
+  const fabStyle: StylingItem = {
+    type: 'fab',
+    borderRadius: 100,
+    backgroundColor: baseStyle,
+    borderColor: baseStyle,
+    position: 'absolute',
+    width: widthByScreen(12),
+    height:widthByScreen(12),
+    justifyContent: 'center',
+    alignItems: 'center',
+    ...styles.buttonWrap,
+    // ...containerStyle,
+  };
+
   if (children == undefined) {
-    styling = [dashedStyle, outlineStyle, underlineStyle, defaultStyle].find(
-      data => data.type == type
-    );
+    styling = [
+      dashedStyle,
+      outlineStyle,
+      underlineStyle,
+      defaultStyle,
+      fabStyle,
+    ].find(data => data.type == type);
   }
 
   const text = () => (
@@ -135,6 +161,27 @@ const Component: React.FC<AppProps> = ({
           {children}
         </Ripple>
       );
+    } else if (type == 'fab') {
+      const positionStyles = {
+        'top-right': { top: 20, right: 20 },
+        'bottom-right': { bottom: 20, right: 20 },
+        'top-left': { top: 20, left: 20 },
+        'bottom-left': { bottom: 20, left: 20 },
+      };
+      return (
+        <Ripple
+          onPress={() => onPress()}
+          style={[fabStyle,positionStyles[position]]}
+          disabled={disabled}
+          rippleContainerBorderRadius={fabStyle.borderRadius}
+        >
+          {isLoading ? (
+            <ActivityIndicator color={COLOR_WHITE} />
+          ) : (
+            <Icon name={iconName} color={COLOR_WHITE} size={widthByScreen(4)}/>
+          )}
+        </Ripple>
+      );
     } else {
       return (
         <Ripple
@@ -143,7 +190,7 @@ const Component: React.FC<AppProps> = ({
           disabled={disabled}
           rippleContainerBorderRadius={rippleRadius}
         >
-          {text()}
+          {isLoading ? <ActivityIndicator color={COLOR_WHITE} /> : text()}
         </Ripple>
       );
     }

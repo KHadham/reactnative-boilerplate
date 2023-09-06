@@ -73,11 +73,11 @@ export const FONT_SECONDARY_BOLD = 'PlusJakartaSans-Bold';
 const getFontScale = PixelRatio.getFontScale();
 const fontSize = size => fontPixel(size) 
 
-export const FONT_SIZE_HEADER = fontSize(26);
-export const FONT_SIZE_TITLE = fontSize(21);
-export const FONT_SIZE_SUBTITLE = fontSize(18);
-export const FONT_SIZE_DESC = fontSize(16);
-export const FONT_SIZE_CAPTION = fontSize(14);
-export const FONT_SIZE_INFO = fontSize(12);
-export const FONT_SIZE_REGULAR = fontSize(12);
+export const FONT_SIZE_HEADER = fontSize(28);
+export const FONT_SIZE_TITLE = fontSize(23);
+export const FONT_SIZE_SUBTITLE = fontSize(20);
+export const FONT_SIZE_DESC = fontSize(18);
+export const FONT_SIZE_CAPTION = fontSize(16);
+export const FONT_SIZE_INFO = fontSize(14);
+export const FONT_SIZE_REGULAR = fontSize(14);
 
