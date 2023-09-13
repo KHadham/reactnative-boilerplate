@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@othersApp/apis';
 import Toast from 'react-native-toast-message';
-import useFetch from '@utils/networking';
-
+import { useFetch ,handleRequest } from '@utils/networking';
 interface FAQInterface {
   kategori: string;
   child: FAQItem[];
@@ -38,23 +37,21 @@ export const useHooks = () => {
   const [error, setError] = useState('');
 
   useEffect(() => {
-    setTimeout(() => {
-      useFetch({
-        endpoint: endpoint.getFaq({
-          data: { token: '9998fd04-6ebb-45f8-a694-28a284e156aa' },
-        }),
-        onSuccess: data => {
-          console.log('data faq :>> ', data);
-          setData(data.data);
-        },
-        onProgress(progress) {
-          setIsLoading(progress);
-        },
-        onError: error => {
-          setError(error);
-        },
-      });
-    }, 2000);
+    useFetch({
+      endpoint: endpoint.getFaq({
+        data: { token: '9998fd04-6ebb-45f8-a694-28a284e156aa' },
+      }),
+      onSuccess: data => {
+        console.log('data faq :>> ', data);
+        setData(data.data);
+      },
+      onProgress(progress) {
+        setIsLoading(progress);
+      },
+      onError: error => {
+        setError(error);
+      },
+    });
   }, []);
 
   return {

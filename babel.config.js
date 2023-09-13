@@ -10,6 +10,7 @@ module.exports = {
           '@components': './src/components',
           '@constants': './src/constants',
           '@images': './assets/images',
+          '@certificate': './assets/certificate',
           '@fonts': './assets/fonts',
           '@animation': './assets/animation',
           '@svgs': './assets/svgs',

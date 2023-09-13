@@ -13,12 +13,13 @@ import {
 import { FlashList } from '@shopify/flash-list';
 import { useHooks } from '@newsApp/hooks/usePengumuman';
 import { heightByScreen } from '@utils/dimensions';
-import { onShare, onPressLink } from '@utils/other';
+import { useNavigationHandler } from '@utils/navigation';
+
 import { spacing } from '@constants/spacing';
 
 const Screen = () => {
+  const { onShare, onPressLink } = useNavigationHandler();
   const { data, fetching, isLoading } = useHooks();
-
   const [first, setfirst] = useState('');
 
   //   useEffect(() => {

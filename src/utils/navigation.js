@@ -3,7 +3,8 @@ import {
   useNavigation,
   useRoute,
 } from '@react-navigation/native';
-import { Linking, Platform } from 'react-native';
+import { Share, Linking, Platform } from 'react-native';
+import Toast from 'react-native-toast-message';
 
 let navigationRef: { dispatch: (arg0: CommonActions.Action) => void };
 
@@ -173,6 +174,52 @@ export function useNavigationHandler() {
     navigation.setParams(params);
   };
 
+  const onShare = async ({
+    title = '',
+    message = '',
+    url = '',
+  }: {
+    title?: string,
+    message: string,
+    url?: string,
+  }) => {
+    try {
+      const result = await Share.share({
+        title: title,
+        message: message,
+        url: url,
+      });
+      if (result.action === Share.sharedAction) {
+        if (result.activityType) {
+          // shared with activity type of result.activityType
+        } else {
+          // shared
+        }
+      } else if (result.action === Share.dismissedAction) {
+        // dismissed
+      }
+    } catch (error) {
+      Toast.show({
+        type: 'error',
+        text1: 'Terjadi kesalahan saat membagikan konten',
+      });
+    }
+
+  };
+
+  const onPressLink = async ({ url }) => {
+    const supported = await Linking.canOpenURL(url);
+
+    if (supported) {
+      await Linking.openURL(url);
+    } else {
+      Toast.show({
+        type: 'error',
+        text1: 'Terjadi kesalahan saat membuka link',
+      });
+    }
+  };
+
   return {
     goBack,
     navigate,
@@ -183,6 +230,8 @@ export function useNavigationHandler() {
     popToTop,
     replace,
     setParams,
+    onShare,
+    onPressLink
     // Add more navigation functions here if needed
   };
 }

@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@homeApp/apis';
 import Toast from 'react-native-toast-message';
-import useFetch from '@utils/networking';
-
+import { useFetch ,handleRequest } from '@utils/networking';
 interface slideInterface {
   img: string;
 }

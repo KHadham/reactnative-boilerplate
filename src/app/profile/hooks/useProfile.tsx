@@ -5,8 +5,7 @@ import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '../apis';
 import { useProfileStore } from '@profileApp/stores';
 import { APPKEY } from '@constants/appKey';
-import useFetch from '@utils/networking';
-
+import { useFetch ,handleRequest } from '@utils/networking';
 export const useProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');

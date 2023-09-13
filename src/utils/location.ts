@@ -7,6 +7,7 @@ import { zustandStorage } from '@utils/storage';
 import DeviceInfo from 'react-native-device-info';
 import { Linking } from 'react-native';
 import RNAndroidLocationEnabler from 'react-native-android-location-enabler';
+import { Float } from 'react-native/Libraries/Types/CodegenTypes';
 
 export const gpsEnabler = () => {
   return new Promise<string>((resolve, reject) => {
@@ -64,11 +65,10 @@ export const getCurrentLocation = async ({
             text1: 'Terjadi kesalahan saat mengambil lokasi',
             type: 'error',
           });
-
           // Reject the Promise with the error
           reject(error);
         },
-        { enableHighAccuracy: true, timeout: 30000, maximumAge: 60000 }
+        { timeout: 30000 }
       );
     }
   );
@@ -78,16 +78,20 @@ export const animateMapToTargetRegion = ({
   ref,
   latitude,
   longitude,
+  latitudeDelta = 0.01,
+  longitudeDelta = 0.01,
 }: {
   ref: any,
   latitude: any,
   longitude: any,
+  latitudeDelta?: any,
+  longitudeDelta?: any,
 }) => {
   const targetRegion = {
     latitude,
     longitude,
-    latitudeDelta: 0.01,
-    longitudeDelta: 0.01,
+    latitudeDelta: latitudeDelta,
+    longitudeDelta: longitudeDelta,
   };
   ref.animateToRegion(targetRegion, 1000);
 };

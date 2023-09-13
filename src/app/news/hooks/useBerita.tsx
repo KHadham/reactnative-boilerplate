@@ -1,8 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@newsApp/apis';
 import Toast from 'react-native-toast-message';
-import useFetch from '@utils/networking';
-
+import { useFetch ,handleRequest } from '@utils/networking';
 interface beritaInterface {
   id_berita: string;
   img: string;

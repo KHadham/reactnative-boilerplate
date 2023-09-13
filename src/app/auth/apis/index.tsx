@@ -1,4 +1,4 @@
-import { post, get } from '@utils/networking';
+import { post, get ,handleRequest } from '@utils/networking';
 
 interface endpointParam {
   data?: object;
@@ -7,12 +7,12 @@ interface endpointParam {
 
 export const endpoint = {
   loginPtpn: async (params: endpointParam) =>
-    post({
+    handleRequest({ method: 'post',
       path: 'satuakses/service/auth',
       data: params.data,
     }),
   loginCitata: async (params: endpointParam) =>
-    post({
+    handleRequest({ method: 'post',
       path: 'satuakses/service/auth',
       data: params.data,
       headers: params.headers,

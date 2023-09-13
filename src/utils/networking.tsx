@@ -4,8 +4,7 @@ import Toast from 'react-native-toast-message';
 import { storage } from '@utils/storage';
 import { APPKEY } from '@constants/appKey'
 import { useEffect, useState } from 'react';
-
-const TIMEOUT = 15000;
+import { fetch } from 'react-native-ssl-pinning';
 
 export const checkInternetConnectivity = async (): Promise<boolean> => {
   try {
@@ -54,60 +53,66 @@ const requestWithTimeout = async (
   ]);
 };
 
-const handleRequest = async (
-  method: string,
+export const handleRequest = async ({
+  method = 'GET',
+  path = '',
+  data = {},
+  headers = {},
+  query = {},
+  useSsl = false
+}: {
+  method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   path: string,
-  data: any,
-  headers: any,
-  query: object
-) => {
+  data?: any,
+  headers?: any,
+  query?: object
+  useSsl?: boolean
+}) => {
   try {
+    const realPath = path.includes('https') ? path : `${APPKEY.BASE_URL}${path}${toQueryString(query)}`;
+    const timeoutInterval = 15000; // milliseconds (customize as needed)
 
-    const isConnected = await checkInternetConnectivity(); // Implement your own function to check for internet connectivity
-    if (!isConnected) {
-      if (method === 'POST') {
-        // Cache the POST data for later resend
-        // storage.setItem(`${method}-${path}-cached`, JSON.stringify(data));
-        Toast.show({
-          type: 'warning',
-          text1: 'Tidak ada koneksi,data tersimpan sementara !',
-        });
-      } else {
-        const cachedResponse = storage.getItem(`${method}-${path}-cache`);
-        if (cachedResponse) {
-          return cachedResponse
-        } else {
-          Toast.show({
-            type: 'error',
-            text1: 'Tidak ada koneksi !',
-          });
-        }
-      }
-    }
-
-    const realPath = path.includes('http') ? path : `${APPKEY.BASE_URL}${path}${toQueryString(query)}`
     const config: AxiosRequestConfig = {
       method,
       url: realPath,
-      timeout: TIMEOUT,
+      timeout: timeoutInterval,
     };
-    if (data && Object.keys(data).length > 0) {
-      config.data = data;
-      console.log('ada data :>> ');
-    }
-    if (headers && Object.keys(headers).length > 0) {
-      config.headers = headers;
-      console.log('ada header :>> ')
-    }
-    const response = (await requestWithTimeout(config, TIMEOUT)) as AxiosResponse<any>;
+    if (Object.keys(data).length > 0) config.data = data;
+    if (Object.keys(headers).length > 0) config.headers = headers;
 
-    // Cache the response for future offline access
-    // storage.setItem(`${method}-${path}-cache`, JSON.stringify(response.data));
-    // console.log('path :>> ', path);
-    // console.log('response.data :>> ', response);
-    return response;
+    if (useSsl) {
+      console.log('true :>> ', true);
+      const sslPinningConfig = {
+        certs: [
+          'DigiCert_Global_G2_TLS_RSA_SHA256_2020_CA1',
+          'DigiCert_Global_Root_G2',
+        ],
+      };
+
+      const response = await fetch(realPath, {
+        method,
+        timeoutInterval,
+        sslPinning: {
+          certs: [
+            'DigiCert_Global_G2_TLS_RSA_SHA256_2020_CA1',
+            'DigiCert_Global_Root_G2',
+          ],
+        },
+        headers: {
+          ...headers,
+          Accept: 'application/json; charset=utf-8',
+          'Access-Control-Allow-Origin': '*',
+          e_platform: 'mobile',
+        },
+      });
+      const responseBody = response
+      return responseBody;
+    } else {
+      const response = await requestWithTimeout(config, timeoutInterval);
+      return response;
+    }
   } catch (error) {
-    // console.error('Error in handleRequest:', error + ` ${path}`);
+    console.error(`Error handle request:  ${error}`);
     throw error;
   }
 };
@@ -121,54 +126,6 @@ function toQueryString(query: object) {
   }
   return ''
 }
-
-export const get = async ({
-  path = '',
-  data = {},
-  headers = {},
-  query = {}
-}: {
-  path: string,
-  data?: object,
-  headers?: object,
-  query?: object
-}) => handleRequest('get', path, data, headers, query);
-
-export const post = async ({
-  path = '',
-  data = {},
-  headers = {},
-  query = {}
-}: {
-  path: string,
-  data?: object,
-  headers?: object,
-  query?: object
-}) => handleRequest('post', path, data, headers, query,);
-
-export const put = async ({
-  path = '',
-  data = {},
-  headers = {},
-  query = {}
-}: {
-  path: string,
-  data?: object,
-  headers?: object,
-  query?: object
-}) => handleRequest('put', path, data, headers, query);
-
-export const remove = async ({
-  path = '',
-  data = {},
-  headers = {},
-  query = {}
-}: {
-  path: string,
-  data?: object,
-  headers?: object,
-  query?: object
-}) => handleRequest('delete', path, data, headers, query);
 
 /**
  * Custom hook for fetching data from API. 
@@ -203,7 +160,7 @@ interface FetchConfig {
   successStatuses?: (string | boolean | number)[];
 }
 
-const useFetch = async (config: FetchConfig) => {
+export const useFetch = async (config: FetchConfig) => {
   const {
     endpoint,
     onSuccess = () => { },
@@ -214,18 +171,15 @@ const useFetch = async (config: FetchConfig) => {
   onProgress(true);
   try {
     const response = await endpoint;
-    if (successStatuses.includes(response.status)) {
-      onSuccess(response.data);
+    if (successStatuses?.includes(response?.status)) {
+      response.data == undefined ?onSuccess(response): onSuccess(response.data);
     } else {
-      console.log(`error false on api ${endpoint} :>> `, response );
       onError(response);
     }
   } catch (e) {
-    console.log(`error code on api ${endpoint} :>> `, e );
     onError(e);
   } finally {
     onProgress(false);
   }
 };
 
-export default useFetch;

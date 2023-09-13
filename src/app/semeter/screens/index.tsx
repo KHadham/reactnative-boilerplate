@@ -1,7 +1,10 @@
 import React, { useState, useEffect, useCallback, useRef } from 'react';
 import {
+  ActivityIndicator,
   BackHandler,
+  Image,
   Linking,
+  Platform,
   StyleSheet,
   TouchableOpacity,
   View,
@@ -18,21 +21,29 @@ import {
   ModalConfirmation,
   ModalList,
   ModalSearch,
+  Text,
 } from '@components';
 import { useNavigationHandler } from '@utils/navigation';
 import { storage } from '@utils/storage';
 import { STORAGE_KEY } from '@constants/index';
-import MapView, { Marker, UrlTile } from 'react-native-maps';
+import { Marker, UrlTile } from 'react-native-maps';
+import MapView from 'react-native-map-clustering';
+
 import { useHooks } from '@semeterApp/hooks';
 import {
   animateMapToTargetRegion,
   gpsEnabler,
   getCurrentLocation,
 } from '@utils/location';
+import { COLOR_BASE_PRIMARY_DARK } from '@themes/index';
+import { MARKER } from '@images';
+import colors from '@themes/colors';
+import { widthByScreen } from '@utils/dimensions';
 
 const Screen = () => {
   const { getParam } = useNavigationHandler();
   const { data, isLoading, actions, states, ref } = useHooks();
+  console.log('data :>> ', data.features[0]);
 
   return (
     <BaseView>
@@ -45,27 +56,104 @@ const Screen = () => {
               actions.setisSearchingVisible(!states.isSearchingVisible)
             }
           >
-            <Icon name="magnify" />
+            {isLoading ? <ActivityIndicator /> : <Icon name="magnify" />}
           </Button>
         }
       />
       <View style={{ flex: 1, width: '100%', height: '100%' }}>
         <MapView
+          clusterColor={COLOR_BASE_PRIMARY_DARK}
           ref={ref} // Attach the ref to the MapView
           style={{
             flex: 1,
             justifyContent: 'flex-end',
             alignItems: 'center',
           }}
-          provider="google"
+          provider={Platform.OS == 'android' ? 'google' : null}
           initialRegion={{
             // lokasi monas
             latitude: -6.1754,
             longitude: 106.8272,
-            latitudeDelta: 0.0922,
-            longitudeDelta: 0.0421,
+            latitudeDelta: 2.5,
+            longitudeDelta: 2.5,
           }}
         >
+          {data?.features?.map((item, index) => {
+            const tindakanToImage = {
+              0: MARKER.marker,
+              1: MARKER.markerPemberitahuan,
+              2: MARKER.markerSp,
+              3: MARKER.markerSp,
+              4: MARKER.markerSp,
+              5: MARKER.markerSegel,
+              6: MARKER.markerSpb,
+              7: MARKER.markerBongkar,
+            };
+
+            const groupToColor = {
+              0: colors.orange.orange_50,
+              1: colors.bronze.bronze_50,
+              2: colors.green.green_50,
+              3: colors.purple.purple_50,
+              4: colors.sky.sky_50,
+              5: colors.blue.blue_50,
+              6: colors.dusk.dusk_50,
+            };
+
+            const image =
+              tindakanToImage[item.attributes.KD_JENIS_TINDAKAN] ||
+              MARKER.marker;
+
+            const group = groupToColor[item.attributes.GROUP_BY_ID] || 'red';
+
+            return (
+              <Marker
+                key={`${index}~${item.geometry.y}`}
+                coordinate={{
+                  latitude: item.geometry.y,
+                  longitude: item.geometry.x,
+                }}
+                // pinColor={group}
+              >
+                <View
+                  style={{
+                    // backgroundColor: group,
+                    // borderWidth: 1,
+                    // borderColor: group,
+                  }}
+                >
+                  <Image
+                    source={image}
+                    style={{
+                      width: widthByScreen(5),
+                      height: widthByScreen(5),
+                      tintColor: group,
+                      // backgroundColor: group,
+                    }}
+                  />
+                </View>
+              </Marker>
+            );
+            {
+              /* <View
+                  style={{
+                    backgroundColor: group,
+                    borderWidth: 1,
+                    borderColor: group,
+                  }}
+                >
+                  <Image
+                    source={image}
+                    style={{
+                      width: widthByScreen(5),
+                      height: widthByScreen(5),
+                      tintColor: group,
+                    }}
+                  />
+                </View>
+              </Marker> */
+            }
+          })}
           <GpsMarker coordinate={states.coordinate} />
 
           {/* basic */}

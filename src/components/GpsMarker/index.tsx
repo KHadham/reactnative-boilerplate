@@ -63,7 +63,6 @@ const App: React.FC<AppProps> = ({ coordinate }) => {
             ],
           }}
         >
-          {/* <Icon name={'menu-up'} color="#007AFF" style={{  }} /> */}
           <View
             style={{
               borderWidth: 1,

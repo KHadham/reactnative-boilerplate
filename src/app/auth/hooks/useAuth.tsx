@@ -13,8 +13,7 @@ import { useProfile } from '@profileApp/hooks/useProfile';
 import { APPKEY } from '@constants/appKey';
 import FastImage from 'react-native-fast-image';
 import { useProfileStore } from '@profileApp/stores';
-import useFetch from '@utils/networking';
-
+import { useFetch ,handleRequest } from '@utils/networking';
 export const useAuth = () => {
   const { navigate } = useNavigationHandler();
 
@@ -39,6 +38,9 @@ export const useAuth = () => {
         Toast.show({
           type: 'success',
           text1: 'Berhasil Login',
+        });
+        navigate({
+          screen: 'Tab',
         });
       },
       onProgress(progress) {

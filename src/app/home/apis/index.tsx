@@ -1,4 +1,4 @@
-import { get } from '@utils/networking';
+import { get, handleRequest } from '@utils/networking';
 
 interface homeApp {
   headers?: object;
@@ -6,11 +6,13 @@ interface homeApp {
 
 export const endpoint = {
   homeSlider: async () =>
-    get({
+    handleRequest({
+      method: 'get',
       path: 'beranda/v.1/Api/slider',
     }),
   homeApp: async (params: homeApp) =>
-    get({
+    handleRequest({
+      method: 'get',
       path: 'satuakses/service/app-user',
       headers: params.headers,
     }),

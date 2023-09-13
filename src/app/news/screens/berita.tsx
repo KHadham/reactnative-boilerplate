@@ -14,11 +14,13 @@ import { navigate, getParams } from '@utils/navigation';
 import { FlashList } from '@shopify/flash-list';
 import { useHooks } from '@newsApp/hooks/useBerita';
 import { heightByScreen } from '@utils/dimensions';
-import { onShare, onPressLink } from '@utils/other';
+import { useNavigationHandler } from '@utils/navigation';
+
 import { spacing } from '@constants/spacing';
 import ImageView from 'react-native-image-viewing';
 
 const Screen = () => {
+  const { onShare, onPressLink } = useNavigationHandler();
   const { data, fetching, isLoading } = useHooks();
   const params = getParams();
 

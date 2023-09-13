@@ -138,6 +138,7 @@ const App: React.FC<AppProps> = ({
           }
           renderItem={({ item, index }) => (
             <Button
+              key={index}
               containerStyle={{ paddingVertical: spacing.md }}
               onPress={() => onPressItem(item)}
             >
@@ -147,11 +148,19 @@ const App: React.FC<AppProps> = ({
           ListFooterComponent={() =>
             historyList.length !== 0 && (
               <View style={{ borderTopWidth: 1, paddingTop: spacing.sm }}>
-                <View style={{flexDirection:'row',alignItems:'center',justifyContent:'space-between'}}>
-                  <Text weight="bold" size='regular'>Riwayat Pencarian</Text>
-                  <Icon name='history'/>
+                <View
+                  style={{
+                    flexDirection: 'row',
+                    alignItems: 'center',
+                    justifyContent: 'space-between',
+                  }}
+                >
+                  <Text weight="bold" size="regular">
+                    Riwayat Pencarian
+                  </Text>
+                  <Icon name="history" />
                 </View>
-                {historyList.reverse().map((item,index) => (
+                {historyList.reverse().map((item, index) => (
                   <Button
                     containerStyle={{ paddingVertical: spacing.md }}
                     onPress={() => {

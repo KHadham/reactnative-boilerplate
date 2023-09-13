@@ -17,6 +17,7 @@
       "@constants/*": ["src/constants/*"],
       "@screens/*": ["src/screens/*"],
       "@images": ["./assets/images"],
+      "@certificate": ["./assets/certificate"],
       "@svgs/*": ["./assets/svgs/index.js"],
       "@fonts/*": ["./assets/fonts/*"],
       "@animation/*": ["./assets/animation/*"],

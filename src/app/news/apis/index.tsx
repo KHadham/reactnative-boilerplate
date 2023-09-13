@@ -1,4 +1,4 @@
-import { get } from '@utils/networking';
+import { get ,handleRequest } from '@utils/networking';
 
 interface endpointParam {
   page?: number;
@@ -7,11 +7,11 @@ interface endpointParam {
 export const endpoint = {
  
   pengumuman: async (params: endpointParam) =>
-    get({
+    handleRequest({ method: 'get',
       path: `beranda/v.1/Api/GetBerita/pengumuman/${params.page}`,
     }),
   berita: async (params: endpointParam) =>
-    get({
+    handleRequest({ method: 'get',
       path: `beranda/v.1/Api/GetBerita/berita/${params.page}`,
     }),
 };

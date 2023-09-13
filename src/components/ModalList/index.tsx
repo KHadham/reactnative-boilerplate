@@ -182,8 +182,6 @@ const App: React.FC<AppProps> = ({
             <View style={{ marginVertical: spacing.xxs }} />
           )}
           renderItem={({ item, index }) => {
-            console.log('selectedValue :>> ', selectedValue.name);
-            console.log('item :>> ', item.name);
             return (
               <Button
                 onPress={() => {
