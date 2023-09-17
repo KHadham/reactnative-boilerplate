@@ -78,6 +78,6 @@ export const FONT_SIZE_TITLE = fontSize(23);
 export const FONT_SIZE_SUBTITLE = fontSize(20);
 export const FONT_SIZE_DESC = fontSize(18);
 export const FONT_SIZE_CAPTION = fontSize(16);
-export const FONT_SIZE_INFO = fontSize(14);
+export const FONT_SIZE_INFO = fontSize(12);
 export const FONT_SIZE_REGULAR = fontSize(14);
 

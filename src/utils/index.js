@@ -4,6 +4,14 @@ import { COLOR_BLACK, COLOR_FONT_PRIMARY_DARK, COLOR_FONT_PRIMARY_LIGHT } from '
 import _ from 'lodash';
 import { Image, Text } from 'react-native';
 
+export function trimUrlCitata(url) {
+  const index = url.indexOf('cores/');
+  if (index !== -1) {
+    return url.substring(0, index) + url.substring(index + 6);
+  }
+  return url;
+}
+
 export function formatBoldSubstring(fullString, substring) {
   const indexOfSubstring = fullString.toLowerCase().indexOf(substring.toLowerCase());
 

@@ -12,7 +12,7 @@ import { endpoint } from '@authApp/apis';
 import { useProfile } from '@profileApp/hooks/useProfile';
 import { APPKEY } from '@constants/appKey';
 import FastImage from 'react-native-fast-image';
-import { useProfileStore } from '@profileApp/stores';
+import { useProfileStore } from '@profileApp/stores/storage';
 import { useFetch ,handleRequest } from '@utils/networking';
 export const useAuth = () => {
   const { navigate } = useNavigationHandler();
@@ -33,7 +33,6 @@ export const useAuth = () => {
         headers: { 'app-key': APPKEY.CITATA_KEY },
       }),
       onSuccess: data => {
-        console.log('data login :>> ', data);
         storage.setItem(STORAGE_KEY.LOGIN_TOKEN, data.token);
         Toast.show({
           type: 'success',

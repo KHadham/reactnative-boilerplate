@@ -8,7 +8,7 @@ import {
   basicData,
   employeeData,
   unexpectedData,
-} from './types';
+} from './interface';
 
 const filtering = <T extends object>(
   data: T,

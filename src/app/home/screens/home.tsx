@@ -13,7 +13,7 @@ import { spacing } from '@constants/spacing';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
 import styles from '@homeApp/styles';
-import { useProfileStore } from '@profileApp/stores';
+import { useProfileStore } from '@profileApp/stores/storage';
 
 const App: React.FC = () => {
   const { navigate } = useNavigationHandler();

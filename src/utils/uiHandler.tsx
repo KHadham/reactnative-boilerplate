@@ -8,6 +8,7 @@ import {
   Platform,
   UIManager,
 } from 'react-native';
+import { Matrix } from 'react-native-color-matrix-image-filters';
 
 export const handleHorizontalScroll = (event: {
   nativeEvent: { contentOffset: { x: any } },
@@ -96,6 +97,38 @@ export function hexToRgb(hex: string): { r: number, g: number, b: number } {
   const b: number = parseInt(hex.slice(4, 6), 16);
 
   return { r, g, b };
+}
+
+export function hexToMatrix(hexColor) {
+  // Function to convert hex to RGB
+  const r = parseInt(hexColor.slice(1, 3), 16) / 255;
+  const g = parseInt(hexColor.slice(3, 5), 16) / 255;
+  const b = parseInt(hexColor.slice(5, 7), 16) / 255;
+
+  const matrix: Matrix = [
+    r,
+    0,
+    0,
+    0,
+    0, // red
+    0,
+    g,
+    0,
+    0,
+    0, // green
+    0,
+    0,
+    b,
+    0,
+    0, // blue
+    1,
+    0,
+    1,
+    0,
+    0, // alpha
+  ];
+
+  return matrix;
 }
 
 /**

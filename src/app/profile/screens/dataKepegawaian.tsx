@@ -9,7 +9,7 @@ import { FlashList,  } from '@shopify/flash-list';
 import { spacing } from '@constants/spacing';
 import { toTitleCase } from '@utils/index';
 import { useProfile } from '@profileApp/hooks/useProfile';
-import { unexpectedData } from '../stores/types';
+import { unexpectedData } from '../stores/interface';
 import { COLOR_BACKGROUND } from '@themes/index';
 // import { useBearStore } from './../stores/stores';
 

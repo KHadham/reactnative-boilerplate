@@ -5,7 +5,7 @@ import IMAGES from '@images';
 import styles from './styles';
 import { navigate } from '@utils/navigation';
 import { BaseView, Text, Icon, Header, Input } from '@components';
-import { useProfileStore } from '@profileApp/stores';
+import { useProfileStore } from '@profileApp/stores/storage';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { spacing } from '@constants/spacing';
 import { toTitleCase } from '@utils/index';

@@ -9,18 +9,19 @@ import ItemList from './ItemList';
 import Carousel from './Carousel/index';
 import Spacer from './Spacer';
 import Accordion from './Accordion';
-import ModalList from './ModalList';
+import ModalList from './Overlay/Modals/ModalList';
 import SnackBar from './Overlay/SnackBar';
-import ModalFilter from './ModalFilter';
+import ModalFilter from './Overlay/Modals/ModalFilter';
 import Icon from './Icon';
 import Switch from './Switch'
 import FastImage from './FastImage'
 import Separator from './Separator'
 import Avatar from './Avatar'
 import FocusAwareStatusBar from './FocusAwareStatusBar'
-import ModalConfirmation from './ModalConfirmation'
+import ModalConfirmation from './Overlay/Modals/ModalConfirmation'
 import GpsMarker from './GpsMarker'
-import ModalSearch from './ModalSearch'
+import ModalRegionSearch from './Overlay/Modals/ModalRegionSearch'
+import ModalBasic from './Overlay/Modals/ModalBasic'
 
 export {
   BaseView,
@@ -45,5 +46,6 @@ export {
   FocusAwareStatusBar,
   ModalConfirmation,
   GpsMarker,
-  ModalSearch
+  ModalRegionSearch,
+  ModalBasic
 };

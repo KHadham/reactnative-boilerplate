@@ -55,7 +55,6 @@ const Screen = () => {
   const customHeaders = {
     Authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
   };
-  console.log('customHeaders :>> ', customHeaders);
   return (
     <BaseView style={{ flex: 1, width: '100%', height: '100%' }}>
       <Header title={'SEMETER'} />

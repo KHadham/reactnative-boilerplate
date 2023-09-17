@@ -35,7 +35,7 @@ import { openSettings } from 'react-native-permissions';
 import { FlashList } from '@shopify/flash-list';
 import { widthByScreen } from '@utils/dimensions';
 import LinearGradient from 'react-native-linear-gradient';
-import { useProfileStore } from '@profileApp/stores';
+import { useProfileStore } from '@profileApp/stores/storage';
 import { isColorDark } from '@utils/uiHandler';
 
 const App: React.FC = () => {

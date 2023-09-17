@@ -80,12 +80,14 @@ export const animateMapToTargetRegion = ({
   longitude,
   latitudeDelta = 0.01,
   longitudeDelta = 0.01,
+  onAnimationComplete,
 }: {
   ref: any,
   latitude: any,
   longitude: any,
   latitudeDelta?: any,
   longitudeDelta?: any,
+  onAnimationComplete?: () => void,
 }) => {
   const targetRegion = {
     latitude,
@@ -93,5 +95,12 @@ export const animateMapToTargetRegion = ({
     latitudeDelta: latitudeDelta,
     longitudeDelta: longitudeDelta,
   };
-  ref.animateToRegion(targetRegion, 1000);
+
+  const animationDuration = 1000;
+  ref.animateToRegion(targetRegion, animationDuration);
+
+  // If a callback for animation completion is provided, call it after the animation duration
+  if (onAnimationComplete) {
+    setTimeout(onAnimationComplete, animationDuration/2);
+  }
 };

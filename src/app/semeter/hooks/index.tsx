@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { endpoint } from '@semeterApp/apis';
 import Toast from 'react-native-toast-message';
 import { useFetch, handleRequest } from '@utils/networking';
@@ -13,12 +13,28 @@ import {
 import { useNavigationHandler } from '@utils/navigation';
 import axios from 'axios';
 import { Platform } from 'react-native'; // Import the Platform module
-import { ReklameData } from '@semeterApp/stores/interface';
-import { sampleReklameData } from '@semeterApp/stores/sampleData';
+import {
+  ReklameArcgisInterface,
+  BaseAtributInterface,
+  ResponseAtributInterface,
+} from '@semeterApp/stores/interface';
+import {
+  ReklameArcgisData,
+  BaseAtributData,
+  ResponseAtributData,
+} from '@semeterApp/stores/models';
+import { STORAGE_KEY } from '@constants/index';
+import { storage } from '@utils/storage';
 
 export const useHooks = () => {
-  const [data, setData] = useState<ReklameData>(sampleReklameData);
+  const [data, setData] = useState<ReklameArcgisInterface>(ReklameArcgisData);
+  const [selectedMarker, setselectedMarker] =
+    useState<BaseAtributInterface>(BaseAtributData);
+  const [detailMarker, setdetailMarker] =
+    useState<ResponseAtributInterface>(ResponseAtributData);
+
   const [isLoading, setIsLoading] = useState(false);
+  const [isModalDetail, setIsModalDetail] = useState(false);
   const [error, setError] = useState('');
   const [modalSetting, setModalSetting] = useState(false);
   const [modalLayer, setmodalLayer] = useState(false);
@@ -92,7 +108,7 @@ export const useHooks = () => {
 
   const getMarkers = async () => {
     useFetch({
-      endpoint: endpoint.getMarker(),
+      endpoint: endpoint.getMarkers(),
       onSuccess: data => {
         setData(JSON.parse(data?.bodyString));
         setTimeout(() => {
@@ -114,7 +130,44 @@ export const useHooks = () => {
     });
   };
 
-  const applyLayer = params => {
+  const getDetailMarker = async (id: number) => {
+    useFetch({
+      endpoint: endpoint.getDetailMarker({
+        id: id,
+        headers: {
+          token_sso: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
+        },
+      }),
+      onSuccess: data => {
+        console.log('data getDetailMarker :>> ', data.data);
+        console.log(
+          'data getDetailMarker attachment:>> ',
+          data.data.ATTACHMENT
+        );
+        setdetailMarker(data.data);
+        // console.log('data getDetailMarker:>> ', data.data);
+        // setselectedMarker(data?.data);
+        // setData(JSON.parse(data?.bodyString));
+        // setTimeout(() => {
+        //   animateMapToTargetRegion({
+        //     ref: mapRef.current,
+        //     latitude: -6.1754,
+        //     longitude: 106.8272,
+        //     latitudeDelta: 0.5,
+        //     longitudeDelta: 0.5,
+        //   });
+        // }, 1000);
+      },
+      onProgress(progress) {
+        setIsLoading(progress);
+      },
+      onError: error => {
+        setError(error);
+      },
+    });
+  };
+
+  const applyLayer = (params: { name: any, url: any }) => {
     const updatedListData = [...layerList];
     // Check if the selectedData already contains an entry with the given name
     const existingEntryIndex = updatedListData.findIndex(
@@ -138,6 +191,24 @@ export const useHooks = () => {
     setlayerList(updatedListData);
   };
 
+  const onPressMarker = (item: {
+    attributes: BaseAtributInterface,
+    geometry: { y: any, x: any },
+  }) => {
+    animateMapToTargetRegion({
+      ref: mapRef.current,
+      latitude: item.geometry.y,
+      longitude: item.geometry.x,
+      latitudeDelta: 0.009,
+      longitudeDelta: 0.009,
+      onAnimationComplete() {
+        setIsModalDetail(true);
+        setselectedMarker(item.attributes);
+        getDetailMarker(item.attributes.REKLAME_ID);
+      },
+    });
+  };
+
   return {
     data,
     error,
@@ -147,12 +218,15 @@ export const useHooks = () => {
       setModalSetting,
       onConfirmGps,
       onCancelGps,
+      onPressMarker,
       getDetaillocation,
       setisSearchingVisible,
       setmodalLayer,
       setlayerList,
       applyLayer,
       getMarkers,
+      setIsModalDetail,
+      setselectedMarker,
     },
     states: {
       coordinate,
@@ -160,6 +234,9 @@ export const useHooks = () => {
       isSearchingVisible,
       modalLayer,
       layerList,
+      isModalDetail,
+      selectedMarker,
+      detailMarker,
     },
     ref: mapRef,
   };

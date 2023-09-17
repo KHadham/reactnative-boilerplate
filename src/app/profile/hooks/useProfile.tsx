@@ -3,7 +3,7 @@ import Toast from 'react-native-toast-message';
 import { storage } from '@utils/storage';
 import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '../apis';
-import { useProfileStore } from '@profileApp/stores';
+import { useProfileStore } from '@profileApp/stores/storage';
 import { APPKEY } from '@constants/appKey';
 import { useFetch ,handleRequest } from '@utils/networking';
 export const useProfile = () => {

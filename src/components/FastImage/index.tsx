@@ -30,7 +30,7 @@ const App: React.FC<AppProps> = ({
 }) => {
   const [isVisible, setisVisible] = useState(false);
   // const [progress, setprogress] = useState(false);
-  // const [isloading, setisloading] = useState(false);
+  const [isloading, setisloading] = useState(false);
 
   const previewModal = () => (
     <ImageView
@@ -54,9 +54,11 @@ const App: React.FC<AppProps> = ({
     } else {
       return (
         <FastImage
-          // onProgress={event => setprogress(event.nativeEvent.total)}
-          // onLoadStart={() => setisloading(true)}
-          // onLoadEnd={() => setisloading(false)}
+          onProgress={e =>
+            console.log(e.nativeEvent.loaded / e.nativeEvent.total)
+          }
+          onLoadStart={() => setisloading(true)}
+          onLoadEnd={() => setisloading(false)}
           style={style}
           source={{
             uri: source,

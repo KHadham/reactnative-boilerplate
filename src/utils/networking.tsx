@@ -81,14 +81,6 @@ export const handleRequest = async ({
     if (Object.keys(headers).length > 0) config.headers = headers;
 
     if (useSsl) {
-      console.log('true :>> ', true);
-      const sslPinningConfig = {
-        certs: [
-          'DigiCert_Global_G2_TLS_RSA_SHA256_2020_CA1',
-          'DigiCert_Global_Root_G2',
-        ],
-      };
-
       const response = await fetch(realPath, {
         method,
         timeoutInterval,
