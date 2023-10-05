@@ -76,6 +76,9 @@
 		<string>Inter-ExtraLight.ttf</string>
 		<string>Inter-Regular.ttf</string>
 	</array>
-	
+	<key>UISupportsDocumentBrowser</key>
+	<true/>
+	<key>UIFileSharingEnabled</key>
+	<true/>
 </dict>
 </plist>

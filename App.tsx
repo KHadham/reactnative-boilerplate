@@ -1,7 +1,7 @@
 import BaseAppRoute from './src/router/Index';
 import Toast, { ToastConfig, ToastConfigParams } from 'react-native-toast-message';
 import { SnackBar } from '@components';
-
+import ReactNativeForegroundService from "@supersami/rn-foreground-service";
 const createSnackBar =
   (event: 'error' | 'success' | 'info' | 'warning' | 'inactive' | 'loading') =>
   ({ text1, props }: ToastConfigParams<any>) =>
@@ -17,6 +17,7 @@ const toastConfig: ToastConfig = {
 };
 
 function App() {
+  ReactNativeForegroundService.register();
   return (
     <>
       <BaseAppRoute />

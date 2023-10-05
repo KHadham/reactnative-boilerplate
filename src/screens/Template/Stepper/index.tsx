@@ -77,12 +77,12 @@
 //           <View style={styles.line} />
 //           <Text size='desc' style={{ margin: spacing.sm }}>
 //             Atau daftar sebagai
-//           </Text.Desc>
+//           </Text>
 //           <View style={styles.line} />
 //         </View> */}
 //         <View style={{ flexDirection: 'row', justifyContent: 'center' }}>
 //           <Button
-//             // containerStyle={{ flex: 1,borderWidth:3 }}
+//             // style={{ flex: 1,borderWidth:3 }}
 //             type="outline"
 //             title="Legislatif"
 //             onPress={() =>
@@ -93,7 +93,7 @@
 //             }
 //           />
 //           <Button
-//             // containerStyle={{ flex: 1 }}
+//             // style={{ flex: 1 }}
 //             type="outline"
 //             title="Kepala Daerah"
 //             onPress={() =>

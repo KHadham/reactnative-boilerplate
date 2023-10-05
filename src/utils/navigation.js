@@ -207,7 +207,7 @@ export function useNavigationHandler() {
 
   };
 
-  const onPressLink = async ({ url }) => {
+  const onPressLink = async (url) => {
     const supported = await Linking.canOpenURL(url);
 
     if (supported) {

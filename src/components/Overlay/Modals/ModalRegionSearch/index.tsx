@@ -139,7 +139,7 @@ const App: React.FC<AppProps> = ({
           renderItem={({ item, index }) => (
             <Button
               key={index}
-              containerStyle={{ paddingVertical: spacing.md }}
+              style={{ paddingVertical: spacing.md }}
               onPress={() => onPressItem(item)}
             >
               {formatBoldSubstring(item.description, value)}
@@ -162,7 +162,7 @@ const App: React.FC<AppProps> = ({
                 </View>
                 {historyList.reverse().map((item, index) => (
                   <Button
-                    containerStyle={{ paddingVertical: spacing.md }}
+                    style={{ paddingVertical: spacing.md }}
                     onPress={() => {
                       onSelect(item.place_id);
                       onClose();

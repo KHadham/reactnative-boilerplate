@@ -150,6 +150,7 @@ interface FetchConfig {
   onError?: (e: any) => void;
   onProgress?: (e: any) => void;
   successStatuses?: (string | boolean | number)[];
+  delay?: number
 }
 
 export const useFetch = async (config: FetchConfig) => {
@@ -159,19 +160,22 @@ export const useFetch = async (config: FetchConfig) => {
     onError = () => { },
     onProgress = () => { },
     successStatuses = ['success', true, 200],
+    delay = 0
   } = config;
   onProgress(true);
   try {
     const response = await endpoint;
-    if (successStatuses?.includes(response?.status)) {
-      response.data == undefined ?onSuccess(response): onSuccess(response.data);
-    } else {
-      onError(response);
-    }
+    setTimeout(() => {
+      if (successStatuses?.includes(response?.status)) {
+        response.data == undefined ? onSuccess(response) : onSuccess(response.data);
+      } else {
+        onError(response);
+      }
+        onProgress(false);
+    }, delay);
   } catch (e) {
     onError(e);
-  } finally {
     onProgress(false);
-  }
+  } 
 };
 

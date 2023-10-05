@@ -17,12 +17,12 @@ import {
   ReklameArcgisInterface,
   BaseAtributInterface,
   ResponseAtributInterface,
-} from '@semeterApp/stores/interface';
+} from '@semeterApp/stores/interfaces';
 import {
   ReklameArcgisData,
   BaseAtributData,
   ResponseAtributData,
-} from '@semeterApp/stores/models';
+} from '@semeterApp/stores/seeds';
 import { STORAGE_KEY } from '@constants/index';
 import { storage } from '@utils/storage';
 

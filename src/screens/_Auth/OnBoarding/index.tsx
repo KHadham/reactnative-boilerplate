@@ -85,7 +85,7 @@ const Screen = () => {
             <Text size='header' style={{ textAlign: 'center' }}>
               {item?.title}
             </Text>
-            <Text size='desc' style={{ textAlign: 'center' }}>{item?.desc}</Text.Desc>
+            <Text size='desc' style={{ textAlign: 'center' }}>{item?.desc}</Text>
           </View>
         )}
       />
@@ -107,7 +107,7 @@ const Screen = () => {
           <Button
             type="outline"
             title="Legislatif"
-            containerStyle={{ flex: 1 }}
+            style={{ flex: 1 }}
             onPress={() =>
               navigate({
                 parent: 'Auth',
@@ -123,7 +123,7 @@ const Screen = () => {
           <Button
             type="outline"
             title="Kepala Daerah"
-            containerStyle={{ flex: 1 }}
+            style={{ flex: 1 }}
             onPress={() =>
               navigate({
                 parent: 'Auth',

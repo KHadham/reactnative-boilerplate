@@ -75,7 +75,7 @@ const Screen = () => {
         stickyHeaderHiddenOnScroll
         ListHeaderComponent={() => (
           <Button
-            containerStyle={{
+            style={{
               padding: spacing.md,
               backgroundColor: COLOR_WHITE,
             }}
@@ -93,7 +93,7 @@ const Screen = () => {
                 text2: 'This is some something 👋',
               })
             }
-            containerStyle={{
+            style={{
               borderRadius: 10,
               padding: spacing.md,
               backgroundColor: COLOR_WHITE,

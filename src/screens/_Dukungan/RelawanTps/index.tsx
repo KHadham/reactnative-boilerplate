@@ -47,7 +47,7 @@ const Screen = () => {
     <BaseView>
       <View style={{ padding: spacing.md, paddingTop: spacing.xs }}>
         <Input type="search" value={''} placeholder="Cari nama pendukung" />
-        <Text size='desc'>Terdapat 123.201 Dukungan</Text.Desc>
+        <Text size='desc'>Terdapat 123.201 Dukungan</Text>
       </View>
       <FlatList
         data={[
@@ -92,8 +92,8 @@ const Screen = () => {
               </View>
               <Spacer />
               <View style={{ justifyContent: 'center' }}>
-                <Text size='title'>{item.name}</Text.Title>
-                <Text size='desc'>{item.name}</Text.Desc>
+                <Text size='title'>{item.name}</Text>
+                <Text size='desc'>{item.name}</Text>
               </View>
             </View>
             <Icon

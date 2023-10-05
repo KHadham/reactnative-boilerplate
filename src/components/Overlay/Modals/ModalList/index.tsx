@@ -190,7 +190,7 @@ const App: React.FC<AppProps> = ({
                     onClose();
                   }, 300);
                 }}
-                containerStyle={[
+                style={[
                   styles.listWrap,
                   {
                     borderColor:

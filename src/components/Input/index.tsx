@@ -1,104 +1,67 @@
-import { getNumberOnly, toTitleCase } from '@utils';
+import React, {
+  useEffect,
+  useRef,
+  useState,
+  forwardRef,
+  ForwardRefRenderFunction,
+  Ref,
+} from 'react';
+import {
+  View,
+  TouchableOpacity,
+  TextInput,
+  Switch,
+  KeyboardAvoidingView,
+} from 'react-native';
+import dayjs from 'dayjs';
+import DateTimePickerModal from 'react-native-modal-datetime-picker';
+
+import { getNumberOnly, toTitleCase } from '@utils/index';
 import {
   COLOR_EVENT_ERROR,
   COLOR_EVENT_INACTIVE,
   COLOR_EVENT_SUCCESS,
   COLOR_FONT_PRIMARY_DARK,
-  COLOR_EVENT_INFORMATION,
-  FONT_PRIMARY_MEDIUM,
   COLOR_WHITE,
+  COLOR_FONT_PRIMARY_LIGHT,
+  COLOR_BACKGROUND,
+  COLOR_BASE_PRIMARY_DARK,
+  COLOR_GREY,
+  COLOR_GREY_LIGHT,
+  COLOR_BACKGROUND_ERROR,
+  COLOR_BACKGROUND_SUCCESS,
 } from '@themes/index';
-import { BaseView, ModalList, Button, Switch } from '@components';
-
-import React, { useEffect, useRef, useState } from 'react';
-import {
-  View,
-  TouchableOpacity,
-  Animated,
-  Text,
-  TextInput,
-  StatusBar,
-  Image,
-  Keyboard,
-  FlatList,
-  Easing,
-  TouchableWithoutFeedback,
-  ViewStyle,
-  TextInputProps,
-} from 'react-native';
-import dayjs from 'dayjs';
-import { Icon } from '@components';
-
-import styles from './styles';
-import DateTimePickerModal from 'react-native-modal-datetime-picker';
-import Modal from 'react-native-modal';
-// import { FlatList } from 'react-native-gesture-handler';
-import Ripple from 'react-native-material-ripple';
-import ImagePicker from 'react-native-image-crop-picker';
-import { openImagePicker } from '@utils/permissions';
-
+import { Text, Icon } from '@components';
+import { Otp, ImagePicker } from '@components/Input/indexx';
 import { heightByScreen } from '@utils/dimensions';
-// type TextWrapProps = TextProps & {
+import { LayoutAnimationHandler } from '@utils/uiHandler';
+import { InputProps, TypeListConfigMap } from './types';
+import styles from './styles';
 
-type Props = TextInputProps & {
-  label?: string,
-  error?: any,
-  value: any,
-  onInteract?: Function,
-  type?:
-    | 'text'
-    | 'password'
-    | 'time'
-    | 'date'
-    | 'select'
-    | 'switch'
-    | 'area'
-    | 'search'
-    | 'check'
-    | 'radio'
-    | 'image'
-    | 'number'
-    | 'otp',
-  data?: Array<String>,
-  placeholder?: string,
-  length?: number,
-  borderRadius?: number,
-  style?: ViewStyle,
-  ref?: any,
-  editable?: boolean,
-};
-
-const Component = ({
-  label,
-  value = '',
-  onInteract,
-  error = null,
-  type = 'text',
-  data,
-  placeholder,
-  length,
-  borderRadius = 10,
-  style,
-  ref,
-  editable,
-  ...rest
-}: Props) => {
-  // if (type === 'select' && (!data || !placeholder)) {
-  //   throw new Error('data and placeholder are required');
-  // }
-  const scrollY = useRef(new Animated.Value(0)).current;
-  const switchAnim = useRef(new Animated.Value(0)).current;
-  const listPhotoRef = useRef(null);
-  const otpInputsRef = useRef([]);
-
+const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
+  {
+    label,
+    value = undefined,
+    onInteract,
+    error = '',
+    success = '',
+    required = '',
+    type = 'text',
+    data, // multiple input / selection
+    length = 6,
+    borderRadius = 10,
+    style,
+    leftComponent = null,
+    rightComponent = null,
+    ...rest
+  },
+  ref: Ref<TextInput>
+) => {
   const [usrInput, setusrInput] = useState(value);
   const [isSelected, setisSelected] = useState(false);
   const [isModalShow, setisModalShow] = useState(false);
   const [isPickerShow, setisPickerShow] = useState(false);
-  const [isPreviewModal, setisPreviewModal] = useState(false);
   const [isFocus, setisFocus] = useState(false);
-  const [isFocusOtp, setisFocusOtp] = useState(null);
-  const [imagePreview, setimagePreview] = useState('');
   const [showPass, setshowPass] = useState(type == 'password');
   const [isDatePickerVisible, setDatePickerVisibility] = useState(false);
 
@@ -107,524 +70,314 @@ const Component = ({
     setisSelected(value);
   }, [value]);
 
-  const pickOption = async (camera: boolean) => {
-    setisPickerShow(false);
-    if (camera) {
-      ImagePicker.openCamera({
-        width: 300,
-        height: 400,
-      }).then(image => {
-        onInteract([...usrInput, image]);
-        console.log(image);
-      });
-    } else {
-      ImagePicker.openPicker({
-        width: 300,
-        height: 400,
-      })
-        .then(image => {
-          onInteract([...usrInput, image]);
-          console.log(image);
-        })
-        .catch(error => console.log('error :>> ', error));
-    }
-    // listPhotoRef.current.scrollToIndex({
-    //   index: 0,
-    //   animated: true,
-    //   viewOffset: 0,
-    //   viewPosition: 1,
-    // });
-    // listPhotoRef.current.scrollToEnd({ animated: true });
+  useEffect(() => {
+    LayoutAnimationHandler();
+  }, [value, error, isFocus, usrInput]);
 
-    // ImagePicker.clean()
-    //   .then(() => {
-    //     console.log('removed all tmp images from tmp directory');
-    //   })
-    //   .catch(e => {});
-  };
-
-  const typeListConfig = [
-    {
-      type: 'text',
-      icon: '',
-      onPress: () => setshowPass(!showPass),
-      editable: true,
-      emptyBtn: true,
+  const typeListConfig: TypeListConfigMap = {
+    otp: { keyboardType: 'default' },
+    text: { keyboardType: 'default' },
+    username: { keyboardType: 'default', icon: 'account' },
+    phone: {
+      icon: 'phone',
+      keyboardType: 'phone-pad',
+      validation: getNumberOnly
     },
-    {
-      type: 'number',
-      icon: '',
-      onPress: () => {},
-      editable: true,
-      emptyBtn: true,
+    number: {
+      keyboardType: 'decimal-pad',
+      validation: getNumberOnly
     },
-    {
-      type: 'password',
+    password: {
       icon: ['eye', 'eye-off'],
       onPress: () => setshowPass(!showPass),
       state: showPass,
-      editable: true,
+      keyboardType: 'default',
     },
-    {
-      type: 'time',
+    area: {
+      icon: 'resize-bottom-right',
+      keyboardType: 'default',
+    },
+    search: {
+      icon: 'magnify',
+      keyboardType: 'default',
+    },
+    email: {
+      icon: 'email-outline',
+      keyboardType: 'email-address',
+    },
+    time: {
       icon: 'clock-outline',
       onPress: () => setDatePickerVisibility(!isDatePickerVisible),
+      keyboardType: 'default',
+      typeable: false
     },
-    {
-      type: 'date',
+    date: {
       icon: 'calendar-month',
       onPress: () => setDatePickerVisibility(!isDatePickerVisible),
+      keyboardType: 'default',
+      typeable: false
     },
-    {
-      type: 'select',
+    select: {
       icon: 'chevron-down',
       onPress: () => setisModalShow(!isModalShow),
+      keyboardType: 'default',
     },
-    {
-      type: 'switch',
-      onPress: () => setisSelected(!isSelected),
-    },
-    {
-      type: 'area',
-      icon: 'resize-bottom-right',
-      onPress: () => setshowPass(!showPass),
-      editable: true,
-    },
-    {
-      type: 'search',
-      icon: 'magnify',
-      emptyBtn: true,
-      onPress: () => console.log('asdas :>> '),
-      editable: true,
-    },
-    {
-      type: 'check',
-      icon: ['checkbox-marked-outline', 'checkbox-blank-outline'],
-    },
-    {
-      type: 'radio',
-      icon: ['radiobox-marked', 'radiobox-blank'],
-    },
-    {
-      type: 'image',
-      icon: 'plus',
+    image: {
+      icon: 'file-image-plus-outline',
       onPress: () => setisPickerShow(!isPickerShow),
+      keyboardType: 'default',
     },
-  ].find(data => data.type == type);
+    switch: {
+      onPress: () => setisSelected(!isSelected),
+      keyboardType: 'default',
+      typeable: false,
+      state: isSelected,
+    },
+    check: {
+      icon: ['checkbox-marked-outline', 'checkbox-blank-outline'],
+      keyboardType: 'default',
+      typeable: false,
+      onPress: () => setisSelected(!isSelected),
+      state: isSelected,
+    },
+    radio: {
+      icon: ['radiobox-marked', 'radiobox-blank'],
+      keyboardType: 'default',
+      typeable: false,
+      onPress: () => setisSelected(!isSelected),
+      state: isSelected,
+    },
+  };
 
-  const borderColor = () => {
-    if (error) {
-      return COLOR_EVENT_ERROR;
-    } else if (isFocus) {
-      return COLOR_EVENT_SUCCESS;
-    } else {
-      return COLOR_EVENT_INACTIVE;
+  const fieldStateBorder = () => {
+    if (isFocus) return COLOR_BASE_PRIMARY_DARK;
+    else if (success) return COLOR_EVENT_SUCCESS;
+    else if (error) return COLOR_EVENT_ERROR;
+    else if (!rest.editable) return COLOR_FONT_PRIMARY_LIGHT;
+    else return COLOR_EVENT_INACTIVE;
+  };
+
+  const fieldStateBackground = () => {
+    if (rest.editable !== undefined) return COLOR_GREY_LIGHT;
+    else if (error) return COLOR_BACKGROUND_ERROR;
+    else if (success) return COLOR_BACKGROUND_SUCCESS;
+    else return COLOR_WHITE;
+  };
+
+  const icons = () => {
+    const typeConfig = typeListConfig[type];
+    if (typeConfig) {
+      if (typeof typeConfig.icon === 'string') {
+        return typeConfig.icon;
+      } else if (Array.isArray(typeConfig.icon)) {
+        return typeConfig.state ? typeConfig.icon[0] : typeConfig.icon[1];
+      }
     }
   };
 
-  const handleOtpInput = (params: any, index: number) => {
-    if (params.key == 'Backspace') {
-      if (value[index] == ' ') {
-        otpInputsRef.current[index - 1].focus();
-      } else if (value[index] !== undefined) {
-        onInteract(value.slice(0, index) + ' ' + value.slice(index + 1));
-      }
-      if (index == 0) {
-        otpInputsRef.current[index].blur();
-      }
-    } else {
-      if (getNumberOnly(params.key) !== '') {
-        onInteract(
-          value.slice(0, index) +
-            getNumberOnly(params.key) +
-            value.slice(index + 1)
-        );
-        if (index + 1 == length) {
-          otpInputsRef.current[index].blur();
-        } else {
-          otpInputsRef.current[index + 1].focus();
-        }
-      } else {
-        // Snackbar;
-        // infokan user untuk masukin angka aja
-      }
-    }
-  };
-
-  const suffix = () => {
-    if (typeListConfig) {
-      const iconSwitch = typeListConfig.state
-        ? typeListConfig.icon[0]
-        : typeListConfig.icon[1];
-      const icons = Array.isArray(typeListConfig.icon)
-        ? iconSwitch
-        : typeListConfig.icon;
-
-      if (
-        (type === 'text' || type === 'search') &&
-        isFocus &&
-        usrInput !== ''
-      ) {
-        return (
-          <TouchableOpacity
-            style={[styles.rightIcon(type)]}
-            onPress={() => onInteract('')}
-          >
-            <Icon name={'close'} size={22} />
-          </TouchableOpacity>
-        );
-      } else if (typeListConfig.icon) {
-        return (
-          <TouchableOpacity
-            style={[styles.rightIcon(type)]}
-            onPress={() => typeListConfig.onPress()}
-          >
-            <Icon name={icons} size={22} />
-          </TouchableOpacity>
-        );
-      }
-    }
-    return null;
-  };
-
-  const prefix = () => {
-    if (type == 'date' || type == 'time') {
-      console.log('value length :>> ', value);
+  const right = () => {
+    if (isFocus && usrInput !== '') {
       return (
-        <DateTimePickerModal
-          isVisible={isDatePickerVisible}
-          mode={type}
-          onConfirm={() => setDatePickerVisibility(!isDatePickerVisible)}
-          onCancel={() => setDatePickerVisibility(false)}
-          locale="en_GB"
-          is24Hour={true}
-        />
-      );
-    } else return null;
-  };
-
-  const pickerModal = () => (
-    <Modal
-      isVisible={isPickerShow}
-      onBackdropPress={() => setisPickerShow(false)}
-      onSwipeComplete={() => setisPickerShow(false)}
-      swipeDirection={['down']}
-      style={{ justifyContent: 'flex-end', margin: 0 }}
-      propagateSwipe={true}
-    >
-      <StatusBar barStyle={'light-content'} />
-      <BaseView style={styles.pickerModal}>
-        <Ripple
-          onPress={() => pickOption(true)}
-          style={{ alignItems: 'center', flex: 1, padding: 20 }}
-        >
-          <Icon name={'camera'} size={22} />
-          <Text>Dari Kamera</Text>
-        </Ripple>
-        <Ripple
-          onPress={() => pickOption(false)}
-          style={{ alignItems: 'center', flex: 1, padding: 20 }}
-        >
-          <Icon name={'folder-image'} size={22} />
-          <Text>Dari Galleri</Text>
-        </Ripple>
-      </BaseView>
-    </Modal>
-  );
-
-  const listModal = () => {
-    return (
-      <ModalList
-        visible={isModalShow}
-        data={data}
-        isSearch={true}
-        onClose={() => setisModalShow(false)}
-        selectedValue={usrInput}
-        onSelect={(txt: any) => onInteract(txt)}
-      />
-    );
-  };
-
-  const previewModal = () => (
-    <Modal
-      isVisible={isPreviewModal}
-      onBackdropPress={() => setisPreviewModal(false)}
-      onSwipeComplete={() => setisPreviewModal(false)}
-      propagateSwipe={true}
-      swipeDirection={['down', 'left', 'right', 'up']}
-    >
-      <View>
         <TouchableOpacity
-          style={styles.closeBtn}
-          onPress={() => {
-            setisPreviewModal(false);
-          }}
+          style={styles.sideComponentWrap}
+          onPress={() => onInteract('')}
         >
-          <Icon name={'close'} size={22} color="white" />
+          <Icon name={'close'} size={22} color={COLOR_EVENT_ERROR} />
         </TouchableOpacity>
-        <Image
-          style={{ width: '100%', height: '100%' }}
-          source={{ uri: imagePreview }}
-        />
-      </View>
-    </Modal>
-  );
-
-  const selectedIcon = (item: any) => {
-    const selected = usrInput?.includes(item);
-    if (type == 'switch') {
-      return selected;
+      );
     }
-    return selected ? typeListConfig.icon[0] : typeListConfig.icon[1];
+    else if (type == 'switch') {
+      return (
+        <View style={styles.sideComponentWrap}>
+          <Switch
+            value={value}
+            onValueChange={() => { handleFieldPress() }}
+          />
+        </View>
+      )
+    }
+    else if (typeListConfig[type].icon) {
+      return (
+        <>
+          {typeListConfig[type].typeable == false && <View style={{ justifyContent: 'center' }}>
+            <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
+          </View>}
+          <TouchableOpacity
+            disabled={typeListConfig[type].onPress == undefined}
+            style={[styles.sideComponentWrap, type == 'area' && { alignItems: 'flex-end', paddingBottom: 12 }]}
+            onPress={() => typeListConfig[type].onPress()}
+          >
+            <Icon name={icons()} size={22} color={fieldStateBorder()} />
+          </TouchableOpacity>
+        </>
+      );
+    }
+    else if (rightComponent) {
+      return (
+        <>
+          <View style={{ justifyContent: 'center' }}>
+            <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
+          </View>
+          {rightComponent}
+        </>
+      )
+    }
   };
 
-  const handleValueChange = (item: any) => {
-    var selectedIndex = usrInput.indexOf(item);
-    if (type == 'radio') {
-      onInteract(item);
+  const left = () => {
+    if (leftComponent) return (
+      <>
+        {leftComponent}
+        <View style={{ justifyContent: 'center' }}>
+          <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
+        </View>
+      </>
+    )
+  };
+
+  const disableState = () => {
+    if (!typeListConfig[type].typeable && typeListConfig[type].onPress !== undefined && rest.editable == false) {
+      return true
     } else {
-      if (selectedIndex > -1) {
-        usrInput.splice(selectedIndex, 1);
-        onInteract([...usrInput]);
-      } else {
-        onInteract([...usrInput, item]);
-      }
+      return false
     }
-  };
+  }
+
+  const handleFieldPress = () => {
+    if (disableState) {
+      typeListConfig[type].onPress()
+      onInteract(!isSelected)
+    }
+  }
 
   const basicInput = () => {
     return (
-      <View
-        onTouchEnd={() => type !== 'password' && typeListConfig?.onPress()}
+      <TouchableOpacity
+        disabled={disableState()}
+        onPress={() => handleFieldPress()}
         style={{
+          borderRadius: borderRadius,
+          borderColor: fieldStateBorder(),
+          height: type == 'area' ? 120 : heightByScreen(8),
+          backgroundColor: fieldStateBackground(),
           borderWidth: 1,
           marginVertical: 4,
-          borderRadius: borderRadius,
-          borderColor: borderColor(),
           flexDirection: 'row',
-          height: type == 'area' ? 120 : heightByScreen(8),
           minHeight: 40,
-          backgroundColor: COLOR_WHITE,
         }}
       >
-        {prefix()}
+        {left()}
         <TextInput
-              {...rest}
-          pointerEvents="auto"
+          keyboardType={typeListConfig[type].keyboardType ?? 'default'}
+          ref={ref}
+          {...rest}
           value={usrInput}
-          placeholder={placeholder}
-          onChangeText={txt =>
-            onInteract(type == 'number' ? getNumberOnly(txt) : txt)
-          }
+          onChangeText={(txt) => {
+            const validationFunction = typeListConfig[type]?.validation;
+            const finalValue = validationFunction ? validationFunction(txt) : txt;
+            onInteract(finalValue);
+          }}
           style={{
             flex: 7,
             paddingHorizontal: 8,
             color: COLOR_FONT_PRIMARY_DARK,
           }}
-          placeholderTextColor={COLOR_FONT_PRIMARY_DARK}
+          placeholderTextColor={COLOR_FONT_PRIMARY_LIGHT}
           multiline={type == 'area'}
           textAlignVertical={type == 'area' ? 'top' : 'center'}
           onFocus={() => setisFocus(true)}
           onBlur={() => setisFocus(false)}
-          editable={editable && typeListConfig?.editable == true}
+          editable={typeListConfig[type].typeable ?? rest.editable}
           secureTextEntry={type == 'password' && showPass}
-          keyboardType={type == 'number' ? 'number-pad' : 'default'}
         />
-        {suffix()}
-      </View>
+        {right()}
+      </TouchableOpacity>
     );
-  };
-
-  const renderMultipleInput = ({ item }) => {
-    return (
-      <Ripple
-        style={{
-          borderWidth: 1,
-          marginVertical: 4,
-          borderRadius: borderRadius,
-          borderColor: borderColor(),
-          flexDirection: 'row',
-          height: heightByScreen(7.5),
-        }}
-        rippleContainerBorderRadius={4}
-        onPress={() => handleValueChange(item)}
-      >
-        {type !== 'switch' && (
-          <TouchableOpacity
-            style={styles.itemSelect}
-            onPress={() => {
-              handleValueChange(item);
-            }}
-          >
-            <Icon
-              name={selectedIcon(item)}
-              size={22}
-              // color={error ? COLOR_EVENT_ERROR : COLOR_FONT_PRIMARY_DARK}
-            />
-          </TouchableOpacity>
-        )}
-        {/* {type == 'switch' && <View style={{ marginRight: 6 }} />} */}
-        <TextInput
-          value={item}
-          // placeholder={placeholder}
-          style={{
-            flex: 1,
-            color: COLOR_FONT_PRIMARY_DARK,
-            paddingLeft: 6,
-          }}
-          textAlignVertical={'center'}
-          editable={false}
-        />
-        {type == 'switch' && (
-          <View style={[styles.rightIcon(type)]}>
-            <Switch
-              value={selectedIcon(item)}
-              onSwitch={() => handleValueChange(item)}
-            />
-          </View>
-        )}
-      </Ripple>
-    );
-  };
-
-  const mainInput = () => {
-    if (type == 'check' || type == 'radio' || type == 'switch') {
-      return <FlatList data={data} renderItem={renderMultipleInput} />;
-    } else if (type == 'otp') {
-      return (
-        <View style={styles.pickerWrap}>
-          {[...Array(length)].map((item, index) => (
-            <View
-              style={{
-                borderWidth: 1,
-                flex: 1,
-                flexDirection: 'row',
-                borderRadius: 12,
-                margin: 2,
-                maxWidth: 48,
-                justifyContent: 'center',
-                borderColor:
-                  isFocusOtp == index
-                    ? COLOR_EVENT_SUCCESS
-                    : COLOR_EVENT_INACTIVE,
-              }}
-            >
-              <TextInput
-                value={value?.split('')[index]}
-                key={index}
-                textAlign="center"
-                keyboardType="number-pad"
-                maxLength={1}
-                onFocus={() => setisFocusOtp(index)}
-                onBlur={() => setisFocusOtp(null)}
-                onKeyPress={({ nativeEvent }) =>
-                  handleOtpInput(nativeEvent, index)
-                }
-                editable={editable}
-                ref={ref => (otpInputsRef.current[index] = ref)}
-              />
-            </View>
-          ))}
-        </View>
-      );
-    } else if (type == 'image') {
-      return (
-        <View style={styles.pickerWrap}>
-          <FlatList
-            data={usrInput}
-            horizontal
-            showsHorizontalScrollIndicator={false}
-            ref={listPhotoRef}
-            renderItem={({ item, index }) => (
-              <View style={[styles.listImg, { borderColor: borderColor() }]}>
-                <TouchableOpacity
-                  style={styles.closeBtn}
-                  onPress={() => {
-                    usrInput.splice(index, 1);
-                    onInteract([...usrInput]);
-                  }}
-                >
-                  <Icon name={'close'} size={22} color="white" />
-                </TouchableOpacity>
-                <Ripple
-                  onPress={() => {
-                    setimagePreview(item.path);
-                    setisPreviewModal(true);
-                  }}
-                >
-                  <Image
-                    style={{
-                      width: 86,
-                      height: 86,
-                      borderRadius: borderRadius,
-                    }}
-                    resizeMethod="auto"
-                    resizeMode="cover"
-                    source={{ uri: item?.path }}
-                  />
-                </Ripple>
-              </View>
-            )}
-            ListFooterComponent={
-              <Button
-                onPress={() => setisPickerShow(true)}
-                style={[
-                  styles.footerImgList,
-                  { borderColor: borderColor(), flex: 1 },
-                ]}
-              >
-                <Icon name={'image'} size={50} />
-                <Icon name={'camera-plus'} size={10} />
-              </Button>
-            }
-          />
-        </View>
-      );
-    } else {
-      return basicInput();
-    }
   };
 
   const labelText = () => {
-    return (
-      <View
-        style={{
-          flexDirection: 'row',
-          alignItems: 'center',
-        }}
-      >
-        <Text
-          style={{
-            color: error ? COLOR_EVENT_ERROR : COLOR_FONT_PRIMARY_DARK,
-            marginRight: 6,
-            fontFamily: 'Inter-Regular',
-          }}
-        >
-          {toTitleCase(label)}
-        </Text>
-        {error && (
-          <TouchableOpacity>
-            <Icon
-              name={'information-outline'}
-              size={16}
-              color={COLOR_EVENT_ERROR}
-            />
-          </TouchableOpacity>
-        )}
-      </View>
-    );
+    if (label) {
+      return (
+        <View style={{ flexDirection: 'row' }} >
+          <Text weight='bold'>
+            {toTitleCase(label)}
+          </Text>
+          {required && <Text weight='bold' color={COLOR_EVENT_ERROR}>
+            {' '}*
+          </Text>}
+        </View>
+      );
+    }
   };
 
+  const messageInfo = () => {
+    let iconName: string, iconColor: string, text: string | boolean;
+    if (error) {
+      iconName = 'alert-outline';
+      iconColor = COLOR_EVENT_ERROR;
+      text = error;
+    } else if (success) {
+      iconName = 'check';
+      iconColor = COLOR_EVENT_SUCCESS;
+      text = success;
+    } else if (required) {
+      iconName = 'alert-circle-outline';
+      iconColor = COLOR_FONT_PRIMARY_DARK;
+      text = required;
+    }
+    if (typeof text !== 'boolean' && iconName) {
+      return (
+        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+          <Icon name={iconName} size={16} color={iconColor} />
+          <Text style={{ color: iconColor }}> {text}</Text>
+        </View>
+      )
+    }
+  }
+
+  const mainInput = () => {
+    if (type == 'otp') {
+      return (
+        <Otp
+          value={value}
+          length={length}
+          onInteract={(values) => onInteract(values)}
+        />
+      )
+    } else if (type == 'image') {
+      return (
+        <ImagePicker
+          data={value}
+          onInteract={(data) => onInteract(data)}
+          borderRadius={borderRadius}
+        />
+      )
+    }
+    else return basicInput()
+  }
+
   return (
-    <View style={[{ paddingVertical: 8 }, style]}>
-      {label && labelText()}
+    <KeyboardAvoidingView style={[{ paddingVertical: 8 }, style]}>
+      {labelText()}
       {mainInput()}
-      {error && <Text style={{ color: COLOR_EVENT_ERROR }}>{error}</Text>}
-      {/* {listModal()} */}
-      {pickerModal()}
-      {previewModal()}
-    </View>
+      {messageInfo()}
+      {(type == 'date' || type == 'time') && (
+        <DateTimePickerModal
+          isVisible={isDatePickerVisible}
+          mode={type}
+          onConfirm={(data) => {
+            onInteract(dayjs(data).format(type == 'time' ? 'HH:mm' : 'DD/MM/YYYY'))
+            setDatePickerVisibility(!isDatePickerVisible)
+          }}
+          onCancel={() => setDatePickerVisibility(false)}
+          locale="en_GB"
+          is24Hour={true}
+        />
+      )}
+    </KeyboardAvoidingView>
   );
 };
 
-export default Component;
+export default forwardRef(Component);
+// tambahin ini di setiap scrollview / flatlist ==>
+//  keyboardShouldPersistTaps='always'

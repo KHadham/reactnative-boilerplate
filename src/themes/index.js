@@ -24,8 +24,8 @@ const citataTheme = {
 
 
 
-export const COLOR_BASE_PRIMARY_DARK = '#0054b0';
 export const COLOR_BASE_PRIMARY_MAIN = '#003D80';
+export const COLOR_BASE_PRIMARY_DARK = '#0054b0';
 
 // export const COLOR_BASE_PRIMARY_DARK = '#039855';
 // export const COLOR_BASE_PRIMARY_MAIN = '#43A01C';
@@ -73,11 +73,10 @@ export const FONT_SECONDARY_BOLD = 'PlusJakartaSans-Bold';
 const getFontScale = PixelRatio.getFontScale();
 const fontSize = size => fontPixel(size) 
 
-export const FONT_SIZE_HEADER = fontSize(28);
-export const FONT_SIZE_TITLE = fontSize(23);
-export const FONT_SIZE_SUBTITLE = fontSize(20);
-export const FONT_SIZE_DESC = fontSize(18);
-export const FONT_SIZE_CAPTION = fontSize(16);
-export const FONT_SIZE_INFO = fontSize(12);
+export const FONT_SIZE_HEADER = fontSize(23);
+export const FONT_SIZE_TITLE = fontSize(21);
+export const FONT_SIZE_SUBTITLE = fontSize(19);
+export const FONT_SIZE_DESC = fontSize(16);
 export const FONT_SIZE_REGULAR = fontSize(14);
+export const FONT_SIZE_INFO = fontSize(12);
 

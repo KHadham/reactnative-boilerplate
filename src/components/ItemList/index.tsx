@@ -40,7 +40,7 @@ const App: React.FC<AppProps> = ({
   return (
     <Button
       disabled={typeof rightAction !== 'function'}
-      containerStyle={[{ minHeight: 50, justifyContent: 'center' }, style]}
+      style={[{ minHeight: 50, justifyContent: 'center' }, style]}
       onPress={() => handleRightAction()}
     >
       <View

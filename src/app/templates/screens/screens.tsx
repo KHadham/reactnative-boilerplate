@@ -6,7 +6,7 @@ import styles from './styles';
 import { Icon } from '@components';
 import { navigate } from '@utils/navigation';
 import { BaseView, Text } from '@components';
-import {useBearStore} from './../stores/stores'
+import {useBearStore} from '../stores/stores'
 interface AppProps {
   props1: string;
   props2: number;
@@ -34,7 +34,7 @@ const App: React.FC<AppProps> = ({ props1 = 'default value', props2 }) => {
       <Text weight='bold' style={{}}>
         {props1}
         {props2}
-      </Text.Bold>
+      </Text>
     </BaseView>
   );
 };

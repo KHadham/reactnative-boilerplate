@@ -49,7 +49,7 @@ const Screen = ({ navigation }: HomeScreenProps) => {
 
   return (
     <BaseView style={{}}>
-      <Text size='title' >Home</Text.Title>
+      <Text size='title' >Home</Text>
     </BaseView>
   );
 };

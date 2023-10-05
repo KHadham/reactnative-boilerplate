@@ -180,7 +180,7 @@ const App: React.FC<AppProps> = ({
               key={`keys${indexx}`}
               onPress={() => filtering(item.title, itemx)}
               // isSelected={someFunction(x)}
-              containerStyle={[
+              style={[
                 {
                   borderWidth: 2,
                   borderRadius: 10,
@@ -255,7 +255,7 @@ const App: React.FC<AppProps> = ({
         />
         <Button
           title="Terapkan Filter"
-          containerStyle={{ marginTop: spacing.md }}
+          style={{ marginTop: spacing.md }}
           onPress={() => {
             onFilterChange(selectedData);
             onClose();

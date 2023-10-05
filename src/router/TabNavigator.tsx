@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '@homeApp/screens/home';
 import Berita from '@newsApp/screens';
-import Faq from '../app/others/screens/faq';
+import Faq from '@othersApp/screens/faq';
 import Profil from '@profileApp/screens/profile';
 import { Icon, Text } from '@components';
 import {

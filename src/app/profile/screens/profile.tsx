@@ -83,7 +83,12 @@ const App: React.FC = () => {
             fetch();
           },
         },
-        // { title: 'Kirim Tiket', right: () => {} },
+        {
+          title: 'Produk Hukum',
+          right: () => {
+            navigate({ parent: 'Profile', screen: 'ProdukHukum' });
+          },
+        },
       ],
     },
     {
@@ -186,7 +191,9 @@ const App: React.FC = () => {
         sections={MENULIST}
         contentContainerStyle={{}}
         keyExtractor={(item, index) => item.title + index}
-        ItemSeparatorComponent={() => <Separator marginHorizontal={spacing.md} />}
+        ItemSeparatorComponent={() => (
+          <Separator marginHorizontal={spacing.md} />
+        )}
         renderItem={({ item, index }) => (
           <ItemList
             style={{
@@ -212,7 +219,7 @@ const App: React.FC = () => {
         ListFooterComponent={
           <Button
             color={'danger'}
-            containerStyle={{ marginVertical: spacing.sm }}
+            style={{ marginVertical: spacing.sm }}
             title="Logout"
             onPress={() => setbaseModal('logout')}
             type="outline"

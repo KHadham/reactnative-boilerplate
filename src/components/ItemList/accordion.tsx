@@ -31,7 +31,7 @@ const App: React.FC<AppProps> = ({ title = '', desc = '', onPress, style }) => {
 
   return (
     <Button
-      containerStyle={[
+      style={[
         {
           flexDirection: 'row',
           alignItems: 'center',

@@ -5,7 +5,7 @@ import Profil from '@profileApp/screens/profile';
 import ChangePassword from '@profileApp/screens/changePassword';
 import dataKepegawaian from '@profileApp/screens/dataKepegawaian';
 import informasiPersonal from '@profileApp/screens/informasiPersonal';
-
+import produkHukum from '@othersApp/screens/produkHukum';
 
 const Stack = createStackNavigator();
 
@@ -16,6 +16,7 @@ const App = () => {
       <Stack.Screen name="DataKepegawaian" component={dataKepegawaian} />
       <Stack.Screen name="InformasiPersonal" component={informasiPersonal} />
       <Stack.Screen name="GantiPassword" component={ChangePassword} />
+      <Stack.Screen name="ProdukHukum" component={produkHukum} />
     </Stack.Navigator>
   );
 };

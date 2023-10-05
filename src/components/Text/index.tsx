@@ -33,10 +33,10 @@ type TextWrapProps = TextProps & {
 const fontSizeMapping = {
   header: FONT_SIZE_HEADER,
   title: FONT_SIZE_TITLE,
-  desc: FONT_SIZE_DESC,
-  info: FONT_SIZE_INFO,
   subTitle: FONT_SIZE_SUBTITLE,
+  desc: FONT_SIZE_DESC,
   regular: FONT_SIZE_CAPTION,
+  info: FONT_SIZE_INFO,
 };
 
 const fontWeightMapping = {
@@ -56,16 +56,13 @@ function index({
   isLoading = false,
   ...rest
 }: TextWrapProps) {
-  const fontSize = size ? fontSizeMapping[size] : FONT_SIZE_CAPTION;
-  const fontFamily = weight ? fontWeightMapping[weight] : 'Inter-Regular';
 
   const coreText = () => (
     <Text
       style={[
-        style,
         {
-          fontFamily,
-          fontSize,
+          fontFamily: fontWeightMapping[weight],
+          fontSize: fontSizeMapping[size],
           color,
         },
         type?.includes('italic') && {
@@ -74,6 +71,7 @@ function index({
         type?.includes('underline') && {
           textDecorationLine: 'underline',
         },
+        style,
       ]}
       onPress={onPress}
       {...rest}

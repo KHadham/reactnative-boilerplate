@@ -30,7 +30,7 @@ const Screen = () => {
       onCloseBaseModal={() => setbaseModal('')}
     >
       <ScrollView>
-        <Text size='title' style={{ marginVertical: spacing.md }}>Akun</Text.Title>
+        <Text size='title' style={{ marginVertical: spacing.md }}>Akun</Text>
         <ItemList
           desc="Data Pribadi"
           onPress={() => {

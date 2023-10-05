@@ -1,4 +1,4 @@
-import { post, get ,handleRequest } from '@utils/networking';
+import { post, get, handleRequest } from '@utils/networking';
 
 interface endpointParam {
   data?: object;
@@ -7,10 +7,16 @@ interface endpointParam {
 
 export const endpoint = {
   getFaq: async (params: endpointParam) =>
-    handleRequest({ method: 'post',
+    handleRequest({
+      method: 'POST',
       path: 'https://dev.dcktrp.id/web-dcktrp-be/api/faq',
       data: params.data,
     }),
- 
+  getProdukHukum: async (params: endpointParam) =>
+    handleRequest({
+      method: 'POST',
+      path: 'https://dev.dcktrp.id/web-dcktrp-be/api/peraturan',
+      data: params.data,
+    }),
 };
 export default { endpoint };

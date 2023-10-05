@@ -61,7 +61,7 @@ const Screen = () => {
         }}
       >
         <Text size='header'>Masuk</Text>
-        <Text size='desc'>Silakan masuk dengan No. HP yang terdaftar</Text.Desc>
+        <Text size='desc'>Silakan masuk dengan No. HP yang terdaftar</Text>
         <Input
           label="Username"
           placeholder="Contoh: 165581"
@@ -84,7 +84,7 @@ const Screen = () => {
           <View style={styles.line} />
           <Text size='desc' style={{ margin: spacing.sm }}>
             Atau daftar sebagai
-          </Text.Desc>
+          </Text>
           <View style={styles.line} />
         </View>
         <Button
@@ -99,7 +99,7 @@ const Screen = () => {
         />
         <Spacer />
         <Button
-          containerStyle={{}}
+          style={{}}
           type="outline"
           title="Kepala Daerah"
           onPress={() =>
@@ -109,16 +109,16 @@ const Screen = () => {
             })
           }
         />
-        <Text.Italic style={{ margin: spacing.sm }}>
+        <Text style={{ margin: spacing.sm }}>
           Dengan masuk saya menyetujui
-          <Text.Underline
+          <Text
             color={COLOR_BASE_PRIMARY_MAIN}
             onPress={() => showToast()}
           >
             {' Kebijakan Privasi '}
-          </Text.Underline>
+          </Text>
           serta
-          <Text.Underline
+          <Text
             onPress={() =>
               navigate('Register', {
                 value: noHp,
@@ -128,9 +128,9 @@ const Screen = () => {
             color={COLOR_BASE_PRIMARY_MAIN}
           >
             {' Ketentuan Layanan '}
-          </Text.Underline>
+          </Text>
           yang berlaku
-        </Text.Italic>
+        </Text>
         <Spacer />
       </ScrollView>
     </BaseView>

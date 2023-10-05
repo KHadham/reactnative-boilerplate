@@ -1,19 +1,20 @@
 import React, { useEffect, useState } from 'react';
-import { View, Image } from 'react-native';
+import { View, Image, FlatList, RefreshControl } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import { navigate } from '@utils/navigation';
-import { BaseView, Accordion, Header, Icon, Text } from '@components';
+import { BaseView, Accordion, Header, Icon, Text, Button } from '@components';
 import { FlashList } from '@shopify/flash-list';
-import { useHooks } from '@othersApp/hooks';
+import { useHooks } from '@othersApp/hooks/faq';
 import { WebView } from 'react-native-webview';
 import RenderHtml from 'react-native-render-html';
 import { widthByScreen } from '@utils/dimensions';
 import { spacing } from '@constants/spacing';
 import styles from '@othersApp/styles';
+import { COLOR_BASE_PRIMARY_DARK } from '@themes/index';
 
 const App: React.FC = () => {
-  const { data, isLoading } = useHooks();
+  const { data, isLoading, fetching } = useHooks();
 
   useEffect(() => {
     console.log('isLoading outer :>> ', isLoading);
@@ -33,55 +34,58 @@ const App: React.FC = () => {
             />
           </View>
         }
-        title="F.A.Q"
+        title="Pertanyaan Umum"
         shadow
       />
-      <FlashList
-        estimatedItemSize={4}
+      <FlatList
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetching} />
+        }
         data={data}
         renderItem={({ index, item }) => (
           <Accordion
             isLoading={isLoading}
             style={{ margin: spacing.md }}
             keys={index}
-            content={(isExpand: boolean) => (
-              <View style={styles.acordionContent}>
-                <Text size="title" weight="bold">
-                  {item.kategori}
-                </Text>
-                {isExpand && (
-                  <FlashList
-                    estimatedItemSize={4}
-                    data={item.child}
-                    renderItem={({ index, item }) => (
-                      <Accordion
-                        isLoading={isLoading}
-                        style={{ marginTop: spacing.md }}
-                        keys={index}
-                        content={(isExpand: boolean) => (
-                          <View style={styles.acordionContent}>
-                            <Text
-                              size="title"
-                              weight="bold"
-                              style={{ marginRight: spacing.md }}
-                            >
-                              {item.nama_faq}
-                            </Text>
-                            {isExpand && (
-                              <RenderHtml
-                                baseStyle={styles.baseStyleHtml}
-                                contentWidth={widthByScreen(100)}
-                                source={{ html: item.isi }}
-                              />
-                            )}
-                          </View>
-                        )}
+            content={
+              <Text size="subTitle" weight="bold">
+                {item.kategori}
+              </Text>
+            }
+            contentExpand={
+              <FlashList
+                estimatedItemSize={20}
+                estimatedListSize={{ height: 100, width: widthByScreen(80) }}
+                ListEmptyComponent={() => (
+                  <View style={styles.itemProdukHukumNull}>
+                    <Text size="desc">Tidak ada data</Text>
+                    <Icon
+                      name="server-network-off"
+                      color={COLOR_BASE_PRIMARY_DARK}
+                    />
+                  </View>
+                )}
+                data={item.child}
+                renderItem={({ index, item }) => (
+                  <Accordion
+                    style={{ marginTop: spacing.md }}
+                    content={
+                      <Text weight="bold" size="regular">
+                        {item.nama_faq}
+                      </Text>
+                    }
+                    contentExpand={
+                      <RenderHtml
+                        baseStyle={styles.baseStyleHtml}
+                        contentWidth={widthByScreen(100)}
+                        source={{ html: item.isi }}
                       />
-                    )}
+                    }
+                    keys={index}
                   />
                 )}
-              </View>
-            )}
+              />
+            }
           />
         )}
       />

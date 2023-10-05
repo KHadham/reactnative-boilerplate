@@ -3,7 +3,7 @@ import { BaseView } from '@components';
 import React, { useEffect, useRef, useState } from 'react';
 import { View, Image, Animated, Text, TextInput, Easing } from 'react-native';
 import { ScrollView } from 'react-native-gesture-handler';
-import Input from '../../../components/Input';
+import Input from '../../../components/Input/indexx';
 import styles from './styles';
 import Header from '@components/index/Header';
 

@@ -49,10 +49,14 @@ export const LayoutAnimationHandler = (
   }
 
   LayoutAnimation.configureNext({
-    duration: 250,
-    create: { type: 'easeIn', property: property },
-    update: { type: 'easeInEaseOut', springDamping: 0.4 },
-    delete: { type: 'easeOut', property: property },
+    duration: 200,
+    create: { type: 'easeInEaseOut', property },
+    update: {
+      type: 'easeInEaseOut',
+      springDamping: 0.7,
+      property
+    },
+    delete: { type: 'easeOut', property },
   });
 };
 

@@ -444,7 +444,7 @@ const Screen = () => {
                         <Button
                           title="Lihat Rekapitulasi"
                           type="outline"
-                          containerStyle={{ margin: spacing.sm }}
+                          style={{ margin: spacing.sm }}
                         />
                       }
                     />

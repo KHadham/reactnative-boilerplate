@@ -1,4 +1,4 @@
-import BaseView from './BaseView';
+import BaseView from './Layout/BaseView';
 import Header from './Header';
 import Text from './Text';
 import Input from './Input';
@@ -6,22 +6,24 @@ import Button from './Button';
 import Stepper from './Stepper';
 import AutoImage from './AutoImage';
 import ItemList from './ItemList';
-import Carousel from './Carousel/index';
+import Carousel from './Picture/Carousel/index';
 import Spacer from './Spacer';
-import Accordion from './Accordion';
+import Accordion from './ItemList/Accordion/index';
 import ModalList from './Overlay/Modals/ModalList';
 import SnackBar from './Overlay/SnackBar';
 import ModalFilter from './Overlay/Modals/ModalFilter';
-import Icon from './Icon';
-import Switch from './Switch'
-import FastImage from './FastImage'
+import Icon from './Picture/Icon';
+import Switch from './Button/Switch'
+import FastImage from './Picture/FastImage'
 import Separator from './Separator'
-import Avatar from './Avatar'
+import Avatar from './Picture/Avatar'
 import FocusAwareStatusBar from './FocusAwareStatusBar'
 import ModalConfirmation from './Overlay/Modals/ModalConfirmation'
-import GpsMarker from './GpsMarker'
+import GpsMarker from './Marker/GpsMarker'
 import ModalRegionSearch from './Overlay/Modals/ModalRegionSearch'
 import ModalBasic from './Overlay/Modals/ModalBasic'
+import ModalPDF from './Overlay/Modals/ModalPDF'
+import HeaderModal from './Header/HeaderModal'
 
 export {
   BaseView,
@@ -47,5 +49,7 @@ export {
   ModalConfirmation,
   GpsMarker,
   ModalRegionSearch,
-  ModalBasic
+  ModalBasic,
+  HeaderModal,
+  ModalPDF
 };

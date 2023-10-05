@@ -2,7 +2,7 @@ import React, { useEffect, useRef, useState } from 'react';
 import { View, ScrollView, Image, StatusBar, Platform } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
-import styles from './../styles';
+import styles from '../styles';
 import {} from '@components';
 import { BaseView, Text, Button, FastImage, Icon, Stepper } from '@components';
 import { heightByScreen, widthByScreen } from '@utils/dimensions';
@@ -124,7 +124,7 @@ function Screen() {
             digital yang berbasis web dan mobile
           </Text>
           <Button
-            containerStyle={{ width: '100%' }}
+            style={{ width: '100%' }}
             title="Yuk Mulai"
             onPress={() => {
               setwelcome(false);

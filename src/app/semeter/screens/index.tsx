@@ -112,7 +112,7 @@ const Screen = () => {
         title={'SEMETER'}
         right={
           <Button
-            containerStyle={{ padding: 10 }}
+            style={{ padding: 10 }}
             onPress={() =>
               actions.setisSearchingVisible(!states.isSearchingVisible)
             }
@@ -415,7 +415,7 @@ const Screen = () => {
             title={'SEMETER'}
             right={
               <Button
-                containerStyle={{ padding: 10 }}
+                style={{ padding: 10 }}
                 onPress={() =>
                   actions.setisSearchingVisible(!states.isSearchingVisible)
                 }

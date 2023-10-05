@@ -51,7 +51,7 @@ const Screen = () => {
         ListHeaderComponent={() => (
           <View style={{ paddingHorizontal: spacing.md, paddingTop: spacing.xs,backgroundColor:COLOR_WHITE }}>
             <Input type="search" value={''} placeholder="Cari nama pendukung" />
-            <Text size='desc'>Terdapat 123.201 Dukunganxxx</Text.Desc>
+            <Text size='desc'>Terdapat 123.201 Dukunganxxx</Text>
           </View>
         )}
         data={[
@@ -136,8 +136,8 @@ const Screen = () => {
               </View>
               <Spacer />
               <View style={{ justifyContent: 'center' }}>
-                <Text size='title'>{item.name}</Text.Title>
-                <Text size='desc'>{item.name}</Text.Desc>
+                <Text size='title'>{item.name}</Text>
+                <Text size='desc'>{item.name}</Text>
               </View>
             </View>
             <Icon

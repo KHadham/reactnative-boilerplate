@@ -12,7 +12,7 @@ interface AppProps {
   isVisible: boolean;
   onClose: Function;
   onSuccess: Function;
-  successText: string;
+  successText?: string;
 }
 
 const App: React.FC<AppProps> = ({
@@ -42,14 +42,14 @@ const App: React.FC<AppProps> = ({
             <Button
               color={'danger'}
               title="Batal"
-              containerStyle={{ flex: 1 }}
+              style={{ flex: 1 }}
               type="outline"
               onPress={() => onClose()}
             />
             <Button
               color={'success'}
               title={successText}
-              containerStyle={{ flex: 1 }}
+              style={{ flex: 1 }}
               onPress={() => {
                 onClose();
                 onSuccess();

@@ -34,11 +34,11 @@ interface AppProps {
   type?: 'outline' | 'default' | 'dashed' | 'underlined' | 'fab';
   position?: 'top-right' | 'bottom-right' | 'top-left' | 'bottom-left'
   color?: 'danger' | 'warning' | 'success' | 'info' | 'default';
-  containerStyle?: ViewStyle | ViewStyle[];
+  style?: ViewStyle | ViewStyle[];
   textStyle?: TextStyle[] | TextStyle;
   rippleRadius?: number;
   onPress?: Function;
-  iconName?: string;
+  icon?: string;
   isLoading?: boolean;
 }
 
@@ -50,13 +50,13 @@ const Component: React.FC<AppProps> = ({
   children,
   title,
   disabled = false,
-  containerStyle,
+  style,
   type = 'default',
   rippleRadius = 12,
   color = 'default',
   onPress = () => {},
   textStyle = {},
-  iconName,
+  icon,
   isLoading,
   position = 'bottom-right'
 }) => {
@@ -79,7 +79,7 @@ const Component: React.FC<AppProps> = ({
     borderRadius: rippleRadius,
     borderColor: baseStyle,
     ...styles.buttonWrap,
-    ...containerStyle,
+    ...style,
   };
 
   const outlineStyle: StylingItem = {
@@ -89,14 +89,14 @@ const Component: React.FC<AppProps> = ({
     borderRadius: rippleRadius,
     borderColor: baseStyle,
     ...styles.buttonWrap,
-    ...containerStyle,
+    ...style,
   };
 
   const underlineStyle: StylingItem = {
     type: 'underline',
     borderRadius: rippleRadius,
     borderColor: baseStyle,
-    ...containerStyle,
+    ...style,
   };
 
   const defaultStyle: StylingItem = {
@@ -104,8 +104,9 @@ const Component: React.FC<AppProps> = ({
     borderRadius: rippleRadius,
     backgroundColor: baseStyle,
     borderColor: baseStyle,
+    flexDirection:'row',
     ...styles.buttonWrap,
-    ...containerStyle,
+    ...style,
   };
 
   const fabStyle: StylingItem = {
@@ -119,7 +120,7 @@ const Component: React.FC<AppProps> = ({
     justifyContent: 'center',
     alignItems: 'center',
     ...styles.buttonWrap,
-    // ...containerStyle,
+    // ...style,
   };
 
   if (children == undefined) {
@@ -156,7 +157,7 @@ const Component: React.FC<AppProps> = ({
           onPress={() => onPress()}
           disabled={disabled}
           rippleContainerBorderRadius={rippleRadius}
-          style={[containerStyle, { zIndex: 1 }]}
+          style={[style, { zIndex: 1 }]}
         >
           {children}
         </Ripple>
@@ -178,7 +179,7 @@ const Component: React.FC<AppProps> = ({
           {isLoading ? (
             <ActivityIndicator color={COLOR_WHITE} />
           ) : (
-            <Icon name={iconName} color={COLOR_WHITE} size={widthByScreen(4)}/>
+            <Icon name={icon} color={COLOR_WHITE} size={widthByScreen(4)}/>
           )}
         </Ripple>
       );
@@ -191,6 +192,7 @@ const Component: React.FC<AppProps> = ({
           rippleContainerBorderRadius={rippleRadius}
         >
           {isLoading ? <ActivityIndicator color={COLOR_WHITE} /> : text()}
+          <Icon name={icon} color={COLOR_WHITE}/>
         </Ripple>
       );
     }

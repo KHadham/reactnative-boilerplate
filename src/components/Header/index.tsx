@@ -10,7 +10,7 @@ import {
   Image,
   ImageSourcePropType,
 } from 'react-native';
-import { FastImage, Icon, Input, ModalSearch } from '@components';
+import { FastImage, Icon, Input,  } from '@components';
 import Help from '../../../assets/svgs/Help';
 import { goBack, useNavigationHandler } from '@utils/navigation';
 import { Text } from '@components';
