@@ -31,7 +31,7 @@ import {
   COLOR_BACKGROUND_ERROR,
   COLOR_BACKGROUND_SUCCESS,
 } from '@themes/index';
-import { Text, Icon } from '@components';
+import { Text, Icon, ModalList } from '@components';
 import { Otp, ImagePicker } from '@components/Input/indexx';
 import { heightByScreen } from '@utils/dimensions';
 import { LayoutAnimationHandler } from '@utils/uiHandler';
@@ -47,12 +47,13 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     success = '',
     required = '',
     type = 'text',
-    data, // multiple input / selection
+    data=[],
     length = 6,
     borderRadius = 10,
     style,
     leftComponent = null,
     rightComponent = null,
+    editable = true,
     ...rest
   },
   ref: Ref<TextInput>
@@ -117,11 +118,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       keyboardType: 'default',
       typeable: false
     },
-    select: {
-      icon: 'chevron-down',
-      onPress: () => setisModalShow(!isModalShow),
-      keyboardType: 'default',
-    },
+    // select: {
+    //   icon: 'chevron-down',
+    //   onPress: () => setisModalShow(!isModalShow),
+    //   keyboardType: 'default',
+    // },
     image: {
       icon: 'file-image-plus-outline',
       onPress: () => setisPickerShow(!isPickerShow),
@@ -153,12 +154,12 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     if (isFocus) return COLOR_BASE_PRIMARY_DARK;
     else if (success) return COLOR_EVENT_SUCCESS;
     else if (error) return COLOR_EVENT_ERROR;
-    else if (!rest.editable) return COLOR_FONT_PRIMARY_LIGHT;
+    else if (!editable) return COLOR_FONT_PRIMARY_LIGHT;
     else return COLOR_EVENT_INACTIVE;
   };
 
   const fieldStateBackground = () => {
-    if (rest.editable !== undefined) return COLOR_GREY_LIGHT;
+    if (!editable) return COLOR_GREY_LIGHT;
     else if (error) return COLOR_BACKGROUND_ERROR;
     else if (success) return COLOR_BACKGROUND_SUCCESS;
     else return COLOR_WHITE;
@@ -236,7 +237,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
   };
 
   const disableState = () => {
-    if (!typeListConfig[type].typeable && typeListConfig[type].onPress !== undefined && rest.editable == false) {
+    if (!typeListConfig[type].typeable && typeListConfig[type].onPress !== undefined && editable == false) {
       return true
     } else {
       return false
@@ -277,17 +278,13 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
             const finalValue = validationFunction ? validationFunction(txt) : txt;
             onInteract(finalValue);
           }}
-          style={{
-            flex: 7,
-            paddingHorizontal: 8,
-            color: COLOR_FONT_PRIMARY_DARK,
-          }}
+          style={styles.innerInput}
           placeholderTextColor={COLOR_FONT_PRIMARY_LIGHT}
           multiline={type == 'area'}
           textAlignVertical={type == 'area' ? 'top' : 'center'}
           onFocus={() => setisFocus(true)}
           onBlur={() => setisFocus(false)}
-          editable={typeListConfig[type].typeable ?? rest.editable}
+          editable={typeListConfig[type].typeable ?? editable}
           secureTextEntry={type == 'password' && showPass}
         />
         {right()}
@@ -372,6 +369,19 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
           onCancel={() => setDatePickerVisibility(false)}
           locale="en_GB"
           is24Hour={true}
+        />
+      )}
+      {/* todo multipicker */}
+      {data?.length !== 0 && (
+        <ModalList
+          isVisible={isModalShow}
+          data={data}
+          isSearch={true}
+          onClose={() => setisModalShow(false)}
+          selectedValue={usrInput}
+          onSelect={(txt: any) => onInteract(txt)}
+          title={''}
+          keyTitle={''}
         />
       )}
     </KeyboardAvoidingView>

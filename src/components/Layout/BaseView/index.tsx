@@ -95,7 +95,7 @@ const BaseView = ({
                 zIndex: -9,
                 height: heightByScreen(100),
                 width: widthByScreen(100),
-                backgroundColor: 'rgba(120, 120, 120,0.2 )',
+                backgroundColor: 'rgba(50, 50, 50,0.2 )',
               }}
             />
             <Image

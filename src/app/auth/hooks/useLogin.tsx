@@ -26,8 +26,7 @@ const hooks = () => {
   const [errUserName, seterrUserName] = useState(null);
   const [password, setpassword] = useState('');
 
-  const action = async (username: string, password: string) => {
-    const body = { username: username, password: password };
+  const action = async (body: { username: string, password: string }) => {
     useFetch({
       endpoint: endpoint.loginCitata({
         data: body,

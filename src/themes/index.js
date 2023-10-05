@@ -25,7 +25,7 @@ const citataTheme = {
 
 
 export const COLOR_BASE_PRIMARY_MAIN = '#003D80';
-export const COLOR_BASE_PRIMARY_DARK = '#0054b0';
+export const COLOR_BASE_PRIMARY_DARK = '#004d80';
 
 // export const COLOR_BASE_PRIMARY_DARK = '#039855';
 // export const COLOR_BASE_PRIMARY_MAIN = '#43A01C';

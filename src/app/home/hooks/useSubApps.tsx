@@ -24,6 +24,7 @@ export const useHooks = () => {
         },
       }),
       onSuccess: data => {
+        console.log('data :>> ', data);
         setApp(data.app_list);
       },
       onProgress(progress) {

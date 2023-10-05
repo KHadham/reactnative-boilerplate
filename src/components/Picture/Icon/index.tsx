@@ -1,8 +1,8 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { ViewStyle } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
-import { COLOR_EVENT_INACTIVE } from '@themes/index';
+import { COLOR_FONT_PRIMARY_DARK } from '@themes/index';
 
 /**
  * MaterialCommunityIcons icon set component.
@@ -22,7 +22,7 @@ interface AppProps {
 const App: React.FC<AppProps> = ({
   name = '',
   size = 22,
-  color = COLOR_EVENT_INACTIVE,
+  color = COLOR_FONT_PRIMARY_DARK,
   style = {},
   onPress = null,
 }) => {

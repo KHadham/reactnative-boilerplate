@@ -12,6 +12,7 @@ import { widthByScreen } from '@utils/dimensions';
 import { spacing } from '@constants/spacing';
 import styles from '@othersApp/styles';
 import { COLOR_BASE_PRIMARY_DARK } from '@themes/index';
+import { LayoutAnimationHandler } from '@utils/uiHandler';
 
 const App: React.FC = () => {
   const { data, isLoading, fetching } = useHooks();
@@ -19,6 +20,7 @@ const App: React.FC = () => {
   useEffect(() => {
     console.log('isLoading outer :>> ', isLoading);
     console.log('datassss :>> ', data);
+    LayoutAnimationHandler();
   }, [data]);
 
   return (

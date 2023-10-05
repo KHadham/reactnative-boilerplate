@@ -16,6 +16,11 @@ import { StyleSheet, ViewStyle, TextStyle, ImageStyle } from 'react-native';
 // };
 
 const styles = StyleSheet.create({
+  innerInput: {
+    flex: 7,
+    paddingHorizontal: 8,
+    color: COLOR_FONT_PRIMARY_DARK,
+  },
   basicInput: {
     height: heightByScreen(8),
     borderWidth: 1,

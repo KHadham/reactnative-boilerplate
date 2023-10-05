@@ -36,7 +36,7 @@ const App: React.FC<AppProps> = ({
 
   useEffect(() => {
     LayoutAnimationHandler();
-  }, [isExpand]);
+  }, []);
 
   const rotating = () => {
     Animated.timing(rotateAnim, {

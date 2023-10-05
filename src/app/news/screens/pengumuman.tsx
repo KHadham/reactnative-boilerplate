@@ -40,7 +40,7 @@ const Screen = () => {
         estimatedItemSize={50}
         data={data}
         renderItem={({ item, index }) => (
-          <Button onPress={() => onPressLink({ url: item.link })}>
+          <Button onPress={() => onPressLink(item.link)}>
             <View style={{ padding: 20 }}>
               <Text
                 size="title"

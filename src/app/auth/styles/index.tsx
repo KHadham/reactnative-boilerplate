@@ -1,7 +1,13 @@
 import { StyleSheet } from 'react-native';
-import { COLOR_BASE_PRIMARY_DARK, COLOR_FONT_PRIMARY_LIGHT, COLOR_WHITE } from '@themes/index';
+import {
+  COLOR_BASE_PRIMARY_DARK,
+  COLOR_FONT_PRIMARY_LIGHT,
+  COLOR_GREY,
+  COLOR_WHITE,
+} from '@themes/index';
 import { heightByScreen, widthByScreen } from '@utils/dimensions';
 import { spacing } from '@constants/spacing';
+import { toTransparent } from '@utils/uiHandler';
 
 const styles = StyleSheet.create({
   botBar: {
@@ -42,14 +48,32 @@ const styles = StyleSheet.create({
     padding: widthByScreen(15),
   },
   botLoginWrap: {
-    backgroundColor: COLOR_WHITE,
-    position: 'absolute',
-    bottom: 0,
     width: '100%',
     zIndex: 1,
-    padding: spacing.lg,
-    borderTopLeftRadius: 20,
+    position: 'absolute',
+    bottom: 0,
+    overflow: 'hidden',
     borderTopRightRadius: 20,
+    borderTopLeftRadius: 20,
+  },
+  blurWrap: {
+    width: '100%',
+    height: '100%',
+    backgroundColor: toTransparent(COLOR_WHITE, 0.75),
+  },
+  innerLoginWrap: {
+    padding: 30,
+    height: '100%',
+    width: '100%',
+  },
+  logoWrap: {
+    alignItems: 'center',
+    alignContent: 'center',
+  },
+  logoHeaderWrap: {
+    padding: spacing.lg,
+    paddingVertical: spacing.xxl,
+    gap: 10,
   },
 });
 export default styles;

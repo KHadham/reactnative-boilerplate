@@ -92,7 +92,7 @@ const App: React.FC = () => {
                 style={styles.appMenuWrap}
               >
                 <View style={styles.appMenu}>
-                  <FastImage source={item?.icon} style={styles.appImage} />
+                  <FastImage source={{ uri: item?.icon }} style={styles.appImage} />
                 </View>
                 <Text size="info" weight="bold" style={{ textAlign: 'center' }}>
                   {item?.name}

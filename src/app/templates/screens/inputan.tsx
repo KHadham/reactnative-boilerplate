@@ -204,6 +204,11 @@ const booleanField = [
     fieldName: 'switch',
     type: 'switch',
   },
+  {
+    fieldName: 'switch disabled',
+    type: 'switch',
+    editable: false,
+  },
 ]
 
 const variantField = [
@@ -229,20 +234,23 @@ const variantField = [
   },
   {
     fieldName: 'multi picker dropdown',
-    type: 'text',
+    type: 'check',
     right: 'chevron-down',
+    data: ['otomotif', 'outdoor', 'elektronik', 'perabotan', 'fashion', 'sparepart', 'tanaman', 'makanan']
   },
   {
     fieldName: 'single picker dropdown',
-    type: 'text',
+    type: 'radio',
     right: 'chevron-down',
+    data: ['sd', 'smp', 'sma', 's1', 's2', 's3']
   },
-  {
-    fieldName: 'unit picker',
-    type: 'text',
-    right: 'chevron-down',
-    rightText: 'Meter',
-  },
+  // {
+  //   fieldName: 'unit picker',
+  //   type: 'unit',
+  //   right: 'chevron-down',
+  //   rightText: 'Meter',
+  //   data: ['meter', 'kilo', 'inch', 'petak', 'ubin']
+  // },
   {
     fieldName: 'OTP',
     type: 'otp',
@@ -426,6 +434,7 @@ const Screen = () => {
                 handleFieldChange(item.fieldName, value)
               }
               type={item.type}
+              editable={item.editable}
               onSubmitEditing={() => moveFocus(item.fieldName)}
             />
           )}
@@ -444,13 +453,13 @@ const Screen = () => {
               rightComponent={(item.right) && (
                 <SideComponent onPress={() => { }}>
                   <Icon name={item.right} />
-                  <Text>{item.rightText}</Text>
                 </SideComponent>
               )}
               label={item.fieldName}
               ref={refs[item.fieldName]}
               key={index + 4}
               editable={item.editable}
+              data={item.data}
               // length={item.type == 'otp' && 6}
               placeholder={`masukan ${item.fieldName}`}
               value={values[item.fieldName]}

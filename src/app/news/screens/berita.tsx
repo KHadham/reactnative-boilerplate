@@ -47,7 +47,7 @@ const Screen = () => {
           <View style={{ padding: 20 }}>
             <FastImage
               previewAble={true}
-              source={item.img}
+              source={{ uri: item.img }}
               style={{
                 width: '100%',
                 height: heightByScreen(20),
@@ -55,7 +55,7 @@ const Screen = () => {
               }}
             />
             <Text
-              onPress={() => onPressLink({ url: item.link })}
+              onPress={() => onPressLink(item.link)}
               size="title"
               weight="bold"
               style={{ marginVertical: spacing.sm }}
