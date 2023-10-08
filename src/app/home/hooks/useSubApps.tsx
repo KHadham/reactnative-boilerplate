@@ -24,14 +24,12 @@ export const useHooks = () => {
         },
       }),
       onSuccess: data => {
-        console.log('data :>> ', data);
         setApp(data.app_list);
       },
       onProgress(progress) {
         
       },
       onError: error => {
-        console.log('error :>> ', error);
         Toast.show({
           type: 'error',
           text1: error.message,

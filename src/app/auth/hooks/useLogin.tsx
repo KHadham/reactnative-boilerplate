@@ -14,13 +14,13 @@ import { APPKEY } from '@constants/appKey';
 import FastImage from 'react-native-fast-image';
 import { useProfileStore } from '@profileApp/stores/storage';
 import { useFetch, handleRequest } from '@utils/networking';
-
+import { useVerify } from './useVerify';
 const hooks = () => {
   const { navigate } = useNavigationHandler();
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
-  // const { doVerifyToken, fetch } = useProfile();
+  const { action: verify } = useVerify();
 
   const [userName, setuserName] = useState('');
   const [errUserName, seterrUserName] = useState(null);
@@ -34,13 +34,16 @@ const hooks = () => {
       }),
       onSuccess: data => {
         storage.setItem(STORAGE_KEY.LOGIN_TOKEN, data.token);
-        Toast.show({
-          type: 'success',
-          text1: 'Berhasil Login',
-        });
-        navigate({
-          screen: 'Tab',
-        });
+        verify(data.token);
+        setTimeout(() => {
+          Toast.show({
+            type: 'success',
+            text1: 'Berhasil Login',
+          });
+          navigate({
+            screen: 'Tab',
+          });
+        }, 1000);
       },
       onProgress(progress) {
         progress &&
@@ -51,6 +54,10 @@ const hooks = () => {
           });
       },
       onError: error => {
+        Toast.show({
+          type: 'error',
+          text1: 'Terjadi kesalahaan saat login',
+        });
         setError(error);
       },
     });

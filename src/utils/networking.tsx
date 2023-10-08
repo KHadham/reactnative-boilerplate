@@ -1,8 +1,11 @@
 import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
-import NetInfo, { NetInfoState, NetInfoSubscription } from '@react-native-community/netinfo';
+import NetInfo, {
+  NetInfoState,
+  NetInfoSubscription,
+} from '@react-native-community/netinfo';
 import Toast from 'react-native-toast-message';
 import { storage } from '@utils/storage';
-import { APPKEY } from '@constants/appKey'
+import { APPKEY } from '@constants/appKey';
 import { useEffect, useState } from 'react';
 import { fetch } from 'react-native-ssl-pinning';
 
@@ -15,7 +18,9 @@ export const checkInternetConnectivity = async (): Promise<boolean> => {
   }
 };
 
-export function measureBandwitdh(callback: (arg0: boolean, arg1: number, arg2: null) => void) {
+export function measureBandwitdh(
+  callback: (arg0: boolean, arg1: number, arg2: null) => void
+) {
   const startTime = new Date().getTime();
   const imageUri =
     'http://chandra.harvard.edu/graphics/resources/desktops/2006/1e0657_1280.jpg';
@@ -35,7 +40,9 @@ export function measureBandwitdh(callback: (arg0: boolean, arg1: number, arg2: n
     });
 }
 
-export const networkListener = (callback: (isConnected: boolean) => void): NetInfoSubscription => {
+export const networkListener = (
+  callback: (isConnected: boolean) => void
+): NetInfoSubscription => {
   return NetInfo.addEventListener((state: NetInfoState) => {
     callback(state.isConnected ?? false);
   });
@@ -59,17 +66,21 @@ export const handleRequest = async ({
   data = {},
   headers = {},
   query = {},
-  useSsl = false
-}: {
+  useSsl = false,
+}: // body = {},
+{
   method: 'GET' | 'POST' | 'PUT' | 'DELETE',
   path: string,
   data?: any,
   headers?: any,
-  query?: object
-  useSsl?: boolean
+  query?: object,
+  useSsl?: boolean,
+  // body?: Object,
 }) => {
   try {
-    const realPath = path.includes('https') ? path : `${APPKEY.BASE_URL}${path}${toQueryString(query)}`;
+    const realPath = path.includes('https')
+      ? path
+      : `${APPKEY.BASE_URL}${path}${toQueryString(query)}`;
     const timeoutInterval = 15000; // milliseconds (customize as needed)
 
     const config: AxiosRequestConfig = {
@@ -77,9 +88,10 @@ export const handleRequest = async ({
       url: realPath,
       timeout: timeoutInterval,
     };
+
     if (Object.keys(data).length > 0) config.data = data;
     if (Object.keys(headers).length > 0) config.headers = headers;
-
+    // if (Object.keys(body).length > 0) config.body = body;
     if (useSsl) {
       const response = await fetch(realPath, {
         method,
@@ -97,14 +109,19 @@ export const handleRequest = async ({
           e_platform: 'mobile',
         },
       });
-      const responseBody = response
+      const responseBody = response;
       return responseBody;
     } else {
       const response = await requestWithTimeout(config, timeoutInterval);
       return response;
     }
   } catch (error) {
-    console.error(`Error handle request:  ${error}`);
+    console.error(
+      `Error handle request:  ${`${APPKEY.BASE_URL}${path}${toQueryString(
+        query
+      )}`}`,
+      error
+    );
     throw error;
   }
 };
@@ -112,37 +129,14 @@ export const handleRequest = async ({
 function toQueryString(query: object) {
   if (Object.keys(query).length !== 0) {
     const queryString = Object.keys(query)
-      .map((key) => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`)
+      .map(
+        key => `${encodeURIComponent(key)}=${encodeURIComponent(query[key])}`
+      )
       .join('&');
     return `?${queryString}`;
   }
-  return ''
+  return '';
 }
-
-/**
- * Custom hook for fetching data from API. 
- * This hook is designed to work with APIs that use a token based system and respond with a status and data.
- * 
- * @param {Object} config - The configuration object for the fetching function.
- * The config object has properties `token`, `endpoint`, `successStatuses`, and `errorMessage`.
- * 
- * @returns {Object} The state of the request (data, isLoading, error):
- * - data: Response data from the request.
- * - isLoading: A boolean representing whether the request is in progress.
- * - error: Error message if the request fails, or is not successful as per successStatuses.
- *
- * Example usage:
- * 
- * const Component = () => {
- *   const { data, isLoading, error } = useFetch({
- *     token: '9998fd04-6ebb-45f8-a694-28a284e156aa',
- *     endpoint: endpoint.getFaq,
- *     successStatuses: ['success', true, 200],
- *     errorMessage: 'Error fetching data',
- *   });
- *
- * };
- */
 
 interface FetchConfig {
   endpoint: any;
@@ -150,32 +144,35 @@ interface FetchConfig {
   onError?: (e: any) => void;
   onProgress?: (e: any) => void;
   successStatuses?: (string | boolean | number)[];
-  delay?: number
+  delay?: number;
 }
 
 export const useFetch = async (config: FetchConfig) => {
   const {
     endpoint,
-    onSuccess = () => { },
-    onError = () => { },
-    onProgress = () => { },
+    onSuccess = () => {},
+    onError = () => {},
+    onProgress = () => {},
     successStatuses = ['success', true, 200],
-    delay = 0
+    delay = 0,
   } = config;
   onProgress(true);
   try {
     const response = await endpoint;
+    // console.log('response :>> ', response.config.url);
+
     setTimeout(() => {
       if (successStatuses?.includes(response?.status)) {
-        response.data == undefined ? onSuccess(response) : onSuccess(response.data);
+        response.data == undefined
+          ? onSuccess(response)
+          : onSuccess(response.data);
       } else {
         onError(response);
       }
-        onProgress(false);
+      onProgress(false);
     }, delay);
   } catch (e) {
     onError(e);
     onProgress(false);
-  } 
+  }
 };
-

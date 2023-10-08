@@ -1,7 +1,7 @@
 import React from 'react';
 import { NavigationContainer } from '@react-navigation/native';
 import { createStackNavigator } from '@react-navigation/stack';
-import Profil from '@profileApp/screens/profile';
+import Profil from '@profileApp/screens';
 import ChangePassword from '@profileApp/screens/changePassword';
 import dataKepegawaian from '@profileApp/screens/dataKepegawaian';
 import informasiPersonal from '@profileApp/screens/informasiPersonal';

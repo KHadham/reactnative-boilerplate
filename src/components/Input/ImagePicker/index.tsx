@@ -20,9 +20,6 @@ const index = ({ data = [], onInteract, borderRadius }: IndexProps) => {
   const [isPreviewModal, setisPreviewModal] = useState(null);
   const [isPickerShow, setisPickerShow] = useState(false);
 
-  useEffect(() => {
-    LayoutAnimationHandler()
-  }, [data])
 
   const pickFromCamera = async (camera: boolean) => {
     setisPickerShow(false);

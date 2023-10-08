@@ -2,7 +2,6 @@ import { SetStateAction, useEffect, useRef, useState } from 'react';
 import { endpoint } from '@semeterApp/apis';
 import Toast from 'react-native-toast-message';
 import { useFetch, handleRequest } from '@utils/networking';
-import { fetch } from 'react-native-ssl-pinning';
 // import { cert1, cert2 } from '@certificate';
 
 import {
@@ -49,28 +48,6 @@ export const useHooks = () => {
     longitude: null,
   });
 
-  const getDetaillocation = (location: string) => {
-    // setisLoading(true);
-    // fetch(
-    //   `https://maps.googleapis.com/maps/api/place/details/json?place_id=${location}&key=AIzaSyAHAWEgBz3AN7XVrNOR9P3Rf7unJDjvH9o`,
-    //   { method: 'GET' }
-    // )
-    //   .then(response => response.json())
-    //   .then(obj => {
-    //     console.log('getDetaillocation :>> ', obj);
-    //     animateMapToTargetRegion({
-    //       ref: mapRef.current,
-    //       latitude: obj.result.geometry.location.lat,
-    //       longitude: obj.result.geometry.location.lng,
-    //     });
-    //   })
-    //   .catch(error => {
-    //     console.log('error :>> ', error);
-    //     console.warn(error);
-    //   })
-    //   .finally(() => {});
-  };
-
   const getLocation = () => {
     setIsLoading(true);
     getCurrentLocation({ ref: mapRef.current })
@@ -81,7 +58,6 @@ export const useHooks = () => {
         if (error.message == 'No location provider available.') {
           setModalSetting(true);
         }
-        console.error('Error locatio:', error);
         // Handle the error here
       })
       .finally(() => setIsLoading(false));
@@ -139,29 +115,13 @@ export const useHooks = () => {
         },
       }),
       onSuccess: data => {
-        console.log('data getDetailMarker :>> ', data.data);
-        console.log(
-          'data getDetailMarker attachment:>> ',
-          data.data.ATTACHMENT
-        );
         setdetailMarker(data.data);
-        // console.log('data getDetailMarker:>> ', data.data);
-        // setselectedMarker(data?.data);
-        // setData(JSON.parse(data?.bodyString));
-        // setTimeout(() => {
-        //   animateMapToTargetRegion({
-        //     ref: mapRef.current,
-        //     latitude: -6.1754,
-        //     longitude: 106.8272,
-        //     latitudeDelta: 0.5,
-        //     longitudeDelta: 0.5,
-        //   });
-        // }, 1000);
       },
       onProgress(progress) {
         setIsLoading(progress);
       },
       onError: error => {
+        setdetailMarker(null);
         setError(error);
       },
     });
@@ -186,8 +146,6 @@ export const useHooks = () => {
       // If the entry does not exist, create a new entry
       updatedListData.push(params);
     }
-    console.log('updatedListData :>> ', updatedListData);
-    console.log('params :>> ', params);
     setlayerList(updatedListData);
   };
 
@@ -195,18 +153,9 @@ export const useHooks = () => {
     attributes: BaseAtributInterface,
     geometry: { y: any, x: any },
   }) => {
-    animateMapToTargetRegion({
-      ref: mapRef.current,
-      latitude: item.geometry.y,
-      longitude: item.geometry.x,
-      latitudeDelta: 0.009,
-      longitudeDelta: 0.009,
-      onAnimationComplete() {
-        setIsModalDetail(true);
-        setselectedMarker(item.attributes);
-        getDetailMarker(item.attributes.REKLAME_ID);
-      },
-    });
+    setIsModalDetail(true);
+    setselectedMarker(item.attributes);
+    getDetailMarker(item.attributes.REKLAME_ID);
   };
 
   return {
@@ -219,7 +168,6 @@ export const useHooks = () => {
       onConfirmGps,
       onCancelGps,
       onPressMarker,
-      getDetaillocation,
       setisSearchingVisible,
       setmodalLayer,
       setlayerList,

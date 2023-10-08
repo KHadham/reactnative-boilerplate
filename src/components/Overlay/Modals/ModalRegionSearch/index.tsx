@@ -1,61 +1,35 @@
-import React, { useEffect, useState } from 'react';
-import { View, StyleSheet } from 'react-native';
-import Toast from 'react-native-toast-message';
-import IMAGES from '@images';
-import styles from './styles';
+import React, { useState } from 'react';
+import { View } from 'react-native';
 import { Icon, Text, Input, Separator, Button } from '@components';
 import Modal from 'react-native-modal';
-import {
-  COLOR_BASE_PRIMARY_DARK,
-  COLOR_BASE_PRIMARY_MAIN,
-  COLOR_WHITE,
-} from '@themes/index';
+import { COLOR_WHITE } from '@themes/index';
 import { spacing } from '@constants/spacing';
-import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
+import { FlashList } from '@shopify/flash-list';
 import Lottie from 'lottie-react-native';
 import { formatBoldSubstring } from '@utils/index';
-import LottieView from 'lottie-react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
+import { animateMapToTargetRegion } from '@utils/location';
 
 interface AppProps {
   isVisible: boolean;
   onClose?: Function;
-  onSelect: Function;
+  onSelect?: Function;
   header?: React.ReactNode;
+  mapRef: any;
 }
-
-const gecoding_url =
-  'https://maps.googleapis.com/maps/api/place/autocomplete/json?&location=-6.1754%2C106.8272&&types=geocode&radius=100&input=';
-// 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input= dep&location=-6.1754%2C106.8272&types=geocode&radius=100&key=AIzaSyAHAWEgBz3AN7XVrNOR9P3Rf7unJDjvH9o'
 
 const App: React.FC<AppProps> = ({
   isVisible = false,
   onClose,
   onSelect,
   header,
+  mapRef,
 }) => {
   const [value, setvalue] = useState('');
   const [addressList, setaddressList] = useState([]);
   const [historyList, sethistoryList] = useState([]);
   const [isLoading, setisLoading] = useState(false);
-
-  // data={[
-  //   { title: 'Struktur', items: ['Dinding', 'JPO', 'Tiang'] },
-  //   {
-  //     title: 'Resiko',
-  //     items: ['Semua', 'Berbahaya', 'Tidak Berbahaya'],
-  //   },
-  //   {
-  //     title: 'Jenis Reklame',
-  //     items: [
-  //       'Led/VideoTron',
-  //       'Papan/Billboard',
-  //       'Pengenal Perusahaan',
-  //       'Stiker',
-  //     ],
-  //   },
-  // ]}
 
   const searchAddress = () => {
     let values = encodeURI(value);
@@ -66,7 +40,6 @@ const App: React.FC<AppProps> = ({
     )
       .then(response => response.json())
       .then(obj => {
-        console.log('obj :>> ', obj);
         if (obj?.status == 'ZERO_RESULTS') {
           setaddressList([]);
         } else {
@@ -80,15 +53,43 @@ const App: React.FC<AppProps> = ({
       .finally(() => setisLoading(false));
   };
 
+  const getDetailLocation = (location: string) => {
+    fetch(
+      `https://maps.googleapis.com/maps/api/place/details/json?place_id=${location}&key=AIzaSyAHAWEgBz3AN7XVrNOR9P3Rf7unJDjvH9o`,
+      { method: 'GET' }
+    )
+      .then(response => response.json())
+      .then(obj => {
+        console.log('getDetailLocation geometry:>> ', obj.result.geometry);
+        console.log('getDetailLocation viewport:>> ', obj.result.viewport);
+        console.log('getDetailLocation address_components:>> ', obj.result.address_components);
+        animateMapToTargetRegion({
+          ref: mapRef.current,
+          latitude: obj.result.geometry.location.lat,
+          longitude: obj.result.geometry.location.lng,
+        });
+      })
+      .catch(error => {
+        console.log('error :>> ', error);
+        console.warn(error);
+      })
+      .finally(() => {});
+  };
+
   const typingHandle = (txt: string) => {
     setvalue(txt);
     if (txt.length == 0) setaddressList([]);
   };
 
-  const onPressItem = (item: { place_id: any }) => {
-    addHistory(item);
-    onSelect(item.place_id);
-    onClose();
+  const onPressItem = (item: any) => {
+    try {
+      console.log('item :>> ', item.place_id);
+      getDetailLocation(item.place_id);
+      onSelect && onSelect(item);
+      onClose();
+    } catch (error) {
+      console.log('error onrpess region:>> ', error);
+    }
   };
 
   const addHistory = item => {
@@ -102,13 +103,13 @@ const App: React.FC<AppProps> = ({
 
   return (
     <Modal
+      hardwareAccelerated={true}
+      useNativeDriver={true}
+      hasBackdrop={false}
       isVisible={isVisible}
       style={{ justifyContent: 'flex-end', margin: 0 }}
-      onBackdropPress={() => onClose()}
-      onSwipeComplete={() => onClose()}
       animationIn={'fadeInDown'}
       animationOut={'fadeOutUp'}
-      scrollOffset={1}
     >
       {header}
       <View
@@ -124,6 +125,7 @@ const App: React.FC<AppProps> = ({
           value={value}
           onInteract={(txt: string) => typingHandle(txt)}
           onSubmitEditing={() => searchAddress()}
+          autoFocus
         />
         <FlashList
           data={addressList}
@@ -140,7 +142,10 @@ const App: React.FC<AppProps> = ({
             <Button
               key={index}
               style={{ paddingVertical: spacing.md }}
-              onPress={() => onPressItem(item)}
+              onPress={() => {
+                onPressItem(item);
+                addHistory(item);
+              }}
             >
               {formatBoldSubstring(item.description, value)}
             </Button>
@@ -162,11 +167,9 @@ const App: React.FC<AppProps> = ({
                 </View>
                 {historyList.reverse().map((item, index) => (
                   <Button
+                    key={`history-${index}`}
                     style={{ paddingVertical: spacing.md }}
-                    onPress={() => {
-                      onSelect(item.place_id);
-                      onClose();
-                    }}
+                    onPress={() => onPressItem(item)}
                   >
                     <Text>{item?.description}</Text>
                   </Button>

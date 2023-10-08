@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Share } from 'react-native';
+import { View, RefreshControl } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import {
@@ -8,7 +8,6 @@ import {
   FastImage,
   Separator,
   Icon,
-  Button,
 } from '@components';
 import { navigate, getParams } from '@utils/navigation';
 import { FlashList } from '@shopify/flash-list';
@@ -22,25 +21,14 @@ import ImageView from 'react-native-image-viewing';
 const Screen = () => {
   const { onShare, onPressLink } = useNavigationHandler();
   const { data, fetching, isLoading } = useHooks();
-  const params = getParams();
-
   const [previewUri, setpreviewUri] = useState('');
-
-  //   useEffect(() => {
-  // Toast.show({
-  //   type: 'success',
-  //   text1: 'Hello',
-  //   text2: 'This is some something 👋'
-  // });
-
-  //     return () => {
-  //       second;
-  //     };
-  //   }, []);
 
   return (
     <BaseView>
       <FlashList
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetching} />
+        }
         estimatedItemSize={50}
         data={data}
         renderItem={({ item, index }) => (
@@ -83,10 +71,17 @@ const Screen = () => {
         )}
         ItemSeparatorComponent={() => <Separator />}
         onEndReached={fetching}
+        ListEmptyComponent={
+          !isLoading && <View style={{ alignItems: 'center', borderWidth: 1, flex: 2 }}>
+            <Text size="header" weight="thin" type={['italic', 'underline']}>
+              Tidak ada data
+            </Text>
+          </View>
+        }
         ListFooterComponent={
-          <View style={{ padding: 20, gap: spacing.sm }}>
+          isLoading && <View style={{ padding: 20, gap: spacing.sm, }}>
             <FastImage
-              isLoading
+              isLoading={true}
               source={''}
               style={{
                 width: '100%',

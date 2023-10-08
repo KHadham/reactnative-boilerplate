@@ -62,7 +62,6 @@ const App: React.FC<AppProps> = ({
   };
 
   useEffect(() => {
-    LayoutAnimationHandler();
     // fetchData();
     setlistData(data);
   }, [data]);

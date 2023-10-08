@@ -33,6 +33,7 @@ import { isColorDark, toTransparent } from '@utils/uiHandler';
 // import { useAuth } from '@authApp/hooks/useLogin';
 import styles from './styles';
 import { spacing } from '@constants/spacing';
+import { useLogout } from '@authApp/hooks/useLogout';
 
 type Props = {
   children: any,
@@ -60,7 +61,7 @@ const BaseView = ({
   containerColor = COLOR_WHITE,
 }: Props) => {
   // const { doLogout, baseLoading } = useBaseView();
-  // const { doLogout } = useAuth();
+  const { action } = useLogout();
 
   const [isModalShow, setisModalShow] = useState(false);
 
@@ -75,7 +76,7 @@ const BaseView = ({
         }
         isVisible={baseModal == 'logout' || baseModal == 'force-logout'}
         onClose={() => onCloseBaseModal()}
-        // onSuccess={() => doLogout()}
+        onSuccess={() => action()}
       />
     );
   };
@@ -83,7 +84,9 @@ const BaseView = ({
     <SafeAreaView style={{ backgroundColor: statusBarColor, flex: 1 }}>
       <FocusAwareStatusBar
         backgroundColor={statusBarColor}
-        barStyle={isColorDark(statusBarColor)}
+        barStyle={
+          isColorDark(statusBarColor) ? 'dark-content' : 'light-content'
+        }
         translucent={false}
       />
       <View style={[{ flex: 1, backgroundColor: containerColor }, style]}>

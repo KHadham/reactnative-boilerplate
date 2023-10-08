@@ -26,14 +26,10 @@ const App: React.FC = () => {
     <BaseView>
       <Header
         left={
-          <View style={{ flex: 1, justifyContent: 'center' }}>
-            <Image
-              source={IMAGES.iconCitata}
-              style={{ height: 50, width: 50, position: 'absolute' }}
-              resizeMode="contain"
-              resizeMethod="resize"
-            />
-          </View>
+          <Image
+            source={IMAGES.iconCitata}
+            style={{ height: 50, width: 50, flex: 1, }}
+          />
         }
         title="DCKTRP Mobile"
         shadow
@@ -42,7 +38,6 @@ const App: React.FC = () => {
         <Carousel
           indicator
           previewAble
-          mode="parallax"
           width={widthByScreen(100)}
           height={heightByScreen(20)}
           data={carouselData}

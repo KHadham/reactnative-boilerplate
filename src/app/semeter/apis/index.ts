@@ -1,8 +1,11 @@
+import { STORAGE_KEY } from '@constants/index';
 import { handleRequest } from '@utils/networking';
+import { storage } from '@utils/storage';
 
 interface endpointParam {
   id?: number;
   headers?: object;
+  body?: object;
 }
 
 export const endpoint = {
@@ -22,6 +25,14 @@ export const endpoint = {
       method: 'GET',
       path: `api/semeter/reklame/${params.id}`,
       headers: params.headers,
+    }),
+  getForm: async (params: endpointParam) =>
+    handleRequest({
+      method: 'GET',
+      path: `api/semeter/user-group-privileges`,
+      headers: params.headers,
+      data: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
+      // useSsl: true,
     }),
 };
 export default { endpoint };

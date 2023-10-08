@@ -36,7 +36,7 @@ const styles = StyleSheet.create({
   sliderImage: {
     width: '100%',
     height: heightByScreen(20),
-    borderRadius: 10,
+    // borderRadius: 10,
   },
   sliderImageWrap: {
     borderRadius: 10,

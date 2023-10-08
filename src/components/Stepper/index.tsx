@@ -1,8 +1,9 @@
 import {
   COLOR_BASE_PRIMARY_DARK,
-  COLOR_BASE_PRIMARY_MAIN,
+  color,
   COLOR_FONT_PRIMARY_DARK,
   COLOR_FONT_PRIMARY_LIGHT,
+  COLOR_WHITE,
 } from '@themes/index';
 import React, { useEffect, useRef, useState } from 'react';
 import {
@@ -15,7 +16,7 @@ import {
 } from 'react-native';
 import styles from './styles';
 import { AnimatedCircularProgress } from 'react-native-circular-progress';
-import { toTitleCase } from '@utils';
+import { toTitleCase } from '@utils/index';
 // import Toast from 'react-native-simple-toast';
 import { Circle } from 'react-native-svg';
 import { widthByScreen } from '@utils/dimensions';
@@ -30,14 +31,16 @@ type Props = {
   onPressStep?: Function,
   type?: 'dot' | 'bar' | 'circle' | 'vertical' | 'default',
   containerStyle?: ViewStyle,
+  color: string
 };
 
 const Component: React.FC<Props> = ({
   currentStep,
   dataStep,
-  onPressStep = () => {},
+  onPressStep = () => { },
   containerStyle,
   type = 'default',
+  color = COLOR_WHITE
 }) => {
   const scrollViewRef = useRef(null);
 
@@ -147,7 +150,7 @@ const Component: React.FC<Props> = ({
                                 inputRange: [0, 1],
                                 outputRange: [
                                   '#8D98AA',
-                                  COLOR_BASE_PRIMARY_MAIN,
+                                  color,
                                 ],
                               }
                             ),
@@ -191,7 +194,7 @@ const Component: React.FC<Props> = ({
                               index + 1
                             ].interpolate({
                               inputRange: [0, 1],
-                              outputRange: ['#8D98AA', COLOR_BASE_PRIMARY_MAIN],
+                              outputRange: ['#8D98AA', color],
                             }),
                           },
                         ]}
@@ -270,7 +273,7 @@ const Component: React.FC<Props> = ({
                                 inputRange: [0, 1],
                                 outputRange: [
                                   '#8D98AA',
-                                  COLOR_BASE_PRIMARY_MAIN,
+                                  color,
                                 ],
                               }),
                             },
@@ -341,7 +344,7 @@ const Component: React.FC<Props> = ({
             <View
               style={[
                 styles.barActive,
-                { width: index + 1 <= currentStep ? '100%' : '0%' },
+                { width: index + 1 <= currentStep ? '100%' : '0%', backgroundColor: color },
               ]}
             />
           </TouchableOpacity>
@@ -356,7 +359,7 @@ const Component: React.FC<Props> = ({
           size={120}
           width={15}
           fill={(currentStep / totalStep) * 100}
-          tintColor={COLOR_BASE_PRIMARY_MAIN}
+          tintColor={color}
           backgroundColor={COLOR_BASE_PRIMARY_DARK}
           rotation={0}
         >

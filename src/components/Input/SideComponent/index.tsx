@@ -30,7 +30,6 @@ import {
 } from 'react-native';
 import { Icon } from '@components';
 import { heightByScreen } from '@utils/dimensions';
-import { LayoutAnimationHandler } from '@utils/uiHandler';
 import styles from './../styles';
 
 type Props =

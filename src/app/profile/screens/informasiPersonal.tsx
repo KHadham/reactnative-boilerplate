@@ -1,46 +1,58 @@
 import React, { useEffect, useState } from 'react';
-import { View ,TextInput} from 'react-native';
+import { View, TextInput, TouchableOpacity } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import styles from './styles';
 import { navigate } from '@utils/navigation';
-import { BaseView, Text, Icon, Header, Input } from '@components';
+import { BaseView, Text, Icon, Header, Input, Button } from '@components';
 import { useProfileStore } from '@profileApp/stores/storage';
 import { FlashList, ListRenderItemInfo } from '@shopify/flash-list';
 import { spacing } from '@constants/spacing';
 import { toTitleCase } from '@utils/index';
 import { useProfile } from '@profileApp/hooks/useProfile';
-import { COLOR_BACKGROUND } from '@themes/index';
+import { useUpdateProfile } from '@profileApp/hooks/useUpdateProfile';
+import { COLOR_BACKGROUND, COLOR_EVENT_WARNING } from '@themes/index';
 
 const App: React.FC = () => {
-  //   const bears = useBearStore(state => state.bears);
-  const { data } = useProfile();
+  const { dataPersonal } = useProfile();
+  const { action } = useUpdateProfile();
 
-  const [first, setfirst] = useState('');
+  const [isEditable, setisEditable] = useState(false)
 
-  //   useEffect(() => {
-  // Toast.show({
-  //   type: 'success',
-  //   text1: 'Hello',
-  //   text2: 'This is some something 👋'
-  // });
-
-  //     return () => {
-  //       second;
-  //     };
-  //   }, []);
-  console.log('data.personal :>> ', data.personal);
-
-  const renderItem = ({ item }: { item: [key: string, value: any] }) => (
-    <View style={{ paddingHorizontal:spacing.md }}>
-      <Input editable={false} value={item[1]} label={toTitleCase(item[0])} />
-    </View>
-  );
-
+  const renderItem = ({ item }: { item: [key: string, value: any] }) => {
+    const [key, value] = item;
+    return (
+      <View style={{ paddingHorizontal: spacing.md }}>
+        <Input editable={isEditable} value={value} label={toTitleCase(key)} />
+      </View>
+    );
+  };
+  
   return (
     <BaseView containerColor={COLOR_BACKGROUND} >
-      <Header title="Informasi Personal" />
-      <FlashList data={Object.entries(data.personal)} renderItem={renderItem} estimatedItemSize={80} />
+      <Header
+        shadow
+        title="Informasi Personal"
+        right={
+          <TouchableOpacity onPress={()=>setisEditable(!isEditable)}>
+            <Icon name={isEditable?'pen':'pen-off'} color={COLOR_EVENT_WARNING} />
+          </TouchableOpacity>
+        }
+      />
+      <FlashList
+        data={Object.entries(dataPersonal)}
+        renderItem={renderItem}
+        estimatedItemSize={80}
+        ListFooterComponent={
+          <Button
+            color={'info'}
+            style={{ margin: spacing.md }}
+            title="Ubah data"
+            onPress={() => action()}
+            type="outline"
+          />
+        }
+      />
     </BaseView>
   );
 };

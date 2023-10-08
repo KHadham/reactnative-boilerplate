@@ -40,7 +40,6 @@ export default StyleSheet.create({
   barActive: {
     height: 10,
     borderRadius: 10,
-    backgroundColor: COLOR_BASE_PRIMARY_MAIN,
   },
   txtInactive: {
     borderRadius: 100,

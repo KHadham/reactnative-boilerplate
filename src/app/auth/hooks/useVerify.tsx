@@ -5,8 +5,9 @@ import { STORAGE_KEY } from '@constants/index';
 import { endpoint } from '../apis';
 import { useProfileStore } from '@profileApp/stores/storage';
 import { APPKEY } from '@constants/appKey';
-import { useFetch ,handleRequest } from '@utils/networking';
-export const useProfile = () => {
+import { useFetch, handleRequest } from '@utils/networking';
+
+export const useVerify = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const {
@@ -18,60 +19,54 @@ export const useProfile = () => {
     personal,
   } = useProfileStore();
 
-  useEffect(() => {
-    // fetch();
-  }, []);
-
-  const doVerifyToken = async () => {
+  const action = async (token: string) => {
     useFetch({
       endpoint: endpoint.verifyTokens({
         headers: {
           'app-key': APPKEY.CITATA_KEY,
-          authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
+          authorization: token,
         },
       }),
       onSuccess: response => {
+        console.log('verifyTokens :>> ', response.payload);
         setUserDetail(response.payload);
-        setTimeout(() => {
-          fetch();
-        }, 2000);
       },
       onProgress(progress) {
-        setIsLoading(progress);
+        // setIsLoading(progress);
       },
       onError: error => {
-        setError(error);
+        setUserDetail(null);
+        // setError(error);
       },
     });
   };
 
-  const fetch = async () => {
-    useFetch({
-      endpoint: endpoint.getProfile({
-        headers: {
-          'app-key': APPKEY.CITATA_KEY,
-          authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
-        },
-        query: { username: user.username },
-      }),
-      onSuccess: response => {
-        setEmployeeDetail(response.data.siadik);
-        setPersonalDetail(response.data.sso);
-      },
-      onProgress(progress) {
-        setIsLoading(progress);
-      },
-      onError: error => {
-        setError(error);
-      },
-    });
-  };
+  // const fetch = async () => {
+  //   useFetch({
+  //     endpoint: endpoint.getProfile({
+  //       headers: {
+  //         'app-key': APPKEY.CITATA_KEY,
+  //         authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
+  //       },
+  //       query: { username: user.username },
+  //     }),
+  //     onSuccess: response => {
+  //       setEmployeeDetail(response.data.siadik);
+  //       setPersonalDetail(response.data.sso);
+  //     },
+  //     onProgress(progress) {
+  //       setIsLoading(progress);
+  //     },
+  //     onError: error => {
+  //       setError(error);
+  //     },
+  //   });
+  // };
 
   return {
     isLoading,
     error,
-    data: { user, employee, personal },
-    doVerifyToken,
-    fetch,
+    action,
+    data: user,
   };
 };

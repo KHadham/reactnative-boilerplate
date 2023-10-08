@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { endpoint } from '@newsApp/apis';
 import Toast from 'react-native-toast-message';
-import { useFetch ,handleRequest } from '@utils/networking';
+import { useFetch, handleRequest } from '@utils/networking';
 interface beritaInterface {
   id_berita: string;
   img: string;
@@ -18,8 +18,6 @@ export const useHooks = () => {
   const [page, setpage] = useState(1);
   const [error, setError] = useState('');
 
-  // const setLoading = useGlobalLoading(state => state.setLoading);
-
   useEffect(() => {
     fetching();
   }, []);
@@ -31,7 +29,9 @@ export const useHooks = () => {
         setData(prevData => [...prevData, ...data.data]);
         setpage(page + 1);
       },
-      onProgress(progress) {},
+      onProgress(progress) {
+        setIsLoading(progress)
+      },
       onError: error => {
         console.log('error :>> ', error);
         Toast.show({

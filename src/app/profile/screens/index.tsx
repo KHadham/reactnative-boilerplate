@@ -26,24 +26,26 @@ import {
   COLOR_BACKGROUND_INFORMATION,
   COLOR_BACKGROUND_SUCCESS,
   COLOR_EVENT_ERROR,
+  COLOR_EVENT_INACTIVE,
   COLOR_GREY,
   COLOR_WHITE,
 } from '@themes/index';
 import { useProfile } from '../hooks/useProfile';
+import { useVerify } from '@authApp/hooks/useVerify';
 // import profilStore from '@profileApp/stores';
 import { openSettings } from 'react-native-permissions';
 import { FlashList } from '@shopify/flash-list';
 import { widthByScreen } from '@utils/dimensions';
 import LinearGradient from 'react-native-linear-gradient';
 import { useProfileStore } from '@profileApp/stores/storage';
-import { isColorDark } from '@utils/uiHandler';
+import styles from '@profileApp/styles';
 
 const App: React.FC = () => {
   const { navigate } = useNavigationHandler();
-
-  const { doVerifyToken, fetch, data } = useProfile();
-  const { user, employee } = useProfileStore();
+  const { dataEmployee, dataPersonal } = useProfile();
+  const { data: dataAuth } = useVerify();
   const [baseModal, setbaseModal] = useState('');
+
   const MENULIST = [
     {
       title: 'Akun',
@@ -73,15 +75,11 @@ const App: React.FC = () => {
       data: [
         {
           title: 'Pertanyaan Umum (F.A.Q)',
-          right: () => {
-            doVerifyToken();
-          },
+          right: () => {},
         },
         {
           title: 'Chat Admin',
-          right: () => {
-            fetch();
-          },
+          right: () => {},
         },
         {
           title: 'Produk Hukum',
@@ -118,58 +116,28 @@ const App: React.FC = () => {
       <View>
         <LinearGradient
           colors={[COLOR_BACKGROUND_INFORMATION, '#FFFFFF']}
-          style={{
-            position: 'absolute',
-            width: widthByScreen(100),
-            height: '100%',
-          }}
+          style={styles.gradientHeader}
         />
-        <View
-          style={{
-            flexDirection: 'row',
-            alignItems: 'center',
-            padding: spacing.sm,
-          }}
-        >
+        <View style={styles.headerContentWrap}>
           <Avatar
-            source={employee?.foto}
+            source={dataEmployee?.foto}
             size={spacing.xxl}
             badge={'online'}
             count={10}
             avatarColor="white"
           />
-          <View
-            style={{
-              margin: spacing.md,
-              justifyContent: 'center',
-              alignContent: 'center',
-              flex: 1,
-            }}
-          >
+          <View style={styles.innerheaderContentWrap}>
             <Text size="title" weight="bold">
-              {user?.nama}
-              <Text size="desc"> ({data?.personal?.user_group})</Text>
+              {dataAuth?.nama}
+              <Text size="desc"> ({dataPersonal?.user_group})</Text>
             </Text>
-
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: spacing.xs,
-              }}
-            >
+            <View style={styles.nameLabelWrap}>
               <Icon name="phone" />
-              <Text size="desc"> {data?.personal?.email}</Text>
+              <Text size="desc"> {dataAuth?.telepon}</Text>
             </View>
-            <View
-              style={{
-                flexDirection: 'row',
-                alignItems: 'center',
-                gap: spacing.xs,
-              }}
-            >
+            <View style={styles.nameLabelWrap}>
               <Icon name="email-outline" />
-              <Text size="desc"> {data?.personal?.phone}</Text>
+              <Text size="desc"> {dataAuth?.email}</Text>
             </View>
           </View>
         </View>
@@ -209,6 +177,8 @@ const App: React.FC = () => {
             style={{
               backgroundColor: COLOR_WHITE,
               padding: spacing.md,
+              borderBottomWidth: 0.5,
+              borderColor: COLOR_EVENT_INACTIVE,
             }}
           >
             <Text size="title" weight="bold" style={{}}>

@@ -21,7 +21,7 @@ function App() {
   return (
     <>
       <BaseAppRoute />
-      <Toast position="bottom" config={toastConfig} />
+      <Toast position="bottom" config={toastConfig} visibilityTime={1000} />
     </>
   );
 }

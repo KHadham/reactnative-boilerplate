@@ -9,6 +9,7 @@ import {
   ColorValue,
   TextStyle,
   ActivityIndicator,
+  TouchableOpacity,
 } from 'react-native';
 import Ripple from 'react-native-material-ripple';
 import PropTypes from 'prop-types';

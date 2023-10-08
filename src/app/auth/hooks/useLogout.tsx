@@ -1,34 +1,24 @@
 import { useState } from 'react';
 import Toast from 'react-native-toast-message';
-import {
-  navigate,
-  replace,
-  reset,
-  useNavigationHandler,
-} from '@utils/navigation';
+import { reset } from '@utils/navigation';
 import { storage } from '@utils/storage';
 import { STORAGE_KEY } from '@constants/index';
-import { endpoint } from '@authApp/apis';
-import { useProfile } from '@profileApp/hooks/useProfile';
-import { APPKEY } from '@constants/appKey';
 import FastImage from 'react-native-fast-image';
 import { useProfileStore } from '@profileApp/stores/storage';
-import { useFetch, handleRequest } from '@utils/networking';
 
-export const useAuth = () => {
-  const { navigate } = useNavigationHandler();
-
+export const useLogout = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const action = () => {
+    setIsLoading(true);
+    Toast.show({
+      type: 'loading',
+      text1: 'Sedang Logout ...',
+      autoHide: false,
+    });
     try {
       useProfileStore.persist.clearStorage();
-      Toast.show({
-        type: 'loading',
-        text1: 'Sedang Logout ...',
-        autoHide: false,
-      });
       FastImage.clearMemoryCache();
       FastImage.clearDiskCache();
       storage.removeItem(STORAGE_KEY.LOGIN_TOKEN);
@@ -36,6 +26,7 @@ export const useAuth = () => {
         Toast.show({
           type: 'success',
           text1: 'Berhasil Logout',
+          visibilityTime: 1000,
         });
         reset('Auth');
       }, 2000);
@@ -44,6 +35,7 @@ export const useAuth = () => {
       Toast.show({
         type: 'error',
         text1: 'Terjadi kesalahan saat logout',
+        visibilityTime: 1000,
       });
     }
   };

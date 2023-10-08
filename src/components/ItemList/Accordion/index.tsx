@@ -34,10 +34,6 @@ const App: React.FC<AppProps> = ({
   const [isExpand, setisExpand] = useState(false);
   const rotateAnim = useRef(new Animated.Value(0)).current; // Initial opacity: 0
 
-  useEffect(() => {
-    LayoutAnimationHandler();
-  }, []);
-
   const rotating = () => {
     Animated.timing(rotateAnim, {
       toValue: isExpand ? 0 : 1, // The final height after the animation

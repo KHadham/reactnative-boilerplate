@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from '@react-navigation/bottom-tabs';
 import Home from '@homeApp/screens/home';
 import Arsip from '@archiveApp/screens/screens';
 import Faq from '@othersApp/screens/faq';
-import Profil from '@profileApp/screens/profile';
+import Profil from '@profileApp/screens';
 import { Icon, Text } from '@components';
 import {
   COLOR_BASE_PRIMARY_DARK,
@@ -13,7 +13,6 @@ import {
 } from '@themes/index';
 import { ColorValue, TouchableOpacity, View, SafeAreaView } from 'react-native';
 import { heightByScreen } from '@utils/dimensions';
-import { LayoutAnimationHandler } from '@utils/uiHandler';
 import { useTabCount } from '@utils/state/tabBar';
 import Modal from 'react-native-modal';
 import { useNavigationHandler } from '@utils/navigation';
@@ -141,7 +140,6 @@ const TabIconPlus = (icon: string, color: string, focused) => {
 };
 
 const MainTabNavigator = () => {
-  LayoutAnimationHandler();
   const berandaCount = useTabCount(state => state.beranda);
 
   return (

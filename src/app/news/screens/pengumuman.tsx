@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { View, Share } from 'react-native';
+import { View, Share, RefreshControl } from 'react-native';
 import Toast from 'react-native-toast-message';
 import IMAGES from '@images';
 import {
@@ -12,7 +12,6 @@ import {
 } from '@components';
 import { FlashList } from '@shopify/flash-list';
 import { useHooks } from '@newsApp/hooks/usePengumuman';
-import { heightByScreen } from '@utils/dimensions';
 import { useNavigationHandler } from '@utils/navigation';
 
 import { spacing } from '@constants/spacing';
@@ -20,23 +19,13 @@ import { spacing } from '@constants/spacing';
 const Screen = () => {
   const { onShare, onPressLink } = useNavigationHandler();
   const { data, fetching, isLoading } = useHooks();
-  const [first, setfirst] = useState('');
-
-  //   useEffect(() => {
-  // Toast.show({
-  //   type: 'success',
-  //   text1: 'Hello',
-  //   text2: 'This is some something 👋'
-  // });
-
-  //     return () => {
-  //       second;
-  //     };
-  //   }, []);
 
   return (
     <BaseView>
       <FlashList
+        refreshControl={
+          <RefreshControl refreshing={isLoading} onRefresh={fetching} />
+        }
         estimatedItemSize={50}
         data={data}
         renderItem={({ item, index }) => (
@@ -74,9 +63,9 @@ const Screen = () => {
         onEndReached={fetching}
         ListFooterComponent={
           <View style={{ padding: 20, gap: spacing.sm }}>
-            <Text isLoading style={{ width: '100%' }} />
-            <Text isLoading style={{ width: '90%' }} />
-            <Text isLoading style={{ width: '100%' }} />
+            <Text isLoading />
+            <Text isLoading />
+            <Text isLoading />
             <Text isLoading size="subTitle" />
           </View>
         }

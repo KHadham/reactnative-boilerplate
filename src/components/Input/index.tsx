@@ -47,7 +47,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     success = '',
     required = '',
     type = 'text',
-    data=[],
+    data = [],
     length = 6,
     borderRadius = 10,
     style,
@@ -72,7 +72,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
   }, [value]);
 
   useEffect(() => {
-    LayoutAnimationHandler();
+    // LayoutAnimationHandler();
   }, [value, error, isFocus, usrInput]);
 
   const typeListConfig: TypeListConfigMap = {
@@ -82,11 +82,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     phone: {
       icon: 'phone',
       keyboardType: 'phone-pad',
-      validation: getNumberOnly
+      validation: getNumberOnly,
     },
     number: {
       keyboardType: 'decimal-pad',
-      validation: getNumberOnly
+      validation: getNumberOnly,
     },
     password: {
       icon: ['eye', 'eye-off'],
@@ -110,13 +110,13 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       icon: 'clock-outline',
       onPress: () => setDatePickerVisibility(!isDatePickerVisible),
       keyboardType: 'default',
-      typeable: false
+      typeable: false,
     },
     date: {
       icon: 'calendar-month',
       onPress: () => setDatePickerVisibility(!isDatePickerVisible),
       keyboardType: 'default',
-      typeable: false
+      typeable: false,
     },
     // select: {
     //   icon: 'chevron-down',
@@ -159,7 +159,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
   };
 
   const fieldStateBackground = () => {
-    if (!editable) return COLOR_GREY_LIGHT;
+    if (!editable) return COLOR_EVENT_INACTIVE;
     else if (error) return COLOR_BACKGROUND_ERROR;
     else if (success) return COLOR_BACKGROUND_SUCCESS;
     else return COLOR_WHITE;
@@ -186,70 +186,99 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
           <Icon name={'close'} size={22} color={COLOR_EVENT_ERROR} />
         </TouchableOpacity>
       );
-    }
-    else if (type == 'switch') {
+    } else if (type == 'switch') {
       return (
         <View style={styles.sideComponentWrap}>
           <Switch
             value={value}
-            onValueChange={() => { handleFieldPress() }}
+            onValueChange={() => {
+              handleFieldPress();
+            }}
           />
         </View>
-      )
-    }
-    else if (typeListConfig[type].icon) {
+      );
+    } else if (typeListConfig[type].icon) {
       return (
         <>
-          {typeListConfig[type].typeable == false && <View style={{ justifyContent: 'center' }}>
-            <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
-          </View>}
+          {typeListConfig[type].typeable == false && (
+            <View style={{ justifyContent: 'center' }}>
+              <View
+                style={{
+                  borderWidth: 0.5,
+                  height: '70%',
+                  borderColor: fieldStateBorder(),
+                }}
+              />
+            </View>
+          )}
           <TouchableOpacity
             disabled={typeListConfig[type].onPress == undefined}
-            style={[styles.sideComponentWrap, type == 'area' && { alignItems: 'flex-end', paddingBottom: 12 }]}
+            style={[
+              styles.sideComponentWrap,
+              type == 'area' && { alignItems: 'flex-end', paddingBottom: 12 },
+            ]}
             onPress={() => typeListConfig[type].onPress()}
           >
             <Icon name={icons()} size={22} color={fieldStateBorder()} />
           </TouchableOpacity>
         </>
       );
-    }
-    else if (rightComponent) {
+    } else if (rightComponent) {
       return (
         <>
           <View style={{ justifyContent: 'center' }}>
-            <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
+            <View
+              style={{
+                borderWidth: 0.5,
+                height: '70%',
+                borderColor: fieldStateBorder(),
+              }}
+            />
           </View>
           {rightComponent}
         </>
-      )
+      );
     }
   };
 
   const left = () => {
-    if (leftComponent) return (
-      <>
-        {leftComponent}
-        <View style={{ justifyContent: 'center' }}>
-          <View style={{ borderWidth: 0.5, height: '70%', borderColor: fieldStateBorder() }} />
-        </View>
-      </>
-    )
+    if (leftComponent)
+      return (
+        <>
+          {leftComponent}
+          <View style={{ justifyContent: 'center' }}>
+            <View
+              style={{
+                borderWidth: 0.5,
+                height: '70%',
+                borderColor: fieldStateBorder(),
+              }}
+            />
+          </View>
+        </>
+      );
   };
 
   const disableState = () => {
-    if (!typeListConfig[type].typeable && typeListConfig[type].onPress !== undefined && editable == false) {
-      return true
+    if (
+      !typeListConfig[type].typeable &&
+      typeListConfig[type].onPress !== undefined &&
+      editable == false
+    ) {
+      return true;
     } else {
-      return false
+      return false;
     }
-  }
+  };
 
   const handleFieldPress = () => {
     if (disableState) {
-      typeListConfig[type].onPress()
-      onInteract(!isSelected)
+      if (typeListConfig[type]?.onPress !== undefined ) {
+        typeListConfig[type]?.onPress();
+        onInteract(!isSelected);
+      }
     }
-  }
+  };
 
   const basicInput = () => {
     return (
@@ -273,9 +302,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
           ref={ref}
           {...rest}
           value={usrInput}
-          onChangeText={(txt) => {
+          onChangeText={txt => {
             const validationFunction = typeListConfig[type]?.validation;
-            const finalValue = validationFunction ? validationFunction(txt) : txt;
+            const finalValue = validationFunction
+              ? validationFunction(txt)
+              : txt;
             onInteract(finalValue);
           }}
           style={styles.innerInput}
@@ -295,13 +326,14 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
   const labelText = () => {
     if (label) {
       return (
-        <View style={{ flexDirection: 'row' }} >
-          <Text weight='bold'>
-            {toTitleCase(label)}
-          </Text>
-          {required && <Text weight='bold' color={COLOR_EVENT_ERROR}>
-            {' '}*
-          </Text>}
+        <View style={{ flexDirection: 'row' }}>
+          <Text weight="bold">{toTitleCase(label)}</Text>
+          {required && (
+            <Text weight="bold" color={COLOR_EVENT_ERROR}>
+              {' '}
+              *
+            </Text>
+          )}
         </View>
       );
     }
@@ -328,9 +360,9 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
           <Icon name={iconName} size={16} color={iconColor} />
           <Text style={{ color: iconColor }}> {text}</Text>
         </View>
-      )
+      );
     }
-  }
+  };
 
   const mainInput = () => {
     if (type == 'otp') {
@@ -338,20 +370,19 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
         <Otp
           value={value}
           length={length}
-          onInteract={(values) => onInteract(values)}
+          onInteract={values => onInteract(values)}
         />
-      )
+      );
     } else if (type == 'image') {
       return (
         <ImagePicker
           data={value}
-          onInteract={(data) => onInteract(data)}
+          onInteract={data => onInteract(data)}
           borderRadius={borderRadius}
         />
-      )
-    }
-    else return basicInput()
-  }
+      );
+    } else return basicInput();
+  };
 
   return (
     <KeyboardAvoidingView style={[{ paddingVertical: 8 }, style]}>
@@ -362,9 +393,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
         <DateTimePickerModal
           isVisible={isDatePickerVisible}
           mode={type}
-          onConfirm={(data) => {
-            onInteract(dayjs(data).format(type == 'time' ? 'HH:mm' : 'DD/MM/YYYY'))
-            setDatePickerVisibility(!isDatePickerVisible)
+          onConfirm={data => {
+            onInteract(
+              dayjs(data).format(type == 'time' ? 'HH:mm' : 'DD/MM/YYYY')
+            );
+            setDatePickerVisibility(!isDatePickerVisible);
           }}
           onCancel={() => setDatePickerVisibility(false)}
           locale="en_GB"

@@ -11,6 +11,7 @@
     "skipLibCheck": true,
     "paths": {
       "@themes/*": ["src/themes/*"],
+      "@hooks": ["src/hooks"],
       "@components": ["src/components"],
       "@components/*": ["src/components/*"],
       "@constants/*": ["src/constants/*"],

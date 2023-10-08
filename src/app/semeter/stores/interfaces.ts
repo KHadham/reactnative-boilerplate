@@ -242,3 +242,19 @@ export interface ReklameArcgisInterface {
     },
   }[];
 }
+
+export interface FormItem {
+  DESCRIPTION: string;
+  HAS_CREATE: number;
+  HAS_DELETE: number;
+  HAS_EDIT: number;
+  HAS_VIEW: number;
+  INPUT_ID: number;
+  INPUT_TYPE_ID: number;
+  LABEL: string;
+  NAME: string;
+  SORT: number;
+  TYPE: number;
+  USER_GROUP_ID: number;
+  USER_GROUP_PRIVILEGE_ID: number;
+}

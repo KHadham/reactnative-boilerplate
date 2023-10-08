@@ -10,9 +10,7 @@ import {
   TouchableOpacity,
   View,
 } from 'react-native';
-import { SafeAreaView } from 'react-native-safe-area-context';
-import { WebView } from 'react-native-webview';
-import Toast from 'react-native-toast-message';
+
 import {
   BaseView,
   Button,
@@ -24,16 +22,17 @@ import {
   ModalRegionSearch,
   Text,
   ModalBasic,
+  LoadingWraper,
   FastImage,
 } from '@components';
 import { useNavigationHandler } from '@utils/navigation';
-import { storage } from '@utils/storage';
-import { STORAGE_KEY } from '@constants/index';
+
 import { Marker, UrlTile } from 'react-native-maps';
 import MapView from 'react-native-map-clustering';
-import Lottie from 'lottie-react-native';
 
 import { useHooks } from '@semeterApp/hooks';
+import { useHooks as formHook } from '@semeterApp/hooks/form';
+import styles from '@semeterApp/styles';
 import {
   animateMapToTargetRegion,
   gpsEnabler,
@@ -43,6 +42,7 @@ import {
   COLOR_BASE_PRIMARY_DARK,
   COLOR_EVENT_ERROR,
   COLOR_EVENT_INFORMATION,
+  COLOR_FONT_PRIMARY_DARK,
   COLOR_WHITE,
 } from '@themes/index';
 import { MARKER } from '@images';
@@ -55,7 +55,11 @@ import {
   rgba,
   saturate,
 } from 'react-native-color-matrix-image-filters';
-import { hexToMatrix } from '@utils/uiHandler';
+import {
+  LayoutAnimationHandler,
+  hexToMatrix,
+  isColorDark,
+} from '@utils/uiHandler';
 import { spacing } from '@constants/spacing';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -63,9 +67,16 @@ import { toTitleCase, trimUrlCitata } from '@utils/index';
 import { FlashList } from '@shopify/flash-list';
 
 const Screen = () => {
-  const { getParam } = useNavigationHandler();
+  const { navigate } = useNavigationHandler();
 
   const { data, isLoading, actions, states, ref } = useHooks();
+  const { data: dataform } = formHook();
+  const [isSearchingVisible, setisSearchingVisible] = useState(false);
+
+  useEffect(() => {
+    LayoutAnimationHandler();
+  }, [states.detailMarker]);
+
   const tindakanToImage = {
     0: MARKER.marker,
     1: MARKER.markerPemberitahuan,
@@ -87,24 +98,27 @@ const Screen = () => {
     6: colors.dusk.dusk_50,
   };
 
-  const countToColor = {
-    range1: { min: 0, max: 50, color: colors.green.green_30 },
-    range2: { min: 50, max: 300, color: colors.teal.teal_30 },
-    range3: { min: 301, max: 600, color: colors.blue.blue_30 },
-    range4: { min: 601, max: 900, color: colors.yellow.yellow_30 },
-    range5: { min: 901, max: 1200, color: colors.orange.orange_30 },
-    range6: { min: 1201, max: 9999, color: colors.red.red_30 },
+  const getPointCountColor = (count: number) => {
+    const colors = [
+      '#14ff00',
+      '#d2d500',
+      '#f1b800',
+      '#f9a900',
+      '#ff990b',
+      '#ff8519',
+      '#ff6f26',
+      '#ff5832',
+      '#ff3e3e',
+    ];
+    const cappedCount = Math.min(count, 1500);
+    // Calculate the index based on the count and color range
+    const index = Math.floor((cappedCount / 1500) * (colors.length - 1));
+    return colors[index];
   };
 
-  const getPointCountColor = (point_count: number) => {
-    for (const range in countToColor) {
-      const { min, max, color } = countToColor[range];
-      if (point_count >= min && point_count <= max) {
-        return color;
-      }
-    }
-    return '#000000'; // Default color if point_count is out of range
-  };
+  // todo
+  // pending modal detail show
+  //  get permision to do crud
 
   return (
     <BaseView>
@@ -113,9 +127,7 @@ const Screen = () => {
         right={
           <Button
             style={{ padding: 10 }}
-            onPress={() =>
-              actions.setisSearchingVisible(!states.isSearchingVisible)
-            }
+            onPress={() => setisSearchingVisible(!isSearchingVisible)}
           >
             {isLoading ? <ActivityIndicator /> : <Icon name="magnify" />}
           </Button>
@@ -123,7 +135,8 @@ const Screen = () => {
       />
       <View style={{ flex: 1, width: '100%', height: '100%' }}>
         <MapView
-          // clusterColor={}
+          tracksViewChanges={false}
+          radius={40}
           ref={ref}
           style={{
             flex: 1,
@@ -163,7 +176,15 @@ const Screen = () => {
                     borderRadius: 100,
                   }}
                 >
-                  <Text weight="bold" size="info">
+                  <Text
+                    weight="bold"
+                    size="info"
+                    color={
+                      isColorDark(getPointCountColor(properties?.point_count))
+                        ? COLOR_FONT_PRIMARY_DARK
+                        : COLOR_WHITE
+                    }
+                  >
                     {properties?.point_count}
                   </Text>
                 </View>
@@ -176,7 +197,6 @@ const Screen = () => {
               tindakanToImage[item.attributes.KD_JENIS_TINDAKAN] ||
               MARKER.marker;
             const group = groupToColor[item.attributes.GROUP_BY_ID];
-
             return (
               <Marker
                 key={`${index}~${item.geometry.y}`}
@@ -186,6 +206,10 @@ const Screen = () => {
                 }}
                 tracksViewChanges={false}
                 onPress={() => actions.onPressMarker(item)}
+                style={{
+                  borderWidth: 3,
+                  borderRadius: 100,
+                }}
               >
                 <ColorMatrix matrix={hexToMatrix(group)}>
                   <Image
@@ -199,9 +223,8 @@ const Screen = () => {
               </Marker>
             );
           })}
-          <GpsMarker coordinate={states.coordinate} />
 
-          {/* basic */}
+          <GpsMarker coordinate={states.coordinate} />
           {states?.layerList?.name == 'Peta Struktur' && (
             <UrlTile
               urlTemplate={
@@ -233,14 +256,19 @@ const Screen = () => {
         <Button
           type="fab"
           onPress={() => actions.setmodalLayer(true)}
-          iconName="layers-triple-outline"
+          icon="layers-triple-outline"
           position="top-right"
         />
-        <Button
+        {/* <Button
           type="fab"
           onPress={() => actions.getLocation()}
-          iconName="crosshairs-gps"
+          icon="crosshairs-gps"
           isLoading={isLoading}
+        /> */}
+        <Button
+          type="fab"
+          onPress={() => navigate({ screen: 'Form' })}
+          icon="plus"
         />
       </View>
       <ModalList
@@ -279,6 +307,8 @@ const Screen = () => {
       <ModalBasic
         isVisible={states.isModalDetail}
         onClose={() => actions.setIsModalDetail(false)}
+        style={{ padding: spacing.sm }}
+        header
       >
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
           <Text weight="bold" size="title">
@@ -304,49 +334,34 @@ const Screen = () => {
             </View>
             <Text type="italic">{states?.selectedMarker?.KODE}</Text>
           </View>
-          <Text>{states?.selectedMarker?.LOKASI}</Text>
-
+          <Text>
+            {states?.selectedMarker?.LOKASI},{states?.selectedMarker?.KEL},
+            {states?.selectedMarker?.KEC},{states?.selectedMarker?.WIL}
+          </Text>
           {isLoading ? (
             <>
               <View
                 style={{
                   flexDirection: 'row',
                   gap: 10,
+                  marginVertical: spacing.sm,
                 }}
               >
-                <ShimmerPlaceholder
-                  LinearGradient={LinearGradient}
-                  style={{
-                    width: widthByScreen(20),
-                    height: widthByScreen(20),
-                    borderRadius: 10,
-                    marginVertical: 10,
-                  }}
+                <LoadingWraper
+                  isLoading={true}
+                  style={{ height: 50, width: 50 }}
                 />
-                <ShimmerPlaceholder
-                  LinearGradient={LinearGradient}
-                  style={{
-                    width: widthByScreen(20),
-                    height: widthByScreen(20),
-                    borderRadius: 10,
-                    marginVertical: 10,
-                  }}
-                />
-                <ShimmerPlaceholder
-                  LinearGradient={LinearGradient}
-                  style={{
-                    width: widthByScreen(20),
-                    height: widthByScreen(20),
-                    borderRadius: 10,
-                    marginVertical: 10,
-                  }}
+                <LoadingWraper
+                  isLoading={true}
+                  style={{ height: 50, width: 50 }}
                 />
               </View>
-              <ShimmerPlaceholder
-                LinearGradient={LinearGradient}
+              <LoadingWraper
+                isLoading={true}
+                randomSize
                 style={{
+                  height: 10,
                   borderRadius: 10,
-                  marginVertical: 10,
                 }}
               />
             </>
@@ -355,18 +370,17 @@ const Screen = () => {
               estimatedItemSize={5}
               horizontal
               ItemSeparatorComponent={() => <View style={{ margin: 10 }} />}
-              data={states.detailMarker?.ATTACHMENT}
+              data={
+                states.detailMarker == null
+                  ? []
+                  : states.detailMarker?.ATTACHMENT
+              }
               renderItem={({ item, index }) => (
                 <FastImage
                   key={index}
                   previewAble
-                  style={{
-                    width: widthByScreen(20),
-                    height: widthByScreen(20),
-                    borderRadius: 10,
-                    marginVertical: 10,
-                  }}
-                  source={trimUrlCitata(item.url)}
+                  style={styles.imageDetailReklame}
+                  source={{ uri: trimUrlCitata(item.url) }}
                 />
               )}
               ListEmptyComponent={
@@ -376,58 +390,64 @@ const Screen = () => {
               }
             />
           )}
-          <FlatList
-            style={{marginVertical:10}}
-            ItemSeparatorComponent={() => <View style={{ borderWidth: 0.5 }} />}
-            data={Object.entries(states.detailMarker)}
-            renderItem={({ item, index }) => {
-              if (
-                item[1] !== null &&
-                item[1] !== '' &&
-                item[0] !== 'ATTACHMENT'
-              ) {
-                return (
-                  <View style={{ flexDirection: 'row',margin:spacing.xs }}>
-                    <Text weight="bold">{toTitleCase(item[0])} : </Text>
-                    <Text>{item[1]}</Text>
-                  </View>
-                );
-              }else null
-            }}
-            ListEmptyComponent={
-              <Text type="italic" style={{ textAlign: 'center' }}>
-                Tidak ada data nya
-              </Text>
-            }
-          />
+
+          {!isLoading && (
+            <FlatList
+              style={{ marginVertical: 10 }}
+              // ItemSeparatorComponent={() => <View style={{ borderWidth: 0.5 }} />}
+              data={
+                states.detailMarker == null
+                  ? []
+                  : Object.entries(states.detailMarker)
+              }
+              renderItem={({ item, index }) => {
+                if (
+                  item[1] !== null &&
+                  item[1] !== '' &&
+                  item[0] !== 'ATTACHMENT'
+                ) {
+                  return (
+                    <View
+                      style={{
+                        flexDirection: 'row',
+                        padding: spacing.xs,
+                        borderBottomWidth: 1,
+                      }}
+                    >
+                      <Text weight="bold">{toTitleCase(item[0])} : </Text>
+                      <Text>{item[1]}</Text>
+                    </View>
+                  );
+                }
+              }}
+              ListEmptyComponent={
+                <Text type="italic" style={{ textAlign: 'center' }}>
+                  Tidak ada data nya
+                </Text>
+              }
+            />
+          )}
         </View>
       </ModalBasic>
+
       <ModalRegionSearch
+        mapRef={ref}
         header={
           <Header
-            left={
-              <TouchableOpacity
-                onPress={() => actions.setisSearchingVisible(false)}
-              >
-                <Icon name={'chevron-left'} size={30} />
-              </TouchableOpacity>
-            }
-            title={'SEMETER'}
+            left={null}
+            title={'Cari Wilayah'}
             right={
               <Button
                 style={{ padding: 10 }}
-                onPress={() =>
-                  actions.setisSearchingVisible(!states.isSearchingVisible)
-                }
+                onPress={() => setisSearchingVisible(!isSearchingVisible)}
               >
                 <Icon name="close" />
               </Button>
             }
           />
         }
-        isVisible={states.isSearchingVisible}
-        onClose={() => actions.setisSearchingVisible(false)}
-        onSelect={(txt: string) => actions.getDetaillocation(txt)}
+        isVisible={isSearchingVisible}
+        onClose={() => setisSearchingVisible(false)}
       />
     </BaseView>
   );

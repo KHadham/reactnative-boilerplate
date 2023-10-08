@@ -6,11 +6,11 @@ import { endpoint } from '../apis';
 import { useProfileStore } from '@profileApp/stores/storage';
 import { APPKEY } from '@constants/appKey';
 import { useFetch, handleRequest } from '@utils/networking';
-
 export const useProfile = () => {
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
   const {
+    setUserDetail,
     user,
     setEmployeeDetail,
     setPersonalDetail,
@@ -19,6 +19,10 @@ export const useProfile = () => {
   } = useProfileStore();
 
   useEffect(() => {
+    // fetch();
+  }, []);
+
+  const action = async () => {
     useFetch({
       endpoint: endpoint.getProfile({
         headers: {
@@ -38,14 +42,14 @@ export const useProfile = () => {
         setError(error);
       },
     });
-  }, []);
-
-  // https://dcktrp.jakarta.go.id/satuakses/app/profile/ubah_profile
+  };
 
   return {
     isLoading,
     error,
-    dataEmployee: employee,
-    dataPersonal: personal,
+    user,
+    employee,
+    personal,
+    action,
   };
 };

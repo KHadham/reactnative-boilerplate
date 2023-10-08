@@ -24,6 +24,7 @@ import ModalRegionSearch from './Overlay/Modals/ModalRegionSearch'
 import ModalBasic from './Overlay/Modals/ModalBasic'
 import ModalPDF from './Overlay/Modals/ModalPDF'
 import HeaderModal from './Header/HeaderModal'
+import LoadingWraper from './Progress/LoadingWraper'
 
 export {
   BaseView,
@@ -51,5 +52,6 @@ export {
   ModalRegionSearch,
   ModalBasic,
   HeaderModal,
-  ModalPDF
+  ModalPDF,
+  LoadingWraper
 };

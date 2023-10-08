@@ -39,11 +39,11 @@ const App: React.FC<AppProps> = ({ coordinate }) => {
   //   };
   // }, []);
 
-  useEffect(() => {
-    console.log('DeviceInfo() :>> ', DeviceInfo.isLocationEnabledSync());
-    console.log('isGpsEnabled() :>> ', isGpsEnabled());
-    console.log('coordinatexx :>> ', coordinate);
-  }, [DeviceInfo.isLocationEnabledSync(),coordinate])
+  // useEffect(() => {
+  //   console.log('DeviceInfo() :>> ', DeviceInfo.isLocationEnabledSync());
+  //   console.log('isGpsEnabled() :>> ', isGpsEnabled());
+  //   console.log('coordinatexx :>> ', coordinate);
+  // }, [DeviceInfo.isLocationEnabledSync(),coordinate])
   
 
   if (coordinate.latitude == null) {
@@ -71,7 +71,7 @@ const App: React.FC<AppProps> = ({ coordinate }) => {
               backgroundColor: 'white',
             }}
           >
-            <Icon name={'radiobox-marked'} color="#007AFF"  size={26}/>
+            <Icon name={'radiobox-marked'} color="#007AFF"  size={22}/>
           </View>
         </Animated.View>
       </Marker>

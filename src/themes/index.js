@@ -41,13 +41,13 @@ export const COLOR_FONT_PRIMARY_LIGHT = '#757575';
 
 export const COLOR_EVENT_SUCCESS = '#43936C';
 export const COLOR_EVENT_ERROR = '#CB3A31';
-export const COLOR_EVENT_INACTIVE = '#9E9E9E';
+export const COLOR_EVENT_INACTIVE = '#ededed';
 export const COLOR_EVENT_INFORMATION = '#3267E3';
-export const COLOR_EVENT_WARNING = '#CD7B2E';
+export const COLOR_EVENT_WARNING = '#e0b336';
 
 export const COLOR_BACKGROUND_SUCCESS = '#EFF9E1';
 export const COLOR_BACKGROUND_ERROR = '#FFECEB';
-export const COLOR_BACKGROUND_INACTIVE = '#9E9E9E';
+export const COLOR_BACKGROUND_INACTIVE = '#d6d6d6';
 export const COLOR_BACKGROUND_INFORMATION = '#EBEFFF';
 export const COLOR_BACKGROUND_WARNING = '#FFF2E5';
 

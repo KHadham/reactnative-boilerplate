@@ -12,7 +12,6 @@ import { requestPermission } from '@utils/permissions';
 import { useNavigationHandler } from '@utils/navigation';
 import { spacing } from '@constants/spacing';
 import {
-  LayoutAnimationHandler,
   handleHorizontalScroll,
   scrollToIndexHorizontal,
 } from '@utils/uiHandler';

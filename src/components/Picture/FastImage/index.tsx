@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
-import { View, Text, StyleSheet } from 'react-native';
+import React, { useEffect, useRef, useState } from 'react';
+import { View, Text, ViewStyle, Animated } from 'react-native';
 import styles from './styles';
-import { Button, Icon } from '@components';
+import { Button, LoadingWraper } from '@components';
 import FastImage, {
   ImageStyle,
   ResizeMode,
@@ -9,8 +9,7 @@ import FastImage, {
 } from 'react-native-fast-image';
 import IMAGES from '@images';
 import ImageView from 'react-native-image-viewing';
-import LinearGradient from 'react-native-linear-gradient';
-import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
+// import { useLoadingBackground } from '@hooks'
 
 interface AppProps extends FastImageProps {
   style?: ImageStyle;
@@ -30,7 +29,7 @@ const App: React.FC<AppProps> = ({
 }) => {
   const [isVisible, setisVisible] = useState(false);
   // const [progress, setprogress] = useState(false);
-  const [isloading, setisloading] = useState(false);
+  const [isImageProsgressing, setisImageProgressing] = useState(null);
 
   const previewModal = () => (
     <ImageView
@@ -42,28 +41,36 @@ const App: React.FC<AppProps> = ({
   );
 
   const coreImage = () => {
-    return (
-      <FastImage
-        onProgress={e =>
-          console.log(e.nativeEvent.loaded / e.nativeEvent.total)
-        }
-        onLoadStart={() => setisloading(true)}
-        onLoadEnd={() => setisloading(false)}
-        style={style}
-        source={source}
-        resizeMode={resizeMode}
-        {...rest}
-      />
-    );
-  };
+    // TODO loading image processing
+    
+    // if (isImageProsgressing !== null) {
+    //   return (
+    //     <Animated.View style={{ backgroundColor: 'red' }} />
+    //   )
+    // } else {
+      return (
+        <FastImage
+          onProgress={e => {
+            console.log('(e.nativeEvent.loaded / e.nativeEvent.total) :>> ', (e.nativeEvent.loaded / e.nativeEvent.total) * 100);
+            setisImageProgressing((e.nativeEvent.loaded / e.nativeEvent.total) * 100)
+          }}
+          onLoadStart={() => setisImageProgressing(0)}
+          onLoadEnd={() => setisImageProgressing(100)}
+          style={style}
+          source={source}
+          resizeMode={resizeMode}
+          {...rest}
+        />
+      );
+    }
+  // };
+
   return (
     <>
-      <Button onPress={() => previewAble && !isLoading && setisVisible(true)}>
-        {isLoading ? (
-          <ShimmerPlaceHolder LinearGradient={LinearGradient} style={style} />
-        ) : (
-          coreImage()
-        )}
+      <Button disabled={isLoading} onPress={() => previewAble && !isLoading && setisVisible(true)} >
+        <LoadingWraper isLoading={isLoading} >
+          {coreImage()}
+        </LoadingWraper>
       </Button>
       {previewModal()}
     </>

@@ -1,3 +1,5 @@
+import { LoadingWraper } from '@components';
+import { useLoadingBackground } from '@hooks';
 import {
   COLOR_FONT_PRIMARY_DARK,
   FONT_SIZE_HEADER,
@@ -7,8 +9,9 @@ import {
   FONT_SIZE_INFO,
   FONT_SIZE_SUBTITLE,
 } from '@themes/index';
-import React from 'react';
-import { TextStyle, Text, TextProps, View } from 'react-native';
+import { widthByScreen } from '@utils/dimensions';
+import React, { useEffect } from 'react';
+import { TextStyle, Text, TextProps, Animated } from 'react-native';
 import LinearGradient from 'react-native-linear-gradient';
 import ShimmerPlaceHolder from 'react-native-shimmer-placeholder';
 
@@ -18,13 +21,13 @@ type TextWrapProps = TextProps & {
   onPress?: () => void,
   color?: string,
   size?:
-    | 'header'
-    | 'title'
-    | 'desc'
-    | 'button'
-    | 'info'
-    | 'subTitle'
-    | 'regular',
+  | 'header'
+  | 'title'
+  | 'desc'
+  | 'button'
+  | 'info'
+  | 'subTitle'
+  | 'regular',
   weight?: 'bold' | 'regular' | 'thin',
   type?: Array<'italic' | 'underline'> | 'italic' | 'underline',
   isLoading?: boolean,
@@ -80,14 +83,17 @@ function index({
     </Text>
   );
 
-  return (
-    <ShimmerPlaceHolder
-      visible={!isLoading}
-      LinearGradient={LinearGradient}
-      style={style}
-    >
+  if (isLoading) {
+    return (
+      <LoadingWraper isLoading={true} randomSize>
+        {coreText()}
+      </LoadingWraper>
+    )
+  }
+  else return (
+    <>
       {coreText()}
-    </ShimmerPlaceHolder>
+    </>
   );
 }
 

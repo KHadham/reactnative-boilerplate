@@ -201,8 +201,8 @@ export function isColorDark(color: string) {
   const relativeLuminance = calculateRelativeLuminance(color);
 
   if (relativeLuminance <= threshold) {
-    return 'light-content';
+    return false;
   } else {
-    return 'dark-content';
+    return true;
   }
 }

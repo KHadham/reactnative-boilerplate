@@ -19,15 +19,10 @@ const useHookWithSuccess = (initialFields, onSuccess) => {
       }
     });
     setErrors(newErrors);
-    setFormValidated(true); // Form has been validated
-  };
-
-  useEffect(() => {
-    if (formValidated && Object.keys(errors).length === 0) {
-      // Call onSuccess when there are no errors and form has been validated
-      onSuccess && onSuccess(values);
+    if (Object.keys(newErrors).length === 0) {
+      onSuccess(values)
     }
-  }, [errors, onSuccess, formValidated]);
+  };
 
   const clearError = (fieldName) => {
     setErrors((prevErrors) => {

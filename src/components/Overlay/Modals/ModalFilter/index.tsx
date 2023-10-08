@@ -16,7 +16,6 @@ import {
   ActivityIndicator,
   SectionList,
 } from 'react-native';
-import { LayoutAnimationHandler } from '@utils/uiHandler';
 
 import styles from './styles';
 import Modal from 'react-native-modal';
