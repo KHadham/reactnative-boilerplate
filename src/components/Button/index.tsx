@@ -14,6 +14,7 @@ import {
 import Ripple from 'react-native-material-ripple';
 import PropTypes from 'prop-types';
 import {
+  COLOR_BACKGROUND_INACTIVE,
   COLOR_BASE_PRIMARY_DARK,
   COLOR_EVENT_ERROR,
   COLOR_EVENT_INACTIVE,
@@ -70,13 +71,14 @@ const Component: React.FC<AppProps> = ({
   ].find(data => data.colorName == color).colorCode;
 
   let baseStyle = disabled ? COLOR_EVENT_INACTIVE : colorFilter;
+  let baseBackground = disabled ? COLOR_BACKGROUND_INACTIVE : COLOR_WHITE;
   let styling: any;
 
   const dashedStyle: StylingItem = {
     type: 'dashed',
     borderStyle: 'dashed',
     borderWidth: 1,
-    backgroundColor: COLOR_WHITE,
+    backgroundColor: baseBackground,
     borderRadius: rippleRadius,
     borderColor: baseStyle,
     ...styles.buttonWrap,
@@ -86,7 +88,7 @@ const Component: React.FC<AppProps> = ({
   const outlineStyle: StylingItem = {
     type: 'outline',
     borderWidth: 1,
-    backgroundColor: COLOR_WHITE,
+    backgroundColor: baseBackground,
     borderRadius: rippleRadius,
     borderColor: baseStyle,
     ...styles.buttonWrap,

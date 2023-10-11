@@ -102,10 +102,8 @@ function Screen() {
     return (
       <Modal
         isVisible={welcome}
-        useNativeDriver
         animationIn={'fadeInUp'}
         animationOut={'fadeOutDown'}
-        animationOutTiming={200}
       >
         <View style={styles.welcomeModal}>
           <View style={{ width: '100%', alignItems: 'center' }}>
@@ -204,6 +202,7 @@ function Screen() {
       <View style={styles.botBar}>
         <View style={{ flex: 1 }} />
         <Stepper
+          color={COLOR_BASE_PRIMARY_DARK}
           containerStyle={{ flex: 2 }}
           dataStep={data?.length}
           currentStep={step}

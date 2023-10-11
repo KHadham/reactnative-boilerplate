@@ -50,12 +50,11 @@ const App: React.FC<AppProps> = ({
     // } else {
       return (
         <FastImage
-          onProgress={e => {
-            console.log('(e.nativeEvent.loaded / e.nativeEvent.total) :>> ', (e.nativeEvent.loaded / e.nativeEvent.total) * 100);
-            setisImageProgressing((e.nativeEvent.loaded / e.nativeEvent.total) * 100)
-          }}
-          onLoadStart={() => setisImageProgressing(0)}
-          onLoadEnd={() => setisImageProgressing(100)}
+          // onProgress={e => {
+          //   setisImageProgressing((e.nativeEvent.loaded / e.nativeEvent.total) * 100)
+          // }}
+          // onLoadStart={() => setisImageProgressing(0)}
+          // onLoadEnd={() => setisImageProgressing(100)}
           style={style}
           source={source}
           resizeMode={resizeMode}

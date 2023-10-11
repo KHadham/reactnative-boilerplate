@@ -59,11 +59,11 @@ const Component: React.FC<Props> = ({
   }, []);
 
   useEffect(() => {
-    LayoutAnimationHandler('opacity');
     barAnimating(currentStep);
   }, [animationValues, currentStep]);
 
   const barAnimating = (toStep: number) => {
+    // LayoutAnimationHandler();
     scrollToIndexHorizontal(toStep, scrollViewRef);
     let animations: Animated.CompositeAnimation[];
     if (toStep > prevStep - 1) {

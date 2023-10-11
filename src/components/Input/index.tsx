@@ -422,5 +422,6 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
 };
 
 export default forwardRef(Component);
+// supaya tombol reset bisa di pencet
 // tambahin ini di setiap scrollview / flatlist ==>
 //  keyboardShouldPersistTaps='always'
