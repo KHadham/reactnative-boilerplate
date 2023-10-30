@@ -206,3 +206,32 @@ export function isColorDark(color: string) {
     return true;
   }
 }
+
+export function shadowGenerator(intensity: number) {
+  if (intensity >= 1 && intensity <= 24) {
+    const depth = intensity - 1;
+
+    // Interpolation functions based on provided reference
+    function interpolate(i, a, b, a2, b2) {
+      return ((i - a) * (b2 - a2)) / (b - a) + a2;
+    }
+
+    const y = depth === 0 ? 1 : Math.floor(depth * 0.5);
+    const opacity = interpolate(depth, 0, 23, 0.18, 0.58).toFixed(2);
+    const radius = interpolate(depth, 0, 23, 1.0, 16.0).toFixed(2);
+    const elevation = intensity;
+
+    return {
+      shadowColor: '#000',
+      shadowOffset: {
+        width: 0,
+        height: y,
+      },
+      shadowOpacity: parseFloat(opacity),
+      shadowRadius: parseFloat(radius),
+      elevation,
+    };
+  } else {
+    return {}; // Return an empty object for unsupported intensities
+  }
+}

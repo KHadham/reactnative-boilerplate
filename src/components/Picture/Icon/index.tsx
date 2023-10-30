@@ -3,6 +3,7 @@ import { ViewStyle } from 'react-native';
 
 import Icon from 'react-native-vector-icons/MaterialCommunityIcons';
 import { COLOR_FONT_PRIMARY_DARK } from '@themes/index';
+import { Button } from '@components';
 
 /**
  * MaterialCommunityIcons icon set component.
@@ -26,18 +27,16 @@ const App: React.FC<AppProps> = ({
   style = {},
   onPress = null,
 }) => {
-
   if (name) {
-    return (
-      <Icon
-        name={name}
-        size={size}
-        color={color}
-        disabled={onPress == null}
-        onPress={onPress}
-        style={style}
-      />
-    );
+    if (onPress == null) {
+      return <Icon name={name} size={size} color={color} style={style} />;
+    } else {
+      return (
+        <Button onPress={onPress}>
+          <Icon name={name} size={size} color={color} style={style} />
+        </Button>
+      );
+    }
   }
 };
 

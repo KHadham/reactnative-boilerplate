@@ -1,8 +1,8 @@
 import * as React from 'react';
 import {Dimensions, View} from 'react-native';
 import Svg, {Path} from 'react-native-svg';
-import {colors} from '../styles';
 import PropTypes from 'prop-types';
+import colors from '@themes/colors';
 
 const originalWidth = 4000;
 const originalHeight = 2000;

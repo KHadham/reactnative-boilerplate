@@ -159,7 +159,6 @@ export const useFetch = async (config: FetchConfig) => {
   onProgress(true);
   try {
     const response = await endpoint;
-    // console.log('response :>> ', response.config.url);
 
     setTimeout(() => {
       if (successStatuses?.includes(response?.status)) {

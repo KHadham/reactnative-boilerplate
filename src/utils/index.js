@@ -16,7 +16,7 @@ export function formatBoldSubstring(fullString, substring) {
   const indexOfSubstring = fullString.toLowerCase().indexOf(substring.toLowerCase());
 
   if (indexOfSubstring === -1) {
-    return fullString; // Return the original string if the substring is not found
+    return <Text>{fullString}</Text>; // Return the original string within a <Text> component
   }
 
   const start = fullString.substring(0, indexOfSubstring);
@@ -24,8 +24,12 @@ export function formatBoldSubstring(fullString, substring) {
   const end = fullString.substring(indexOfSubstring + substring.length);
 
   return (
-    <Text style={{ fontFamily: 'Inter-Regular', color: COLOR_FONT_PRIMARY_DARK }}>
-      {start}<Text style={{ fontFamily: 'Inter-Bold', color: COLOR_BLACK }}>{boldText}</Text>{end}
+    <Text>
+      {start}
+      <Text style={{ fontFamily: 'Inter-Bold', color: COLOR_BLACK, textDecorationLine: 'underline' }}>
+        {boldText}
+      </Text>
+      {end}
     </Text>
   );
 }

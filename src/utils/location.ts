@@ -35,11 +35,11 @@ export const isGpsEnabled = () => {
 };
 
 export const getCurrentLocation = async ({
-  animate = true,
+  navigate = false,
   ref,
 }: {
-  animate?: boolean,
-  ref: any,
+  navigate?: boolean,
+  ref?: any,
 }) => {
   return new Promise<{ latitude: number, longitude: number }>(
     (resolve, reject) => {
@@ -55,9 +55,11 @@ export const getCurrentLocation = async ({
             longitudeDelta: 0.01,
           };
           console.log('targetRegion :>> ', targetRegion);
-          if (animate) animateMapToTargetRegion({ ref, latitude, longitude });
+          if (navigate && ref) {
+            animateMapToTargetRegion({ ref, latitude, longitude });
+          }
 
-          // Resolve the Promise with latitude and longitude
+          // Resolve the Promise with latitude and longitudes
           resolve({ latitude, longitude });
         },
         error => {
@@ -68,7 +70,8 @@ export const getCurrentLocation = async ({
           // Reject the Promise with the error
           reject(error);
         },
-        { timeout: 30000 }
+        // cache bug
+        { enableHighAccuracy: true, timeout: 15000, maximumAge: 0 }
       );
     }
   );
@@ -81,6 +84,7 @@ export const animateMapToTargetRegion = ({
   latitudeDelta = 0.01,
   longitudeDelta = 0.01,
   onAnimationComplete,
+  timing = 1000,
 }: {
   ref: any,
   latitude: any,
@@ -88,6 +92,7 @@ export const animateMapToTargetRegion = ({
   latitudeDelta?: any,
   longitudeDelta?: any,
   onAnimationComplete?: () => void,
+  timing?: number,
 }) => {
   const targetRegion = {
     latitude,
@@ -95,12 +100,10 @@ export const animateMapToTargetRegion = ({
     latitudeDelta: latitudeDelta,
     longitudeDelta: longitudeDelta,
   };
-
-  const animationDuration = 1000;
-  ref.animateToRegion(targetRegion, animationDuration);
+  ref.animateToRegion(targetRegion, timing);
 
   // If a callback for animation completion is provided, call it after the animation duration
   if (onAnimationComplete) {
-    setTimeout(onAnimationComplete, animationDuration/2);
+    setTimeout(onAnimationComplete, timing / 2);
   }
 };

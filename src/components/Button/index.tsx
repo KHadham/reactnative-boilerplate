@@ -120,6 +120,8 @@ const Component: React.FC<AppProps> = ({
     position: 'absolute',
     width: widthByScreen(12),
     height:widthByScreen(12),
+    maxWidth:60,
+    maxHeight:60,
     justifyContent: 'center',
     alignItems: 'center',
     ...styles.buttonWrap,
@@ -182,7 +184,7 @@ const Component: React.FC<AppProps> = ({
           {isLoading ? (
             <ActivityIndicator color={COLOR_WHITE} />
           ) : (
-            <Icon name={icon} color={COLOR_WHITE} size={widthByScreen(4)}/>
+            <Icon name={icon} color={COLOR_WHITE} />
           )}
         </Ripple>
       );

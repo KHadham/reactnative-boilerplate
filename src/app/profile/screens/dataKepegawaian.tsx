@@ -24,7 +24,7 @@ const App: React.FC = () => {
     defaultValue: fieldDescription
   }));
 
-  const { values, refs, errors, handleFieldChange, validateForm, moveFocus } =
+  const { values, inputRefs, errors, handleFieldChange, validateForm, moveFocus } =
     useForm(initialFields, () => { });
 
   const renderItem = ({ item }: { item: [key: string, value: any] }) => {
@@ -33,14 +33,14 @@ const App: React.FC = () => {
     return (
       <View style={{ paddingHorizontal: spacing.md }}>
         <Input
-          ref={refs[key]}
+          ref={inputRefs[key]}
           editable={isEditable}
           onInteract={(txt: string) => handleFieldChange(key, txt)}
           value={values[key]}
           label={toTitleCase(key)}
           onSubmitEditing={() => moveFocus(key)}
           error={errors[key]}
-          />
+        />
       </View>
     );
   };
@@ -57,9 +57,9 @@ const App: React.FC = () => {
         }
       />
       <FlashList
-      keyboardShouldPersistTaps='always'
+        keyboardShouldPersistTaps='always'
         data={Object.entries(dataEmployee)}
-        renderItem={renderItem} 
+        renderItem={renderItem}
         estimatedItemSize={80}
         ListFooterComponent={
           <Button

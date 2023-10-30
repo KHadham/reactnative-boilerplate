@@ -477,7 +477,7 @@ PODS:
     - glog
   - react-native-background-timer (2.4.1):
     - React-Core
-  - react-native-blob-util (0.19.1):
+  - react-native-blob-util (0.19.2):
     - React-Core
   - react-native-blur (4.3.2):
     - React-Core
@@ -1012,7 +1012,7 @@ SPEC CHECKSUMS:
   React-jsinspector: b6ed4cb3ffa27a041cd440300503dc512b761450
   React-logger: 186dd536128ae5924bc38ed70932c00aa740cd5b
   react-native-background-timer: 17ea5e06803401a379ebf1f20505b793ac44d0fe
-  react-native-blob-util: af2dc91365bfde33f61389cbd0c692af9a4a97cb
+  react-native-blob-util: c74e4ce87c76d244761c68623df78bf0d1638271
   react-native-blur: cfdad7b3c01d725ab62a8a729f42ea463998afa2
   react-native-color-matrix-image-filters: c945260077dabac82d8e25af937c18fff4021707
   react-native-compass-heading: 1b4403d1c99dfd8311073ca8fc52bfc8e365cfac

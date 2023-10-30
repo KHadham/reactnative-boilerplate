@@ -26,13 +26,15 @@ const hooks = () => {
   const [errUserName, seterrUserName] = useState(null);
   const [password, setpassword] = useState('');
 
-  const action = async (body: { username: string, password: string }) => {
+  const action = async (body: { nik: string, password: string }) => {
     useFetch({
       endpoint: endpoint.loginCitata({
         data: body,
         headers: { 'app-key': APPKEY.CITATA_KEY },
       }),
       onSuccess: data => {
+        console.log('body :>> ', body);
+        console.log('data login :>> ', data);
         storage.setItem(STORAGE_KEY.LOGIN_TOKEN, data.token);
         verify(data.token);
         setTimeout(() => {
@@ -54,6 +56,7 @@ const hooks = () => {
           });
       },
       onError: error => {
+        console.log('error :>> ', error);
         Toast.show({
           type: 'error',
           text1: 'Terjadi kesalahaan saat login',

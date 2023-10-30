@@ -23,7 +23,7 @@ const initialFields = [
 const Screen = () => {
   const { action, state, setState } = useLogin();
   
-  const { values, refs, errors, handleFieldChange, validateForm, moveFocus } =
+  const { values, inputRefs, errors, handleFieldChange, validateForm, moveFocus } =
     useForm(initialFields, action);
 
   return (
@@ -56,7 +56,7 @@ const Screen = () => {
             {initialFields.map((item, index) => (
               <Input
                 label={item.fieldName}
-                ref={refs[item.fieldName]}
+                ref={inputRefs[item.fieldName]}
                 key={index}
                 value={values[item.fieldName]}
                 placeholder={`Masukan ${item.fieldName}`}

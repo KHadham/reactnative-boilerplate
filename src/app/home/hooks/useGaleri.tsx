@@ -1,31 +1,30 @@
 import { useEffect, useState } from 'react';
-import { endpoint } from '@othersApp/apis';
+import { endpoint } from '@newsApp/apis';
 import Toast from 'react-native-toast-message';
 import { useFetch, handleRequest } from '@utils/networking';
-import { FAQInterface } from '@othersApp/stores/interfaces';
-import { FAQData } from '@othersApp/stores/seeds';
 import { APPKEY } from '@constants/appKey';
+
 export const useHooks = () => {
-  const [data, setData] = useState<FAQInterface[]>([]);
+  const [data, setData] = useState([]);
 
   const [isLoading, setIsLoading] = useState(false);
   const [error, setError] = useState('');
 
   const fetching = () => {
-    setData([FAQData, FAQData]);
+    setData([]);
     useFetch({
-      endpoint: endpoint.getFaq({
+      endpoint: endpoint.galeri({
         data: { token: APPKEY.CUSTOM_TOKEN },
       }),
       onSuccess: data => {
-        console.log('data faq :>> ', data);
+        console.log('data galeri :>> ', data);
         setData(data.data);
       },
       onProgress(progress) {
         setIsLoading(progress);
       },
       onError: error => {
-        console.log('error  faq:>> ', error);
+        console.log('error  galeri:>> ', error);
         setData([]);
         setError(error);
       },

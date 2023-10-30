@@ -5,7 +5,7 @@ import { Text, Stepper, AutoImage } from '@components';
 import Carousel, { TCarouselProps } from 'react-native-reanimated-carousel';
 import ImageView from 'react-native-image-viewing';
 import { View } from 'react-native';
-import { COLOR_WHITE } from '@themes/index';
+import { COLOR_BASE_PRIMARY_MAIN, COLOR_WHITE } from '@themes/index';
 
 interface AppProps {
   indicator?: boolean;
@@ -27,7 +27,7 @@ const App: React.FC<CombinedProps> = ({
   const footer = () => (
     <View style={{ position: 'absolute', bottom: 10, right: 10 }}>
       <Stepper
-        color={COLOR_WHITE}
+        color={COLOR_BASE_PRIMARY_MAIN}
         dataStep={props.data?.length}
         currentStep={step + 1}
         onPressStep={(id: number) =>

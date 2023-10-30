@@ -1,7 +1,7 @@
 import { useRef, useState, useEffect } from 'react';
 
 const useHookWithSuccess = (initialFields, onSuccess) => {
-  console.log('initialFields :>> ', initialFields);
+  const scrollRefs = useRef(null); // Create a ref for the FlatList
   const [values, setValue] = useState(() => {
     const initialFieldsState = {};
     initialFields.forEach(field => {
@@ -15,15 +15,29 @@ const useHookWithSuccess = (initialFields, onSuccess) => {
 
   const validateForm = () => {
     const newErrors = {};
-    initialFields.forEach(field => {
+    let firstErrorPosition = null;
+
+    initialFields.forEach((field, index) => {
       if (values[field.fieldName].trim() === '') {
         newErrors[field.fieldName] = `${field.fieldName} tidak boleh kosong`;
       }
+      // todo 
+      // Store the position of the first error
+      if (firstErrorPosition === null) {
+        firstErrorPosition = index;
+      }
     });
     setErrors(newErrors);
-    // refs[initialFields[0]].current.blur();
+    // inputRefs[initialFields[0]].current.blur();
     if (Object.keys(newErrors).length === 0) {
       onSuccess(values);
+    } else {
+      if (firstErrorPosition !== null && scrollRefs.current) {
+        scrollRefs.current.scrollToIndex({
+          index: firstErrorPosition,
+          animated: true,
+        });
+      }
     }
   };
 
@@ -44,9 +58,9 @@ const useHookWithSuccess = (initialFields, onSuccess) => {
     }));
   };
 
-  const refs = {};
+  const inputRefs = {};
   initialFields.forEach(field => {
-    refs[field.fieldName] = useRef(null);
+    inputRefs[field.fieldName] = useRef(null);
   });
 
   const moveFocus = fieldName => {
@@ -56,12 +70,13 @@ const useHookWithSuccess = (initialFields, onSuccess) => {
     const nextField = initialFields[fieldIndex + 1];
 
     if (nextField) {
-      refs[nextField.fieldName].current.focus();
+      inputRefs[nextField.fieldName].current.focus();
     }
   };
 
   return {
-    refs,
+    inputRefs,
+    scrollRefs,
     values,
     errors,
     handleFieldChange,

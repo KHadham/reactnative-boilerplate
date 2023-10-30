@@ -37,7 +37,7 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({
   title = 'judul',
-  subTitle ,
+  subTitle,
   isVisible = false,
   onClose,
   data = [],
@@ -49,22 +49,34 @@ const App: React.FC<AppProps> = ({
 }) => {
   const [searchkey, setsearchKey] = useState('');
   const [listData, setlistData] = useState([]);
-  const [animatedValues, setAnimatedValues] = useState([]);
   const [timeoutId, setTimeoutId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [page, setPage] = useState(1);
-  const [totalPages, setTotalPages] = useState(null);
+  const [selected, setselected] = useState(selectedValue);
 
-  const handleEndReached = () => {
-    if (!isLoading && page < totalPages) {
-      setPage(page + 1);
-    }
-  };
+  // const [page, setPage] = useState(1);
+  // const [totalPages, setTotalPages] = useState(null);
+
+  // const handleEndReached = () => {
+  //   if (!isLoading && page < totalPages) {
+  //     setPage(page + 1);
+  //   }
+  // };
 
   useEffect(() => {
     // fetchData();
     setlistData(data);
   }, [data]);
+
+  const onPressItem = (item, index) => {
+    setIsLoading(true);
+    setselected(item);
+    setTimeout(() => {
+      LayoutAnimationHandler();
+      onSelect(item, index);
+      setIsLoading(false);
+      onClose();
+    }, 200);
+  };
 
   const searching = (txt: string) => {
     setsearchKey(txt);
@@ -133,8 +145,14 @@ const App: React.FC<AppProps> = ({
           <View style={styles.headerHandle} />
         </View> */}
         <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text size="title" weight='bold'>Pilih {title}</Text>
-          <Icon name={'close'} size={22} onPress={() => onClose()} />
+          <Text size="title" weight="bold">
+            Pilih {title}
+          </Text>
+          {isLoading ? (
+            <ActivityIndicator />
+          ) : (
+            <Icon name={'close'} size={22} onPress={() => onClose()} />
+          )}
         </View>
         <Text size="desc">{subTitle}</Text>
         {isSearch && (
@@ -183,17 +201,12 @@ const App: React.FC<AppProps> = ({
           renderItem={({ item, index }) => {
             return (
               <Button
-                onPress={() => {
-                  onSelect(item, index);
-                  setTimeout(() => {
-                    onClose();
-                  }, 300);
-                }}
+                onPress={() => onPressItem(item, index)}
                 style={[
                   styles.listWrap,
                   {
                     borderColor:
-                      selectedValue.name == item.name
+                      selected?.name == item.name
                         ? COLOR_EVENT_SUCCESS
                         : COLOR_EVENT_INACTIVE,
                   },
@@ -224,18 +237,18 @@ const App: React.FC<AppProps> = ({
                 <View style={styles.icon}>
                   <Icon
                     name={
-                      selectedValue.name == item.name
+                      selected.name == item.name
                         ? 'radiobox-marked'
                         : 'radiobox-blank'
                     }
                     size={22}
-                    color={selectedValue.name == item.name && COLOR_EVENT_SUCCESS}
+                    color={selected.name == item.name && COLOR_EVENT_SUCCESS}
                   />
                 </View>
               </Button>
             );
           }}
-          onEndReached={handleEndReached}
+          // onEndReached={handleEndReached}
           onEndReachedThreshold={0.1}
           ListEmptyComponent={() => ListEmptyComponent()}
         />

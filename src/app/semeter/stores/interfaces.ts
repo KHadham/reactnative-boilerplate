@@ -3,6 +3,24 @@ export interface AttachmentInterface {
   url: string
 }
 
+interface HistoriItem {
+  CREATED_AT: string;
+  CREATED_BY: string;
+}
+
+interface PenindakanItem {
+  CAT_TINDAKAN: string | null;
+  CREATED_BY: string;
+  JENIS_TINDAKAN: string | null;
+  TGL_TINDAKAN: string | null;
+}
+
+export interface ResponseDetailMarkerInterface {
+  data_reklame:ResponseAtributInterface;
+  data_histori: HistoriItem[];
+  data_penindakan: PenindakanItem[];
+}
+
 export interface ResponseAtributInterface {
   ALMT_PMLK_IJIN: null | string;
   ALMT_PMLK_IJINI_KTN: null | string;

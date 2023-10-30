@@ -30,7 +30,6 @@ export const useHooks = () => {
         });
         setError(response.message);
       }
-      console.log('response :>> ', response.data);
     } catch (e) {
       Toast.show({
         type: 'error',

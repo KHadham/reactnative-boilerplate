@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { View } from 'react-native';
 import { Icon, Text, Input, Separator, Button } from '@components';
 import Modal from 'react-native-modal';
@@ -30,9 +30,11 @@ const App: React.FC<AppProps> = ({
   const [addressList, setaddressList] = useState([]);
   const [historyList, sethistoryList] = useState([]);
   const [isLoading, setisLoading] = useState(false);
+  const [timeoutId, setTimeoutId] = useState(null);
 
-  const searchAddress = () => {
-    let values = encodeURI(value);
+  const searchAddress = txt => {
+    let values = encodeURI(txt);
+    console.log('values :>> ', values);
     setisLoading(true);
     fetch(
       `https://maps.googleapis.com/maps/api/place/autocomplete/json?input=${values}&location=-6.1754%2C106.8272&types=geocode&radius=100&key=AIzaSyAHAWEgBz3AN7XVrNOR9P3Rf7unJDjvH9o`,
@@ -60,9 +62,6 @@ const App: React.FC<AppProps> = ({
     )
       .then(response => response.json())
       .then(obj => {
-        console.log('getDetailLocation geometry:>> ', obj.result.geometry);
-        console.log('getDetailLocation viewport:>> ', obj.result.viewport);
-        console.log('getDetailLocation address_components:>> ', obj.result.address_components);
         animateMapToTargetRegion({
           ref: mapRef.current,
           latitude: obj.result.geometry.location.lat,
@@ -79,11 +78,19 @@ const App: React.FC<AppProps> = ({
   const typingHandle = (txt: string) => {
     setvalue(txt);
     if (txt.length == 0) setaddressList([]);
+    else {
+      setisLoading(true);
+      clearTimeout(timeoutId);
+      setTimeoutId(
+        setTimeout(() => {
+          searchAddress(txt);
+        }, 1000)
+      );
+    }
   };
 
   const onPressItem = (item: any) => {
     try {
-      console.log('item :>> ', item.place_id);
       getDetailLocation(item.place_id);
       onSelect && onSelect(item);
       onClose();
@@ -124,10 +131,11 @@ const App: React.FC<AppProps> = ({
           placeholder="Cari tempat"
           value={value}
           onInteract={(txt: string) => typingHandle(txt)}
-          onSubmitEditing={() => searchAddress()}
+          onSubmitEditing={() => searchAddress(value)}
           autoFocus
         />
         <FlashList
+          keyboardShouldPersistTaps="always"
           data={addressList}
           estimatedItemSize={10}
           ListHeaderComponent={

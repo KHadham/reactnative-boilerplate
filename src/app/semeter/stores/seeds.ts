@@ -4,6 +4,7 @@ import {
   BaseAtributInterface,
   ReklameArcgisInterface,
   FormItem,
+  ResponseDetailMarkerInterface,
 } from './interfaces';
 
 export const AttachmentData: AttachmentInterface = {
@@ -83,12 +84,12 @@ export const ResponseAtributData: ResponseAtributInterface = {
   NO_TLB: null,
   NPWP_PMLK_IJIN: null,
   NPWP_PMLK_IJIN_KTN: null,
-  OBJECTID: 11553,
+  OBJECTID: 0,
   PANJANG: '',
   PELETAKAN: null,
   PENENG: null,
   POSISI: '',
-  REKLAME_ID: 1143,
+  REKLAME_ID: 0,
   REL_OBJECTID: '',
   STATUS: null,
   STATUS_IJIN: null,
@@ -108,8 +109,8 @@ export const ResponseAtributData: ResponseAtributInterface = {
   WIL: '',
   WIL_PMLK_IJIN: null,
   WIL_PMLK_IJIN_KTN: null,
-  X: 106.75051833,
-  Y: -6.23672,
+  X: 0,
+  Y: 0,
 };
 
 export const BaseAtributData: BaseAtributInterface = {
@@ -275,4 +276,26 @@ export const FormItemData: FormItem = {
   TYPE: 0,
   USER_GROUP_ID: 0,
   USER_GROUP_PRIVILEGE_ID: 0,
+};
+
+export const ResponseDetailMarker: ResponseDetailMarkerInterface = {
+  data_reklame: ResponseAtributData,
+  data_histori: [
+    {
+      CREATED_AT: '2020-04-27 00:59:04',
+      CREATED_BY: 'PTSP 1',
+    },
+    {
+      CREATED_AT: '2020-10-21 01:32:48',
+      CREATED_BY: 'PTSP 1',
+    },
+  ],
+  data_penindakan: [
+    {
+      CAT_TINDAKAN: null,
+      CREATED_BY: 'Setu',
+      JENIS_TINDAKAN: null,
+      TGL_TINDAKAN: null,
+    },
+  ],
 };

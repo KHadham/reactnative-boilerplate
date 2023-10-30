@@ -4,6 +4,7 @@ import Toast from 'react-native-toast-message';
 import { useFetch, handleRequest } from '@utils/networking';
 import { ProdukHukumInterface } from '@othersApp/stores/interfaces';
 import { ProdukHukumData } from '@othersApp/stores/seeds';
+import { APPKEY } from '@constants/appKey';
 
 export const useHooks = () => {
   const [data, setData] = useState<ProdukHukumInterface[]>([]);
@@ -15,7 +16,7 @@ export const useHooks = () => {
     setData([ProdukHukumData, ProdukHukumData]);
     useFetch({
       endpoint: endpoint.getProdukHukum({
-        data: { token: '9998fd04-6ebb-45f8-a694-28a284e156aa' },
+        data: { token: APPKEY.CUSTOM_TOKEN },
       }),
       onSuccess: data => {
         console.log('data hukum :>> ', data);

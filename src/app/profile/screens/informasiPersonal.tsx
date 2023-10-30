@@ -12,6 +12,7 @@ import { toTitleCase } from '@utils/index';
 import { useProfile } from '@profileApp/hooks/useProfile';
 import { useUpdateProfile } from '@profileApp/hooks/useUpdateProfile';
 import { COLOR_BACKGROUND, COLOR_EVENT_WARNING } from '@themes/index';
+import { useForm } from '@hooks';
 
 const App: React.FC = () => {
   const { dataPersonal } = useProfile();
@@ -19,11 +20,29 @@ const App: React.FC = () => {
 
   const [isEditable, setisEditable] = useState(false)
 
+  const initialFields = Object.entries(dataPersonal).map(([fieldName, fieldDescription]) => ({
+    fieldName,
+    type: "text", // You can set a default type if needed
+    defaultValue: fieldDescription
+  }));
+
+  const { values, inputRefs,scrollRefs, errors, handleFieldChange, validateForm, moveFocus } =
+    useForm(initialFields, () => { });
+
   const renderItem = ({ item }: { item: [key: string, value: any] }) => {
-    const [key, value] = item;
+    console.log('values :>> ', values);
+    const [key] = item;
     return (
       <View style={{ paddingHorizontal: spacing.md }}>
-        <Input editable={isEditable} value={value} label={toTitleCase(key)} />
+        <Input
+          ref={inputRefs[key]}
+          editable={isEditable}
+          onInteract={(txt: string) => handleFieldChange(key, txt)}
+          value={values[key]}
+          label={toTitleCase(key)}
+          onSubmitEditing={() => moveFocus(key)}
+          error={errors[key]}
+          />
       </View>
     );
   };
@@ -40,6 +59,8 @@ const App: React.FC = () => {
         }
       />
       <FlashList
+            keyboardShouldPersistTaps='always'
+ref={scrollRefs}
         data={Object.entries(dataPersonal)}
         renderItem={renderItem}
         estimatedItemSize={80}
@@ -48,7 +69,7 @@ const App: React.FC = () => {
             color={'info'}
             style={{ margin: spacing.md }}
             title="Ubah data"
-            onPress={() => action()}
+            onPress={() => validateForm()}
             type="outline"
           />
         }

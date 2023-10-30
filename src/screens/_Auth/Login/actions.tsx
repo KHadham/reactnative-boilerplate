@@ -16,7 +16,6 @@ export const useLogin = () => {
       // Simulating an API call
       const body = { username, password };
       const response = await endpoint.login(body);
-      console.log('response :>> ', response);
       if (response.message == 'Invalid credentials') {
         Toast.show({
           type: 'error',

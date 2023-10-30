@@ -4,7 +4,7 @@ import { storage } from '@utils/storage';
 
 interface endpointParam {
   id?: number;
-  headers?: object;
+  headers?: any;
   body?: object;
 }
 
@@ -23,8 +23,8 @@ export const endpoint = {
   getDetailMarker: async (params: endpointParam) =>
     handleRequest({
       method: 'GET',
-      path: `api/semeter/reklame/${params.id}`,
-      headers: params.headers,
+      path: `api/semeter/reklame/${params.id}/?token_sso=${params.headers.token_sso}`,
+      // data: params.headers,                ? token_sso settingan dari docker server 
     }),
   getForm: async (params: endpointParam) =>
     handleRequest({
@@ -32,7 +32,7 @@ export const endpoint = {
       path: `api/semeter/user-group-privileges`,
       headers: params.headers,
       data: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
-      // useSsl: true,
+      // useSsl: true,  
     }),
 };
 export default { endpoint };

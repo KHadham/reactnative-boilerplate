@@ -30,14 +30,12 @@ function App({
       isVisible={isVisible}
       style={{ justifyContent: 'flex-end', margin: 0 }}
       onBackdropPress={() => onClose()}
+      scrollOffset={1}
       onBackButtonPress={() => onClose()}
-      // animationInTiming={1000}
-      // animationIn={'slideInUp'}
+      propagateSwipe
       hideModalContentWhileAnimating
       useNativeDriver
-      // animationIn={'bounce'}
       backdropOpacity={0.2}
-      // {...props}
     >
       {header && <HeaderModal />}
       <View style={[{ backgroundColor: COLOR_WHITE }, style]}>{children}</View>
