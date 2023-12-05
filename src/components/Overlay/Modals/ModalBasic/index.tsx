@@ -38,7 +38,8 @@ function App({
       backdropOpacity={0.2}
     >
       {header && <HeaderModal />}
-      <View style={[{ backgroundColor: COLOR_WHITE }, style]}>{children}</View>
+      {children}
+      {/* <View style={[{ backgroundColor: COLOR_WHITE }, style]}>{children}</View> */}
     </Modal>
   );
 }

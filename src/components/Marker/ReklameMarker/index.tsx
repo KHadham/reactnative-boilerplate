@@ -30,7 +30,6 @@ interface AppProps {
     longitude: number,
   };
   detailScreen: any;
-  onPress: Function;
 }
 
 const tindakanToImage = {
@@ -53,23 +52,20 @@ const groupToColor = {
   5: colors.sky.sky_40,
   6: colors.dusk.dusk_50,
 };
-const App: React.FC<AppProps> = ({
-  item,
-  coordinate,
-  detailScreen,
-  onPress,
-}) => {
+
+const App: React.FC<AppProps> = ({ item, coordinate, detailScreen }) => {
   const [isDetailVisible, setisDetailVisible] = useState(false);
   const image =
     tindakanToImage[item.attributes.KD_JENIS_TINDAKAN] || MARKER.marker;
   const group = groupToColor[item.attributes.GROUP_BY_ID];
+
   return (
     <Marker
       coordinate={coordinate}
       tracksViewChanges={false}
       onPress={() => {
         setisDetailVisible(true);
-        onPress(item.attributes.REKLAME_ID);
+        // onPress(item.attributes.REKLAME_ID);
       }}
       style={{
         borderWidth: 1,
@@ -89,13 +85,14 @@ const App: React.FC<AppProps> = ({
         header
         isVisible={isDetailVisible}
         onClose={() => setisDetailVisible(false)}
-        style={{ flex: 1 }}
+        style={{}}
       >
         <View
           style={{
             flexDirection: 'row',
             justifyContent: 'space-between',
             padding: spacing.md,
+            backgroundColor: COLOR_WHITE,
           }}
         >
           <Text weight="bold" size="title" style={{ flex: 1 }}>

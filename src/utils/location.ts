@@ -45,7 +45,6 @@ export const getCurrentLocation = async ({
     (resolve, reject) => {
       Geolocation.getCurrentPosition(
         position => {
-          console.log('position xxx :>> ', position);
           const { latitude, longitude } = position.coords;
 
           const targetRegion = {
@@ -54,7 +53,6 @@ export const getCurrentLocation = async ({
             latitudeDelta: 0.01,
             longitudeDelta: 0.01,
           };
-          console.log('targetRegion :>> ', targetRegion);
           if (navigate && ref) {
             animateMapToTargetRegion({ ref, latitude, longitude });
           }

@@ -116,7 +116,7 @@ export const handleRequest = async ({
       return response;
     }
   } catch (error) {
-    console.error(
+    console.log(
       `Error handle request:  ${`${APPKEY.BASE_URL}${path}${toQueryString(
         query
       )}`}`,
@@ -153,7 +153,7 @@ export const useFetch = async (config: FetchConfig) => {
     onSuccess = () => {},
     onError = () => {},
     onProgress = () => {},
-    successStatuses = ['success', true, 200],
+    successStatuses = ['success', true, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226],
     delay = 0,
   } = config;
   onProgress(true);

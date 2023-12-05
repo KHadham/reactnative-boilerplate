@@ -21,26 +21,28 @@ import { widthByScreen } from '@utils/dimensions';
 import { COLOR_FONT_PRIMARY_DARK, COLOR_WHITE } from '@themes/index';
 
 import styles from '@semeterApp/styles';
-import { useHooks } from '@semeterApp/hooks/markers';
+import { useHooks } from '@semeterApp/hooks/useGetMarkers';
 import DetailReklame from '@semeterApp/screens/detailReklame';
-import { useHooks as detailReklameHook } from '@semeterApp/hooks/detailReklame';
+import { useHooks as detailReklameHook } from '@semeterApp/hooks/useGetDetailReklame';
 
 const Screen = () => {
   const { navigate } = useNavigationHandler();
-  const {
-    actions,
-    isLoading: loadingReklame,
-    data: dataReklame,
-  } = detailReklameHook();
+  const { actions } = detailReklameHook();
   const { data, isLoading, ref } = useHooks();
+  const [isSearchingVisible, setisSearchingVisible] = useState(false);
   const [coordinate, setcoordinate] = useState({
     latitude: 0,
     longitude: 0,
   });
-  const [isSearchingVisible, setisSearchingVisible] = useState(false);
   const [selectedLayer, setselectedLayer] = useState({
     name: '',
     url: '',
+  });
+  const [region, setregion] = useState({
+    latitude: -6.1754,
+    longitude: 106.8272,
+    latitudeDelta: 1,
+    longitudeDelta: 1,
   });
 
   const getPointCountColor = (count: number) => {
@@ -86,13 +88,12 @@ const Screen = () => {
               alignItems: 'center',
             }}
             provider={Platform.OS == 'android' ? 'google' : null}
-            initialRegion={{
-              // lokasi monas
-              latitude: -6.1754,
-              longitude: 106.8272,
-              latitudeDelta: 0.25,
-              longitudeDelta: 0.25,
+            initialRegion={region}
+            onRegionChangeComplete={data => {
+              setregion(data);
             }}
+            showsUserLocation
+            showsMyLocationButton={false}
             renderCluster={(cluster: any) => {
               const { geometry, onPress, id, properties } = cluster;
               return (
@@ -147,11 +148,10 @@ const Screen = () => {
                   detailScreen={
                     <DetailReklame
                       id={item.attributes.REKLAME_ID}
-                      isLoading={loadingReklame}
                       // data={dataReklame}
                     />
                   }
-                  onPress={(id: number) => actions(id)}
+                  // onPress={(id: number) => actions(id)}
                 />
               );
             })}
@@ -160,18 +160,26 @@ const Screen = () => {
               flipY={false}
               tileSize={256}
             />
-            <GpsMarker coordinate={coordinate} />
           </MapView>
         )}
+        {/* <View style={styles.fabTopWrap}>
+          <ButtonGps mapRef={ref} onPress={() => {}} />
+        </View> */}
         <View style={styles.fabWrap}>
           <ButtonGps
             mapRef={ref}
-            onGetCoordinate={(
+            onPress={(
               data: React.SetStateAction<{
                 latitude: number,
                 longitude: number,
               }>
-            ) => setcoordinate(data)}
+            ) =>
+              navigate({
+                parent: 'Semeter',
+                screen: 'TambahReklame',
+                params: { data },
+              })
+            }
           />
           <ButtonModalSelection
             selectedValue={selectedLayer}

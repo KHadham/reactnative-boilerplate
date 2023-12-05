@@ -1,30 +1,39 @@
 import React from 'react';
-import { View, StatusBar, Image } from 'react-native';
+import { View, StatusBar, Image, ScrollView, FlatList } from 'react-native';
 import styles from '../styles';
-import { BaseView, Text, Input, Button, } from '@components';
+import { BaseView, Text, Input, Button } from '@components';
 import { spacing } from '@constants/spacing';
 import { COLOR_WHITE } from '@themes/index';
 import IMAGES from '@images';
 import useLogin from '@authApp/hooks/useLogin';
-import useForm from '../../../hooks/useForm';
+import useForm, { InitialFieldsType } from '../../../hooks/useForm';
 import { BlurView } from '@react-native-community/blur';
 
-const initialFields = [
+const initialFields: InitialFieldsType = [
   {
     fieldName: 'username',
     type: 'username',
+    key: 'username',
   },
   {
     fieldName: 'password',
     type: 'password',
+    key: 'password',
   },
 ];
 
 const Screen = () => {
   const { action, state, setState } = useLogin();
-  
-  const { values, inputRefs, errors, handleFieldChange, validateForm, moveFocus } =
-    useForm(initialFields, action);
+
+  const {
+    values,
+    inputRefs,
+    errors,
+    handleFieldChange,
+    validateForm,
+    moveFocus,
+    scrollRefs,
+  } = useForm(initialFields, action);
 
   return (
     <BaseView bg={IMAGES.bgCitata}>
@@ -52,20 +61,27 @@ const Screen = () => {
           blurAmount={2}
           reducedTransparencyFallbackColor="white"
         >
-          <View style={styles.innerLoginWrap}>
-            {initialFields.map((item, index) => (
-              <Input
-                label={item.fieldName}
-                ref={inputRefs[item.fieldName]}
-                key={index}
-                value={values[item.fieldName]}
-                placeholder={`Masukan ${item.fieldName}`}
-                onInteract={(txt: string) => handleFieldChange(item.fieldName, txt)}
-                error={errors[item.fieldName]}
-                type={item.type}
-                onSubmitEditing={() => moveFocus(item.fieldName)}
-              />
-            ))}
+          <View  style={styles.innerLoginWrap}>
+            <FlatList
+            ref={scrollRefs}
+              data={initialFields}
+              renderItem={({ item, index }) => (
+                <Input
+                  label={item.fieldName}
+                  ref={inputRefs[item.fieldName]}
+                  key={index}
+                  value={values[item.fieldName]}
+                  placeholder={`Masukan ${item.fieldName}`}
+                  onInteract={(txt: string) =>
+                    handleFieldChange({ fieldKey: item.fieldName, value: txt })
+                  }
+                  error={errors[item.fieldName]}
+                  type={item.type}
+                  onSubmitEditing={() => moveFocus(item.fieldName)}
+                />
+              )}
+            />
+            {/* {initialFields.map()} */}
             <View style={{ marginVertical: spacing.sm }}>
               <Button
                 title="Masuk"

@@ -14,7 +14,7 @@ function index({
   children,
   isLoading = false,
   randomSize,
-  interval = 1200,
+  interval = 1000,
   ...rest
 }: LoadingProps) {
   const [animation] = useState(new Animated.Value(0));

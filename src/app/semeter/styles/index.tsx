@@ -24,7 +24,17 @@ const styles = StyleSheet.create({
     bottom: 0,
     alignItems: 'flex-end',
     gap: spacing.md,
-    right:0
-  }
+    right: 0,
+  },
+  fabTopWrap: {
+    position: 'absolute',
+    zIndex: 10,
+    // width: widthByScreen(100),
+    padding: spacing.md,
+    top: 0,
+    alignItems: 'flex-end',
+    gap: spacing.md,
+    right: 0,
+  },
 });
 export default styles;

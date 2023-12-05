@@ -10,7 +10,7 @@ import {
   animateMapToTargetRegion,
 } from '@utils/location';
 
-const index = ({ onGetCoordinate, mapRef }) => {
+const index = ({ onPress, mapRef }) => {
   const [modalSetting, setmodalSetting] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const [coordinate, setcoordinate] = useState({
@@ -21,36 +21,40 @@ const index = ({ onGetCoordinate, mapRef }) => {
   useEffect(() => {
     getLocation(false);
 
-    const timer = setInterval(
-      () =>
-        setcoordinate({
-          latitude: 0,
-          longitude: 0,
-        }),
-      5000
-    ); // 60000 milliseconds = 1 minute
+    // const timer = setInterval(
+    //   () =>
+    //     setcoordinate({
+    //       latitude: 0,
+    //       longitude: 0,
+    //     }),
+    //   5000
+    // ); // 60000 milliseconds = 1 minute
 
-    // Clean up the interval timer when the component unmounts
-    return () => {
-      clearInterval(timer);
-    };
+    // // Clean up the interval timer when the component unmounts
+    // return () => {
+    //   clearInterval(timer);
+    // };
   }, []);
 
   const onPressGps = () => {
     if (coordinate.latitude == 0) {
       getLocation(true);
     } else {
-      animateMapToTargetRegion({ ref: mapRef.current, ...coordinate });
+      animateMapToTargetRegion({
+        ref: mapRef.current,
+        ...coordinate,
+        latitudeDelta: 0.00001,
+        longitudeDelta: 0.00001,
+      });
+      onPress(coordinate);
     }
   };
 
   const getLocation = navigate => {
-    console.log('mapRef :>> ', mapRef);
     setIsLoading(true);
     getCurrentLocation({ ref: mapRef.current, navigate })
       .then(data => {
         setcoordinate(data);
-        onGetCoordinate(data);
       })
       .catch(error => {
         if (error.message == 'No location provider available.') {
@@ -87,7 +91,7 @@ const index = ({ onGetCoordinate, mapRef }) => {
         {isLoading ? (
           <ActivityIndicator color={COLOR_WHITE} />
         ) : (
-          <Icon color={COLOR_WHITE} name="crosshairs-gps" />
+          <Icon color={COLOR_WHITE} name="plus" />
         )}
       </Button>
       <ModalConfirmation

@@ -232,7 +232,6 @@ export const ReklameArcgisData: ReklameArcgisInterface = {
   fieldAliases: {
     field1: null,
     field2: null,
-    // Add aliases for other fields as needed
   },
   geometryType: null,
   spatialReference: {
@@ -282,18 +281,14 @@ export const ResponseDetailMarker: ResponseDetailMarkerInterface = {
   data_reklame: ResponseAtributData,
   data_histori: [
     {
-      CREATED_AT: '2020-04-27 00:59:04',
-      CREATED_BY: 'PTSP 1',
-    },
-    {
-      CREATED_AT: '2020-10-21 01:32:48',
-      CREATED_BY: 'PTSP 1',
+      CREATED_AT: '',
+      CREATED_BY: '',
     },
   ],
   data_penindakan: [
     {
       CAT_TINDAKAN: null,
-      CREATED_BY: 'Setu',
+      CREATED_BY: '',
       JENIS_TINDAKAN: null,
       TGL_TINDAKAN: null,
     },

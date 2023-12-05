@@ -41,28 +41,6 @@ export const useVerify = () => {
     });
   };
 
-  // const fetch = async () => {
-  //   useFetch({
-  //     endpoint: endpoint.getProfile({
-  //       headers: {
-  //         'app-key': APPKEY.CITATA_KEY,
-  //         authorization: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
-  //       },
-  //       query: { username: user.username },
-  //     }),
-  //     onSuccess: response => {
-  //       setEmployeeDetail(response.data.siadik);
-  //       setPersonalDetail(response.data.sso);
-  //     },
-  //     onProgress(progress) {
-  //       setIsLoading(progress);
-  //     },
-  //     onError: error => {
-  //       setError(error);
-  //     },
-  //   });
-  // };
-
   return {
     isLoading,
     error,

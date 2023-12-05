@@ -137,9 +137,9 @@ export function useNavigationHandler() {
     params?: { [key: string]: any },
   }) => {
     if (parent !== undefined) {
-      navigation.navigate(parent, { screen: screen, ...params });
+      navigation.navigate(parent, { screen: screen, params: params });
     } else {
-      navigation.navigate(screen, { ...params });
+      navigation.navigate(screen, { params: params });
     }
   };
 

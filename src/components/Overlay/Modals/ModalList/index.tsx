@@ -1,10 +1,11 @@
 import {
+  COLOR_BORDER,
   COLOR_EVENT_INACTIVE,
   COLOR_EVENT_SUCCESS,
   COLOR_FONT_PRIMARY_DARK,
   COLOR_WHITE,
 } from '@themes/index';
-import { BaseView, Input, Icon } from '@components';
+import { BaseView, Input, Icon, HeaderModal } from '@components';
 import React, { useEffect, useState, memo } from 'react';
 import {
   View,
@@ -12,6 +13,7 @@ import {
   FlatList,
   TextInput,
   ActivityIndicator,
+  SafeAreaView,
 } from 'react-native';
 import { AutoImage, Button, Spacer, Text } from '@components';
 import { LayoutAnimationHandler } from '@utils/uiHandler';
@@ -21,18 +23,37 @@ import Modal from 'react-native-modal';
 import Ripple from 'react-native-material-ripple';
 import Lottie from 'lottie-react-native';
 import { spacing } from '@constants/spacing';
+import axios from 'axios';
+import { handleRequest } from '@utils/networking';
+import { toTitleCase } from '@utils/index';
+import { heightByScreen, widthByScreen } from '@utils/dimensions';
+import { FlashList } from '@shopify/flash-list';
 
 interface AppProps {
   title: string;
   subTitle?: string;
   isVisible: boolean;
   onClose: Function;
-  data?: Array<object | string>;
-  selectedValue: object;
+  data?:
+  | Array<{
+    value: string,
+    label: string,
+  }>
+  | string;
+  selectedValue:
+  | Array<{
+    value: string,
+    label: string,
+  }>
+  // | {
+  //     value: string,
+  //     label: string,
+  //   };
   onSelect?: Function;
   isSearch?: boolean;
-  keyTitle: string;
-  keyImage?: string;
+  type?: 'check' | 'radio';
+  label?: string;
+  value?: string;
 }
 
 const App: React.FC<AppProps> = ({
@@ -41,41 +62,46 @@ const App: React.FC<AppProps> = ({
   isVisible = false,
   onClose,
   data = [],
-  selectedValue,
+  selectedValue = [],
   onSelect,
   isSearch,
-  keyTitle = 'item',
-  keyImage,
+  type,
+  label= 'label',
+  value= 'value',
 }) => {
+
   const [searchkey, setsearchKey] = useState('');
+  const [originData, setoriginData] = useState([]);
   const [listData, setlistData] = useState([]);
   const [timeoutId, setTimeoutId] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
-  const [selected, setselected] = useState(selectedValue);
+  const [page, setPage] = useState(1);
+  const [totalPages, setTotalPages] = useState(null);
 
-  // const [page, setPage] = useState(1);
-  // const [totalPages, setTotalPages] = useState(null);
-
-  // const handleEndReached = () => {
-  //   if (!isLoading && page < totalPages) {
-  //     setPage(page + 1);
-  //   }
-  // };
-
+  const handleEndReached = () => {
+    if (!isLoading && page < totalPages) {
+      setPage(page + 1);
+    }
+  };
   useEffect(() => {
-    // fetchData();
-    setlistData(data);
+    getList();
   }, [data]);
 
-  const onPressItem = (item, index) => {
-    setIsLoading(true);
-    setselected(item);
-    setTimeout(() => {
-      LayoutAnimationHandler();
-      onSelect(item, index);
-      setIsLoading(false);
-      onClose();
-    }, 200);
+  const getList = () => {
+    if (typeof data == 'string') {
+      handleRequest({
+        method: 'GET',
+        path: data,
+      })
+        .then(res => {
+          setlistData(res?.data?.data);
+          setoriginData(res?.data?.data);
+        })
+        .catch(err => console.log('errult :>> ', err));
+    } else {
+      setlistData(data);
+      setoriginData(data);
+    }
   };
 
   const searching = (txt: string) => {
@@ -84,32 +110,22 @@ const App: React.FC<AppProps> = ({
     clearTimeout(timeoutId);
     setTimeoutId(
       setTimeout(() => {
+        LayoutAnimationHandler();
         if (txt.length == 0) {
-          setlistData(data);
+          setlistData(originData);
         } else {
-          let filterResult = data.filter((item, index) => {
-            if (
-              keyTitle
-                .split('.')
-                .reduce((obj, key) => item?.[key])
-                ?.toString()
-                .toLowerCase()
-                .includes(txt.toString().toLowerCase())
-            ) {
-              return keyTitle
-                .split('.')
-                .reduce((obj, key) => item?.[key])
-                ?.toString()
-                .toLowerCase()
-                .includes(txt.toString().toLowerCase());
-            } else {
-              console.log('index removed :>> ', index);
+          let filterResult = originData.filter((item, index) => {
+            const itemString = item[label].toString().toLowerCase();
+            const txtString = txt.toString().toLowerCase();
+            if (itemString.includes(txtString)) {
+              return true;
             }
+            return false;
           });
           setlistData(filterResult);
         }
         setIsLoading(false);
-      }, 500)
+      }, 200)
     );
   };
 
@@ -127,7 +143,7 @@ const App: React.FC<AppProps> = ({
         />
       </View>
       <Text size="desc" style={{ marginBottom: 40 }}>
-        Data yang di cari gak ada
+        Data nya gak ada
       </Text>
     </View>
   );
@@ -141,118 +157,121 @@ const App: React.FC<AppProps> = ({
           borderTopEndRadius: 12,
         }}
       >
-        {/* <View style={{ alignItems: 'center' }}>
-          <View style={styles.headerHandle} />
-        </View> */}
-        <View style={{ flexDirection: 'row', justifyContent: 'space-between' }}>
-          <Text size="title" weight="bold">
-            Pilih {title}
-          </Text>
-          {isLoading ? (
-            <ActivityIndicator />
-          ) : (
-            <Icon name={'close'} size={22} onPress={() => onClose()} />
-          )}
-        </View>
+        <Text size="subTitle" weight="bold">
+          Pilih {title}
+        </Text>
         <Text size="desc">{subTitle}</Text>
         {isSearch && (
-          <View style={styles.inputWrap}>
-            <View style={styles.icon}>
-              <Icon name={'magnify'} size={22} />
-            </View>
-            <View style={{ flex: 1 }}>
-              <TextInput
-                onChangeText={searching}
-                value={searchkey}
-                placeholder={'Cari sesuatu ...'}
-                style={styles.input}
-              />
-            </View>
-            <Ripple style={styles.icon} onPress={() => searching('')}>
-              {isLoading ? (
-                <ActivityIndicator />
-              ) : (
-                searchkey !== '' && <Icon name={'close'} size={22} />
-              )}
-            </Ripple>
-          </View>
+          <Input
+            type="search"
+            value={searchkey}
+            placeholder={`Cari ${title}`}
+            onInteract={searching}
+          />
         )}
       </View>
     );
   };
 
+  const onPressList = (item, index) => {
+    if (type == 'check') {
+      const itemIndex = selectedValue.findIndex((selectedItem) => selectedItem.value === item.value);
+      let updatedSelectedItems = selectedValue.slice();
+      if (itemIndex !== -1) {
+        updatedSelectedItems.splice(itemIndex, 1);
+      } else {
+        updatedSelectedItems.push(item);
+      }
+      onSelect(updatedSelectedItems)
+    } else {
+      onClose();
+      setsearchKey('');
+      setTimeout(() => {
+        onSelect(item);
+      }, 1);
+    }
+  };
+
   return (
     <Modal
+      onBackButtonPress={() => onClose()}
+      onBackdropPress={() => onClose()}
+      hardwareAccelerated
       isVisible={isVisible}
       style={{ justifyContent: 'flex-end', margin: 0 }}
-      onBackdropPress={() => onClose()}
-      onSwipeComplete={() => onClose()}
-      swipeDirection={'down'}
+      hideModalContentWhileAnimating
+      useNativeDriver
     >
-      <View style={styles.modalWrap}>
-        <FlatList
-          stickyHeaderIndices={[0]}
-          keyboardShouldPersistTaps="handled"
-          data={listData}
-          ListHeaderComponent={headerList()}
-          ItemSeparatorComponent={() => (
-            <View style={{ marginVertical: spacing.xxs }} />
-          )}
-          renderItem={({ item, index }) => {
-            return (
-              <Button
-                onPress={() => onPressItem(item, index)}
-                style={[
-                  styles.listWrap,
-                  {
-                    borderColor:
-                      selected?.name == item.name
-                        ? COLOR_EVENT_SUCCESS
-                        : COLOR_EVENT_INACTIVE,
-                  },
-                ]}
-              >
-                {keyImage && (
-                  <AutoImage
-                    source={{
-                      uri: keyImage
-                        .split('.')
-                        .reduce((obj, key) => item?.[key]),
-                    }}
-                    maxWidth={30}
-                  />
-                )}
-                <Spacer />
-                <View style={{ flex: 1, justifyContent: 'center' }}>
-                  <Text
-                    size="desc"
-                    style={{
-                      fontFamily: 'Inter-Regular',
-                      color: COLOR_FONT_PRIMARY_DARK,
-                    }}
-                  >
-                    {keyTitle.split('.').reduce((obj, key) => item?.[key])}
-                  </Text>
-                </View>
-                <View style={styles.icon}>
-                  <Icon
-                    name={
-                      selected.name == item.name
-                        ? 'radiobox-marked'
-                        : 'radiobox-blank'
-                    }
-                    size={22}
-                    color={selected.name == item.name && COLOR_EVENT_SUCCESS}
-                  />
-                </View>
-              </Button>
-            );
+      <SafeAreaView
+        style={{
+          backgroundColor: COLOR_WHITE,
+          maxHeight: heightByScreen(90), 
+        }}
+      >
+        <HeaderModal />
+        <View
+          style={{
+            padding: spacing.md,
+            width: '100%',
+            backgroundColor: COLOR_WHITE, 
+            maxHeight:heightByScreen(85)
           }}
-          // onEndReached={handleEndReached}
-          onEndReachedThreshold={0.1}
-          ListEmptyComponent={() => ListEmptyComponent()}
-        />
-      </View>
+        >
+          {headerList()}
+          <FlatList
+            showsVerticalScrollIndicator={false}
+            // contentContainerStyle={{
+            //   backgroundColor: COLOR_WHITE,
+            // }}
+            keyboardShouldPersistTaps="handled"
+            data={listData}
+            ItemSeparatorComponent={() => (
+              <View style={{ marginVertical: spacing.xxs }} />
+            )}
+            renderItem={({ item, index }) => {
+              const isSelected = Array.isArray(selectedValue) ? selectedValue?.some(
+                (selectedItem) => {
+
+                  selectedItem[value] === item[value]}
+              ) : selectedValue[value] === item[value];
+              const itemBorderColor = isSelected ? COLOR_EVENT_SUCCESS : COLOR_BORDER;
+              const iconName = type === 'radio' ? (isSelected ? 'radiobox-marked' : 'radiobox-blank') : (isSelected ? 'checkbox-marked-outline' : 'checkbox-blank-outline');
+
+              return (
+                <Button key={index}
+                  onPress={() => onPressList(item, index)}
+                  style={[
+                    styles.listWrap,
+                    {borderColor: itemBorderColor},
+                  ]}
+                >
+                  <Text size="desc" weight="bold">
+                  {item[label]}
+                  </Text>
+                  <View style={styles.icon}>
+                    <Icon
+                      name={iconName}
+                      size={22}
+                      color={itemBorderColor}
+                    />
+                  </View>
+                </Button>
+              );
+            }}
+            onEndReached={handleEndReached}
+            onEndReachedThreshold={0.1}
+            ListEmptyComponent={() => ListEmptyComponent()}
+          />
+          <Button
+            style={{ width: '100%', marginVertical: spacing.xs }}
+            title={'Simpan'}
+            onPress={() => {
+              onClose();
+            }}
+          />
+        </View>
+
+      </SafeAreaView>
     </Modal>
   );
 };

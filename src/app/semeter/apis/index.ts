@@ -24,15 +24,14 @@ export const endpoint = {
     handleRequest({
       method: 'GET',
       path: `api/semeter/reklame/${params.id}/?token_sso=${params.headers.token_sso}`,
-      // data: params.headers,                ? token_sso settingan dari docker server 
+      // data: params.headers,                ? token_sso settingan dari docker server
     }),
   getForm: async (params: endpointParam) =>
     handleRequest({
-      method: 'GET',
-      path: `api/semeter/user-group-privileges`,
-      headers: params.headers,
-      data: storage.getItem(STORAGE_KEY.LOGIN_TOKEN),
-      // useSsl: true,  
+      method: 'POST',
+      path: `api/semeter/user-group-privileges/?token_sso=${params.headers.token_sso}`,
+      // data: params.headers,                ? token_sso settingan dari docker server
     }),
+ 
 };
 export default { endpoint };

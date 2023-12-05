@@ -10,7 +10,7 @@ import { FlashList } from '@shopify/flash-list';
 import { widthByScreen } from '@utils/dimensions';
 import { scrollToIndexHorizontal, shadowGenerator } from '@utils/uiHandler';
 import { COLOR_WHITE } from '@themes/index';
-import { useHooks as detailReklameHook } from '@semeterApp/hooks/detailReklame';
+import { useHooks as detailReklameHook } from '@semeterApp/hooks/useGetDetailReklame';
 import dayjs from 'dayjs';
 import 'dayjs/locale/id';
 
@@ -26,26 +26,58 @@ const Screen = ({ id }) => {
   const conditionalRender = () => {
     if (isLoading) {
       return (
-        <>
+        <View
+          style={{
+            backgroundColor: COLOR_WHITE,
+            padding: spacing.md,
+          }}
+        >
           <View
             style={{
               flexDirection: 'row',
               gap: 10,
-              marginVertical: spacing.sm,
+              // marginVertical: spacing.sm,
             }}
           >
-            <LoadingWraper isLoading={true} style={{ height: 50, width: 50 }} />
-            <LoadingWraper isLoading={true} style={{ height: 50, width: 50 }} />
+            <LoadingWraper isLoading={true} style={styles.imageDetailReklame} />
+            <LoadingWraper isLoading={true} style={styles.imageDetailReklame} />
+            <LoadingWraper isLoading={true} style={styles.imageDetailReklame} />
           </View>
-          <LoadingWraper
-            isLoading={true}
-            randomSize
-            style={{
-              height: 10,
-              borderRadius: 10,
-            }}
-          />
-        </>
+          <View style={{  gap: spacing.sm }}>
+            <LoadingWraper
+              isLoading={true}
+              randomSize
+              style={{
+                height: 10,
+                borderRadius: 10,
+              }}
+            />
+            <LoadingWraper
+              isLoading={true}
+              randomSize
+              style={{
+                height: 10,
+                borderRadius: 10,
+              }}
+            />
+            <LoadingWraper
+              isLoading={true}
+              randomSize
+              style={{
+                height: 10,
+                borderRadius: 10,
+              }}
+            />
+            <LoadingWraper
+              isLoading={true}
+              randomSize
+              style={{
+                height: 10,
+                borderRadius: 10,
+              }}
+            />
+          </View>
+        </View>
       );
     } else {
       return (

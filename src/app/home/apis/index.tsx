@@ -29,5 +29,12 @@ export const endpoint = {
       path: 'https://dcktrp.jakarta.go.id/web-dcktrp-be/api/album_galeri',
       data: params.data,
     }),
+  getPermission: async (params: homeApp) =>
+    handleRequest({
+      method: 'GET',
+      path: 'api/semeter/detail-user-group',
+      data: params.data,
+      headers: params.headers,
+    }),
 };
 export default { endpoint };

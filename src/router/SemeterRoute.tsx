@@ -9,11 +9,11 @@ const Stack = createStackNavigator();
 const App = () => {
   return (
     <Stack.Navigator
-      initialRouteName="Home"
+      initialRouteName="SemeterHome"
       screenOptions={{ headerShown: false }}
     >
-      <Stack.Screen name="Home" component={Home} />
-      <Stack.Screen name="Form" component={Form} />
+      <Stack.Screen name="SemeterHome" component={Home} />
+      <Stack.Screen name="TambahReklame" component={Form} />
     </Stack.Navigator>
   );
 };

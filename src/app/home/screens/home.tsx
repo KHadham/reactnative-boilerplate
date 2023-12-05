@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { FlatList, Image, SectionList, TouchableOpacity, View } from 'react-native';
 import ShimmerPlaceholder from 'react-native-shimmer-placeholder';
 import LinearGradient from 'react-native-linear-gradient';
@@ -26,7 +26,7 @@ import styles from '@homeApp/styles';
 import { useProfileStore } from '@profileApp/stores/storage';
 import { useHooks } from '@homeApp/hooks/useCarousel';
 import { useHooks as useApp } from '@homeApp/hooks/useSubApps';
-import { useHooks as useGaleri } from '@homeApp/hooks/useGaleri';
+import { useHooks as usePermission  } from '@homeApp/hooks/usePermission';
 import { useHooks as useDetailGaleri } from '@homeApp/hooks/useDetailGaleri';
 import { COLOR_WHITE } from '@themes/index';
 
@@ -34,12 +34,17 @@ const App: React.FC = () => {
   const [firstModal, setfirstModal] = useState(false);
   const { navigate } = useNavigationHandler();
   const { user } = useProfileStore();
+//   const { action } = usePermission();
+
+//  useEffect(() => {
+//   action()
+//  }, [])
+ 
   // const { data } = useGaleri();
   const { data: galeri } = useDetailGaleri();
 
   const { data: carouselData, isLoading } = useHooks();
   const { data: apps, isLoading: loadingApp } = useApp();
-  console.log('apps :>> ', apps);
   return (
     <BaseView>
       <Header

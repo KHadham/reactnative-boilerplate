@@ -12,6 +12,7 @@ import {
   TextInput,
   Switch,
   KeyboardAvoidingView,
+  ScrollView,
 } from 'react-native';
 import dayjs from 'dayjs';
 import DateTimePickerModal from 'react-native-modal-datetime-picker';
@@ -24,24 +25,23 @@ import {
   COLOR_FONT_PRIMARY_DARK,
   COLOR_WHITE,
   COLOR_FONT_PRIMARY_LIGHT,
-  COLOR_BACKGROUND,
   COLOR_BASE_PRIMARY_DARK,
-  COLOR_GREY,
-  COLOR_GREY_LIGHT,
   COLOR_BACKGROUND_ERROR,
   COLOR_BACKGROUND_SUCCESS,
+  COLOR_BORDER,
 } from '@themes/index';
-import { Text, Icon, ModalList } from '@components';
+import { Text, Icon, ModalList, Button, LoadingWraper } from '@components';
 import { Otp, ImagePicker } from '@components/Input/indexx';
 import { heightByScreen } from '@utils/dimensions';
-import { LayoutAnimationHandler } from '@utils/uiHandler';
 import { InputProps, TypeListConfigMap } from './types';
 import styles from './styles';
+import { FlatList } from 'react-native-gesture-handler';
+import { spacing } from '@constants/spacing';
 
 const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
   {
     label,
-    value = undefined,
+    value,
     onInteract,
     error = '',
     success = '',
@@ -51,9 +51,12 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     length = 6,
     borderRadius = 10,
     style,
-    leftComponent = null,
-    rightComponent = null,
+    left = null,
+    right = null,
     editable = true,
+    labelSelection = 'label',
+    valueSelection = 'value',
+    isLoading,
     ...rest
   },
   ref: Ref<TextInput>
@@ -118,15 +121,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       keyboardType: 'default',
       typeable: false,
     },
-    // select: {
-    //   icon: 'chevron-down',
-    //   onPress: () => setisModalShow(!isModalShow),
-    //   keyboardType: 'default',
-    // },
     image: {
       icon: 'file-image-plus-outline',
       onPress: () => setisPickerShow(!isPickerShow),
       keyboardType: 'default',
+      typeable: false,
     },
     switch: {
       onPress: () => setisSelected(!isSelected),
@@ -135,18 +134,19 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       state: isSelected,
     },
     check: {
-      icon: ['checkbox-marked-outline', 'checkbox-blank-outline'],
+      // todo
+      icon: 'chevron-down',
       keyboardType: 'default',
       typeable: false,
-      onPress: () => setisSelected(!isSelected),
-      state: isSelected,
+      onPress: () => setisModalShow(!isModalShow),
     },
     radio: {
-      icon: ['radiobox-marked', 'radiobox-blank'],
+      // icon: ['radiobox-marked', 'radiobox-blank'],
+      icon: 'chevron-down',
       keyboardType: 'default',
       typeable: false,
-      onPress: () => setisSelected(!isSelected),
-      state: isSelected,
+      onPress: () => setisModalShow(!isModalShow),
+      // state: isSelected,
     },
   };
 
@@ -155,7 +155,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     else if (success) return COLOR_EVENT_SUCCESS;
     else if (error) return COLOR_EVENT_ERROR;
     else if (!editable) return COLOR_FONT_PRIMARY_LIGHT;
-    else return COLOR_EVENT_INACTIVE;
+    else return COLOR_BORDER;
   };
 
   const fieldStateBackground = () => {
@@ -176,11 +176,11 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     }
   };
 
-  const right = () => {
+  const rightComponent = () => {
     if (isFocus && usrInput !== '') {
       return (
         <TouchableOpacity
-          style={styles.sideComponentWrap}
+          style={styles.SideInputItemWrap}
           onPress={() => onInteract('')}
         >
           <Icon name={'close'} size={22} color={COLOR_EVENT_ERROR} />
@@ -188,7 +188,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       );
     } else if (type == 'switch') {
       return (
-        <View style={styles.sideComponentWrap}>
+        <View style={styles.SideInputItemWrap}>
           <Switch
             value={value}
             onValueChange={() => {
@@ -201,60 +201,36 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
       return (
         <>
           {typeListConfig[type].typeable == false && (
-            <View style={{ justifyContent: 'center' }}>
-              <View
-                style={{
-                  borderWidth: 0.5,
-                  height: '70%',
-                  borderColor: fieldStateBorder(),
-                }}
-              />
-            </View>
+            <View style={styles.sideInputBorder} />
           )}
           <TouchableOpacity
             disabled={typeListConfig[type].onPress == undefined}
             style={[
-              styles.sideComponentWrap,
+              styles.SideInputItemWrap,
               type == 'area' && { alignItems: 'flex-end', paddingBottom: 12 },
             ]}
             onPress={() => typeListConfig[type].onPress()}
           >
-            <Icon name={icons()} size={22} color={fieldStateBorder()} />
+            <Icon name={icons()} size={22} color={COLOR_FONT_PRIMARY_DARK} />
           </TouchableOpacity>
         </>
       );
-    } else if (rightComponent) {
+    } else if (right) {
       return (
         <>
-          <View style={{ justifyContent: 'center' }}>
-            <View
-              style={{
-                borderWidth: 0.5,
-                height: '70%',
-                borderColor: fieldStateBorder(),
-              }}
-            />
-          </View>
-          {rightComponent}
+          <View style={styles.sideInputBorder} />
+          <View style={styles.SideInputItemCustom}>{right}</View>
         </>
       );
     }
   };
 
-  const left = () => {
-    if (leftComponent)
+  const leftComponent = () => {
+    if (left)
       return (
         <>
-          {leftComponent}
-          <View style={{ justifyContent: 'center' }}>
-            <View
-              style={{
-                borderWidth: 0.5,
-                height: '70%',
-                borderColor: fieldStateBorder(),
-              }}
-            />
-          </View>
+          <View style={styles.SideInputItemCustom}>{left}</View>
+          <View style={styles.sideInputBorder} />
         </>
       );
   };
@@ -273,53 +249,104 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
 
   const handleFieldPress = () => {
     if (disableState) {
-      if (typeListConfig[type]?.onPress !== undefined ) {
-        typeListConfig[type]?.onPress();
-        onInteract(!isSelected);
+      if (typeListConfig[type]?.onPress !== undefined) {
+        typeListConfig[type].onPress();
       }
     }
   };
 
   const basicInput = () => {
     return (
-      <TouchableOpacity
-        disabled={disableState()}
-        onPress={() => handleFieldPress()}
-        style={{
-          borderRadius: borderRadius,
-          borderColor: fieldStateBorder(),
-          height: type == 'area' ? 120 : heightByScreen(8),
-          backgroundColor: fieldStateBackground(),
-          borderWidth: 1,
+      <LoadingWraper isLoading={isLoading}>
+        <TouchableOpacity
+          disabled={disableState()}
+          onPress={() => handleFieldPress()}
+          style={{
+            borderRadius: borderRadius,
+            borderColor: fieldStateBorder(),
+            height: type == 'area' ? 120 : heightByScreen(7),
+            backgroundColor: fieldStateBackground(),
+            borderWidth: 1,
           marginVertical: 4,
           flexDirection: 'row',
-          minHeight: 40,
-        }}
-      >
-        {left()}
-        <TextInput
-          keyboardType={typeListConfig[type].keyboardType ?? 'default'}
-          ref={ref}
-          {...rest}
-          value={usrInput}
-          onChangeText={txt => {
-            const validationFunction = typeListConfig[type]?.validation;
-            const finalValue = validationFunction
-              ? validationFunction(txt)
-              : txt;
-            onInteract(finalValue);
+            // maxHeight: type !== 'area' ? 60 : undefined,
           }}
-          style={styles.innerInput}
-          placeholderTextColor={COLOR_FONT_PRIMARY_LIGHT}
-          multiline={type == 'area'}
-          textAlignVertical={type == 'area' ? 'top' : 'center'}
-          onFocus={() => setisFocus(true)}
-          onBlur={() => setisFocus(false)}
-          editable={typeListConfig[type].typeable ?? editable}
-          secureTextEntry={type == 'password' && showPass}
-        />
-        {right()}
-      </TouchableOpacity>
+        >
+          {leftComponent()}
+          {Array.isArray(value) ? (
+            <ScrollView
+              horizontal
+              style={{
+                flexDirection: 'row',
+                flex: 1,
+              }}
+            >
+              {value.length == 0 ? (
+                <View
+                  style={{
+                    justifyContent: 'center',
+                    paddingHorizontal: spacing.xs,
+                  }}
+                >
+                  <Text color={COLOR_FONT_PRIMARY_LIGHT}>
+                    {rest.placeholder}
+                  </Text>
+                </View>
+              ) : (
+                value.map((item, index) => (
+                  <Button
+                    key={index}
+                    title={item.label}
+                    type="outline"
+                    icon="close"
+                    style={{
+                      marginRight: spacing.xs,
+                    }}
+                    rippleRadius={borderRadius}
+                    onPress={() => {
+                      if (index >= 0 && index < usrInput.length) {
+                        usrInput.splice(index, 1); // Remove one element at the specified index
+                        onInteract(usrInput);
+                      }
+                    }}
+                  />
+                ))
+              )}
+            </ScrollView>
+          ) : (
+            <TextInput
+              keyboardType={typeListConfig[type].keyboardType ?? 'default'}
+              ref={ref}
+              {...rest}
+              onFocus={e => {
+                if (rest.onFocus) rest.onFocus(e);
+                setisFocus(true);
+              }}
+              onBlur={e => {
+                if (rest.onBlur) rest.onBlur(e);
+                setisFocus(false);
+              }}
+              placeholder={rest.placeholder && rest.placeholder}
+              value={usrInput?.[labelSelection] || usrInput}
+              onChangeText={txt => {
+                const validationFunction = typeListConfig[type]?.validation;
+                const finalValue = validationFunction
+                  ? validationFunction(txt)
+                  : txt;
+                onInteract(finalValue);
+              }}
+              style={styles.innerInput}
+              placeholderTextColor={COLOR_FONT_PRIMARY_LIGHT}
+              multiline={type == 'area'}
+              textAlignVertical={type == 'area' ? 'top' : 'center'}
+              editable={typeListConfig[type].typeable ?? editable}
+              secureTextEntry={type == 'password' && showPass}
+            />
+          )}
+
+          {rightComponent()}
+        </TouchableOpacity>
+      </LoadingWraper>
     );
   };
 
@@ -327,7 +354,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     if (label) {
       return (
         <View style={{ flexDirection: 'row' }}>
-          <Text weight="bold">{toTitleCase(label)}</Text>
+          <Text weight="bold">{label}</Text>
           {required && (
             <Text weight="bold" color={COLOR_EVENT_ERROR}>
               {' '}
@@ -356,12 +383,31 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     }
     if (typeof text !== 'boolean' && iconName) {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+        <View style={{ flexDirection: 'row', alignItems: 'center',gap:spacing.xs }}>
           <Icon name={iconName} size={16} color={iconColor} />
-          <Text style={{ color: iconColor }}> {text}</Text>
+          <Text style={{ color: iconColor,flex:1 }}>{text}</Text>
         </View>
       );
     }
+    // if (Array.isArray(error)) {
+    //   error.map(txt => {
+    //     return (
+    //       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    //         <Icon name={'alert-outline'} size={16} color={COLOR_EVENT_ERROR} />
+    //         <Text style={{ color: iconColor }}> {txt}</Text>
+    //       </View>
+    //     );
+    //   });
+    // } else {
+    //   if (typeof text !== 'boolean' && iconName) {
+    //     return (
+    //       <View style={{ flexDirection: 'row', alignItems: 'center' }}>
+    //         <Icon name={iconName} size={16} color={iconColor} />
+    //         <Text style={{ color: iconColor }}> {text}</Text>
+    //       </View>
+    //     );
+    //   }
+    // }
   };
 
   const mainInput = () => {
@@ -371,6 +417,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
           value={value}
           length={length}
           onInteract={values => onInteract(values)}
+          editable={editable}
         />
       );
     } else if (type == 'image') {
@@ -405,16 +452,18 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
         />
       )}
       {/* todo multipicker */}
-      {data?.length !== 0 && (
+      {data?.length !== 0 && (type == 'check' || type == 'radio') && (
         <ModalList
+          type={type}
           isVisible={isModalShow}
           data={data}
           isSearch={true}
           onClose={() => setisModalShow(false)}
           selectedValue={usrInput}
-          onSelect={(txt: any) => onInteract(txt)}
-          title={''}
-          keyTitle={''}
+          onSelect={(data: any) => onInteract(data)}
+          title={label}
+          label={labelSelection}
+          value={valueSelection}
         />
       )}
     </KeyboardAvoidingView>
@@ -422,6 +471,6 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
 };
 
 export default forwardRef(Component);
-// supaya tombol reset bisa di pencet
+// supaya tombol di child bisa di pencet
 // tambahin ini di setiap scrollview / flatlist ==>
 //  keyboardShouldPersistTaps='always'

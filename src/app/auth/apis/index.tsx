@@ -20,5 +20,6 @@ export const endpoint = {
       data: params.data,
       headers: params.headers,
     }),
+
 };
 export default { endpoint };

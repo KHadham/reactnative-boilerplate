@@ -1,6 +1,6 @@
 import { KeyboardTypeOptions, TextInputProps, ViewStyle } from "react-native";
 
-type InputType =
+export type InputType =
   | 'text'
   | 'password'
   | 'number'
@@ -15,24 +15,29 @@ type InputType =
   | 'radio'
   | 'switch'
   | 'otp'
-  | string;
+  |'username'
+  |'search'
+  |'image'
 
-export type InputProps = TextInputProps & {
+export type InputProps = {
   label?: string;
+  labelSelection?: string;
+  valueSelection?: string;
   error?: string;
   success?: string;
-  required?: string | boolean | string;
-  value: any;
-  onInteract?: Function;
+  required?: string | boolean ;
+  value: any| string | string[];
+  onInteract: Function;
   type?: InputType;
-  data?: Array<string>;
+  data?: string | Array<{ value: string; label: string }>;
   length?: InputType extends 'otp' ? number : undefined;
   borderRadius?: number;
   style?: ViewStyle;
-  leftComponent?: React.ReactElement | null | undefined;
-  rightComponent?: React.ReactElement | null | undefined;
+  left?: React.ReactElement | null | undefined;
+  right?: React.ReactElement | null | undefined;
   disabled?: boolean
-};
+  isLoading?: boolean
+}&TextInputProps;
 
 export type TypeConfig = {
     icon?: string | string[];
