@@ -12,9 +12,7 @@ export const useProfile = () => {
   const [error, setError] = useState('');
   const {
     user,
-    setEmployeeDetail,
     setPersonalDetail,
-    employee,
     personal,
   } = useProfileStore();
 
@@ -28,7 +26,8 @@ export const useProfile = () => {
         query: { username: user.username },
       }),
       onSuccess: response => {
-        setEmployeeDetail(response.data.siadik);
+        console.log('response', response.data)
+        // setEmployeeDetail(response.data.siadik);
         setPersonalDetail(response.data.sso);
       },
       onProgress(progress) {
@@ -45,7 +44,6 @@ export const useProfile = () => {
   return {
     isLoading,
     error,
-    dataEmployee: employee,
     dataPersonal: personal,
   };
 };

@@ -13,9 +13,15 @@ interface IndexProps {
   data: Array<any>;
   onInteract: any;
   borderRadius: number;
+  editable: boolean;
 }
 
-const index = ({ data = [], onInteract, borderRadius }: IndexProps) => {
+const index = ({
+  data = [],
+  onInteract,
+  borderRadius,
+  editable = true,
+}: IndexProps) => {
   const listPhotoRef = useRef(null);
   const [isPreviewModal, setisPreviewModal] = useState(null);
   const [isPickerShow, setisPickerShow] = useState(false);
@@ -121,6 +127,7 @@ const index = ({ data = [], onInteract, borderRadius }: IndexProps) => {
         )}
         ListFooterComponent={
           <Button
+            disabled={!editable}
             onPress={() => setisPickerShow(true)}
             style={[styles.footerImgList, { borderRadius }]}
           >

@@ -18,50 +18,68 @@ const App: React.FC = () => {
   const { dataPersonal } = useProfile();
   const { action } = useUpdateProfile();
 
-  const [isEditable, setisEditable] = useState(false)
+  const [isEditable, setisEditable] = useState(false);
+  console.log('Object.entries(dataPersonal)', Object.entries(dataPersonal));
+  const initialFields = Object.entries(dataPersonal).map(
+    ([fieldName, fieldDescription]) => ({
+      fieldName,
+      type: 'text', // You can set a default type if needed
+      defaultValue: fieldDescription,
+    })
+  );
 
-  const initialFields = Object.entries(dataPersonal).map(([fieldName, fieldDescription]) => ({
-    fieldName,
-    type: "text", // You can set a default type if needed
-    defaultValue: fieldDescription
-  }));
+  useEffect(() => {
+    console.log('initialFields', initialFields);
+  }, [initialFields]);
 
-  const { values, inputRefs,scrollRefs, errors, handleFieldChange, validateForm, moveFocus } =
-    useForm(initialFields, () => { });
+  const {
+    values,
+    inputRefs,
+    scrollRefs,
+    errors,
+    handleFieldChange,
+    validateForm,
+    moveFocus,
+  } = useForm(initialFields, () => {}, 'fieldName');
 
-  const renderItem = ({ item }: { item: [key: string, value: any] }) => {
-    console.log('values :>> ', values);
-    const [key] = item;
+  const renderItem = ({ item }) => {
+    console.log('item', item);
+    // console.log('values :>> ', values);
+    // const [key] = item;
     return (
       <View style={{ paddingHorizontal: spacing.md }}>
         <Input
-          ref={inputRefs[key]}
+          ref={inputRefs[item?.fieldName]}
           editable={isEditable}
-          onInteract={(txt: string) => handleFieldChange(key, txt)}
-          value={values[key]}
-          label={toTitleCase(key)}
-          onSubmitEditing={() => moveFocus(key)}
-          error={errors[key]}
-          />
+          onInteract={(txt: string) => handleFieldChange(item?.fieldName, txt)}
+          value={values[item?.fieldName]}
+          label={toTitleCase(item?.fieldName)}
+          onSubmitEditing={() => moveFocus(item?.fieldName)}
+          error={errors[item?.fieldName]}
+        />
       </View>
     );
   };
-  
+
+  console.log('Object.entries(dataPersonal)', Object.entries(dataPersonal));
   return (
-    <BaseView containerColor={COLOR_BACKGROUND} >
+    <BaseView containerColor={COLOR_BACKGROUND}>
       <Header
         shadow
         title="Informasi Personal"
         right={
-          <TouchableOpacity onPress={()=>setisEditable(!isEditable)}>
-            <Icon name={isEditable?'pen':'pen-off'} color={COLOR_EVENT_WARNING} />
+          <TouchableOpacity onPress={() => setisEditable(!isEditable)}>
+            <Icon
+              name={isEditable ? 'pen' : 'pen-off'}
+              color={COLOR_EVENT_WARNING}
+            />
           </TouchableOpacity>
         }
       />
       <FlashList
-            keyboardShouldPersistTaps='always'
-ref={scrollRefs}
-        data={Object.entries(dataPersonal)}
+        keyboardShouldPersistTaps="always"
+        ref={scrollRefs}
+        data={initialFields}
         renderItem={renderItem}
         estimatedItemSize={80}
         ListFooterComponent={

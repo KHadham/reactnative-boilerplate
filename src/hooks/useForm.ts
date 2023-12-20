@@ -1,4 +1,4 @@
-import {  InputType } from '@components/Input/types';
+import { InputType } from '@components/Input/types';
 import { useRef, useState } from 'react';
 import * as Yup from 'yup';
 
@@ -6,75 +6,101 @@ export type InitialFieldsType = Array<
   {
     fieldName: string;
     type: InputType
-    defaultValue?: string | number |any;
-    validationSchema?: any; 
+    defaultValue?: string | number | any;
+    validationSchema?: any;
     editable?: boolean;
     data?: string | Array<{ value: string; label: string }>;
     key?: string; //  for parameter api
-  } 
+  }
 >;
 
-const useHookWithSuccess = (initialFields: InitialFieldsType, onSuccess: Function,customKey: string = 'key') => {
-  const scrollRefs = useRef(null);
-  const getKeyToUse = (field: { [key: string]: any }) => field[customKey] 
+const useHookWithSuccess = (
+  initialFields,
+  onSuccess: (values: Record<string, any>) => void,
+  customKey: string = 'key'
+) => {
 
-  const [values, setValues] = useState(() => {
-    const initialFieldsState = {};
-    initialFields.forEach((field) => {
-      const keyToUse = getKeyToUse(field); // Determine key to use
-      if (field.type === 'image' || field.type === 'check') {
-        initialFieldsState[keyToUse] = field.defaultValue || [];
-      } else {
-        initialFieldsState[keyToUse] = field.defaultValue || '';
-      }
-    });
+  const scrollRefs = useRef(null);
+  const getKeyToUse = (field) => field.key || field[customKey];
+
+  const [values, setValues] = useState<Record<string, any>>(() => {
+    const initialFieldsState: Record<string, any> = {};
+    console.log('initialFieldsState', initialFields)
+    // initialFields.forEach((field) => {
+    //   const keyToUse = field[customKey];
+    //   initialFieldsState[keyToUse] =
+    //     field.type === 'image' || field.type === 'check' ? field.defaultValue || [] : field.defaultValue || '';
+    // });
     return initialFieldsState;
   });
 
-  const [errors, setErrors] = useState({});
+  const [errors, setErrors] = useState<Record<string, string>>({});
 
- 
-  
   const validateForm = async () => {
     try {
       const schema = Yup.object().shape(
         initialFields.reduce((acc, field) => {
           const keyToUse = getKeyToUse(field); // Determine key to use
+          const errMessage = 'Kolom ini tidak boleh kosong'
+
           acc[keyToUse] = field.validationSchema || Yup.lazy((value) => {
-            console.log('value', value)
+            // if (!field.nullable || field?.validationSchema == undefined) {
+            //   return Yup.mixed(); // Return an empty schema for nullable fields
+            // }
             if (field.type !== undefined) {
-              console.log('field1', field)
-              switch (field.type) {
-                case 'number':
-                  return Yup.number().required(`${field.fieldName} tidak boleh kosong`);
-                case 'image':
-                case 'check':
-                  return Yup.array().required(`${field.fieldName} tidak boleh kosong`);
-                default:
-                  return Yup.string().required(`${field.fieldName} tidak boleh kosong`);
+               if (field.type === 'image' || field.type === 'check') {
+                return Yup.array().required(errMessage);
+              } else if (field.type === 'esriFieldTypeString') {
+                if (field.domain !== undefined && typeof values[field.modelName] !== 'string') {
+                  return Yup.object().shape({}).required(errMessage);
+                } else {
+                  return Yup.string().required(errMessage);
+                }
+              } else {
+                if (field['NAME'] == 'Dropdown' || field['DISABLE'] == true) {
+                  return Yup.object().shape({}).required(errMessage);
+                } else {
+                  return Yup.string().required(errMessage);
+                }
               }
             } else {
-              console.log('field2', field['NAME'])
-              if (field['NAME'] == "Dropdown"||field['DISABLE'] == true) {
-                return Yup.object().shape({}).required(`${field.fieldName} tidak boleh kosong`);
+              if (field['NAME'] == "Dropdown" || field['DISABLE'] == true) {
+                return Yup.object().shape({}).required(errMessage);
               } else {
-                return Yup.string().required(`${field.fieldName} tidak boleh kosong`);
+                return Yup.string().required(errMessage);
               }
             }
-            
           });
           return acc;
         }, {})
       );
-  
+
       await schema.validate(values, { abortEarly: false });
       setErrors({});
-      onSuccess(values);
+      successWrapper(values);
     } catch (error) {
-      markingError(error)
+      markingError(error);
     }
   };
+  const successWrapper = (values) => {
+    const transformedValues = {};
+    initialFields.forEach((field) => {
+      const keyToUse = getKeyToUse(field);
+      const value = values[keyToUse];
+  
+      if (field.type === 'esriFieldTypeSmallInteger' || field.type === 'esriFieldTypeDouble') {
+        transformedValues[keyToUse] = Number(value); // Convert to number
+      } else if (field.type === 'esriFieldTypeString' && typeof value === 'object' && value.code) {
+        transformedValues[keyToUse] = value.code; // Extract 'code' property if the value is an object
+      } else {
+        transformedValues[keyToUse] = value; // Keep the original value
+      }
+    });
+    console.log('transformedValues', transformedValues)
+    onSuccess(transformedValues); // Call onSuccess with transformed values
+  };
 
+  
   const markingError = (error) => {
     try {
       const sortedFields = initialFields
@@ -108,7 +134,7 @@ const useHookWithSuccess = (initialFields: InitialFieldsType, onSuccess: Functio
 
 
   const clearError = (fieldKey: string | number) => {
-    setErrors(prevErrors => {
+    setErrors((prevErrors) => {
       const updatedErrors = { ...prevErrors };
       delete updatedErrors[fieldKey];
       return updatedErrors;
@@ -121,7 +147,7 @@ const useHookWithSuccess = (initialFields: InitialFieldsType, onSuccess: Functio
     removedFieldKey = null,
   }: { fieldKey: string; value: any; removedFieldKey?: string | string[] }) => {
     clearError(fieldKey);
-    
+
     setValues((prevFields) => ({
       ...prevFields,
       [fieldKey]: value,
@@ -141,22 +167,26 @@ const useHookWithSuccess = (initialFields: InitialFieldsType, onSuccess: Functio
     }
   };
 
-  const inputRefs = {};
-  initialFields.forEach(field => {
-    const keyToUse = getKeyToUse(field); // Determine key to use
-    // console.log('keyToUse', keyToUse)
-    // inputRefs[keyToUse] = useRef(null);
-  });
+  const initializeInputRefs = (initialFields: InitialFieldsType) => {
+    const inputRefs: Record<string, React.MutableRefObject<any>> = {};
+    initialFields.forEach((field) => {
+      const keyToUse = getKeyToUse(field);
+      inputRefs[keyToUse] = useRef(null);
+    });
+    return inputRefs;
+  };
+
+  const inputRefs = useRef(initializeInputRefs(initialFields)).current;
 
   const moveFocus = (fieldName: string) => {
     const fieldIndex = initialFields.findIndex(
-      field => getKeyToUse(field) === fieldName // Determine key to use
+      (field) => getKeyToUse(field) === fieldName
     );
     const nextField = initialFields[fieldIndex + 1];
 
     if (nextField) {
-      const nextFieldKey = getKeyToUse(nextField); // Determine key to use
-      inputRefs[nextFieldKey].current.focus();
+      const nextFieldKey = getKeyToUse(nextField);
+      inputRefs[nextFieldKey]?.current?.focus();
     }
   };
 

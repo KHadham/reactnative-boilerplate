@@ -1,6 +1,6 @@
 import React, { useState, useCallback, useEffect } from 'react';
-import { FlatList, View } from 'react-native';
-import { BaseView, Header, Input, Button } from '@components';
+import { ActivityIndicator, FlatList, View } from 'react-native';
+import { BaseView, Header, Input, Button, Text } from '@components';
 import { useHooks } from '@semeterApp/hooks/useGetForm';
 import { spacing } from '@constants/spacing';
 // import { useForm } from '@hooks';
@@ -8,17 +8,41 @@ import useForm, { InitialFieldsType } from '../../../hooks/useForm';
 
 import { useNavigationHandler } from '@utils/navigation';
 import Toast from 'react-native-toast-message';
+import { heightByScreen } from '@utils/dimensions';
 
 const MemoizedInput = React.memo(Input);
 
-const App = () => {
-  const { pop, getParam } = useNavigationHandler();
+const LoadingScreen = params => {
+  const { data, isLoading, fetch } = useHooks();
 
-  const params = getParam();
+  useEffect(() => {
+    fetch();
+  }, []);
+
+  useEffect(() => {
+    console.log(
+      'data',
+      data.filter(obj => obj.NAME !== 'Hidden')
+    );
+    console.log('isLoading', isLoading);
+  }, [isLoading, data]);
+
+  if (data.length < 2) {
+    return (
+      <View>
+        <ActivityIndicator />
+        <Text>Memuat Data</Text>
+      </View>
+    );
+  } else {
+    return <App data={data.filter(obj => obj.NAME !== 'Hidden')} />;
+  }
+};
+
+const App = props => {
+  const { getParam } = useNavigationHandler();
+
   const [images, setImages] = useState(undefined);
-  const { data, isLoading } = useHooks();
-
-  const dataFiltered: InitialFieldsType = data.filter(obj => obj.NAME !== "Hidden");
 
   const {
     values,
@@ -29,7 +53,7 @@ const App = () => {
     moveFocus,
     scrollRefs,
   } = useForm(
-    dataFiltered,
+    props.data,
     () => {
       handleSubmit;
     },
@@ -90,7 +114,6 @@ const App = () => {
       if (typeMapping[item.TYPE] !== 'hidden') {
         return (
           <MemoizedInput
-            isLoading={isLoading}
             value={values[item.LABEL]}
             ref={inputRefs[item.LABEL]}
             label={item.DESCRIPTION}
@@ -117,6 +140,7 @@ const App = () => {
                 ? 'KODE_KELURAHAN'
                 : 'value'
             }
+            onSubmitEditing={() => moveFocus(item.LABEL)}
           />
         );
       }
@@ -127,11 +151,13 @@ const App = () => {
   return (
     <BaseView>
       <Header title="Tambah reklame" shadow />
-      <View style={{ paddingHorizontal: spacing.md, flex: 1 }}>
+      <View style={{ flex: 1, marginHorizontal: spacing.md }}>
         <FlatList
+          showsVerticalScrollIndicator={false}
           ref={scrollRefs}
           ListFooterComponent={
             <MemoizedInput
+              editable={props.data.length !== 0}
               value={images}
               label={'Foto'}
               onInteract={val => {
@@ -140,18 +166,25 @@ const App = () => {
               type={'image'}
             />
           }
-          data={dataFiltered}
+          data={props.data}
           renderItem={renderItem}
           keyboardShouldPersistTaps="always"
+          ListEmptyComponent={
+            <View
+              style={{
+                flex: 1,
+                justifyContent: 'center',
+                alignItems: 'center',
+              }}
+            >
+              <Text weight="bold">Ada kesalahan pada server!</Text>
+            </View>
+          }
         />
-        <Button
-          disabled={isLoading}
-          onPress={() => validateForm()}
-          title="Simpan Reklame"
-        />
+        <Button onPress={() => validateForm()} title="Simpan Reklame" />
       </View>
     </BaseView>
   );
 };
 
-export default App;
+export default LoadingScreen;

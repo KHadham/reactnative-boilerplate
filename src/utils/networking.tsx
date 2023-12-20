@@ -106,7 +106,7 @@ export const handleRequest = async ({
           ...headers,
           Accept: 'application/json; charset=utf-8',
           'Access-Control-Allow-Origin': '*',
-          e_platform: 'mobile',
+          // e_platform: 'mobile',
         },
       });
       const responseBody = response;
@@ -116,6 +116,7 @@ export const handleRequest = async ({
       return response;
     }
   } catch (error) {
+    console.log('error handleRequest', JSON.stringify(error, 2, null));
     console.log(
       `Error handle request:  ${`${APPKEY.BASE_URL}${path}${toQueryString(
         query
@@ -153,7 +154,20 @@ export const useFetch = async (config: FetchConfig) => {
     onSuccess = () => {},
     onError = () => {},
     onProgress = () => {},
-    successStatuses = ['success', true, 200, 201, 202, 203, 204, 205, 206, 207, 208, 226],
+    successStatuses = [
+      'success',
+      true,
+      200,
+      201,
+      202,
+      203,
+      204,
+      205,
+      206,
+      207,
+      208,
+      226,
+    ],
     delay = 0,
   } = config;
   onProgress(true);

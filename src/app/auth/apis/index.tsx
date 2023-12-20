@@ -1,4 +1,4 @@
-import { post, get, handleRequest } from '@utils/networking';
+import { handleRequest } from '@utils/networking';
 
 interface endpointParam {
   data?: object;

@@ -267,8 +267,8 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
             height: type == 'area' ? 120 : heightByScreen(7),
             backgroundColor: fieldStateBackground(),
             borderWidth: 1,
-          marginVertical: 4,
-          flexDirection: 'row',
+            marginVertical: 4,
+            flexDirection: 'row',
             // maxHeight: type !== 'area' ? 60 : undefined,
           }}
         >
@@ -383,9 +383,15 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     }
     if (typeof text !== 'boolean' && iconName) {
       return (
-        <View style={{ flexDirection: 'row', alignItems: 'center',gap:spacing.xs }}>
+        <View
+          style={{
+            flexDirection: 'row',
+            alignItems: 'center',
+            gap: spacing.xs,
+          }}
+        >
           <Icon name={iconName} size={16} color={iconColor} />
-          <Text style={{ color: iconColor,flex:1 }}>{text}</Text>
+          <Text style={{ color: iconColor, flex: 1 }}>{text}</Text>
         </View>
       );
     }
@@ -423,6 +429,7 @@ const Component: ForwardRefRenderFunction<TextInput, InputProps> = (
     } else if (type == 'image') {
       return (
         <ImagePicker
+          editable={editable}
           data={value}
           onInteract={data => onInteract(data)}
           borderRadius={borderRadius}

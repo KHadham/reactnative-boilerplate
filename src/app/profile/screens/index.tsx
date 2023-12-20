@@ -56,12 +56,12 @@ const App: React.FC = () => {
             navigate({ parent: 'Profile', screen: 'InformasiPersonal' });
           },
         },
-        {
-          title: 'Data Kepegawaian',
-          right: () => {
-            navigate({ parent: 'Profile', screen: 'DataKepegawaian' });
-          },
-        },
+        // {
+        //   title: 'Data Kepegawaian',
+        //   right: () => {
+        //     navigate({ parent: 'Profile', screen: 'DataKepegawaian' });
+        //   },
+        // },
         {
           title: 'Ganti Password',
           right: () => {

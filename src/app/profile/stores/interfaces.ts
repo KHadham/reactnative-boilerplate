@@ -46,18 +46,29 @@ export interface employeeData {
 }
 
 export interface personalData {
-  provinsi: string;
+  address: string;
+  created_at: string;
+  created_by: string;
+  email: string;
+  file_ktp: null|number|string;
+  id_user: string;
+  instansi: null|number|string;
   kabupaten: string;
   kecamatan: string;
   kelurahan: string;
-  user_group: string;
-  passport: string | null;
-  nrk: string;
-  nik: string | null;
-  address: string;
-  phone: string;
-  email: string;
+  kodepos: number, 
   name: string;
+  nik: null|number|string;
+  nip: null|number|string;
+  nrk: null|number|string;
+  passport: null|number|string;
+  phone: string;
+  provinsi: string;
+  rt: null|number|string;
+  rw: null|number|string;
+  updated_at: string;
+  updated_by: string;
+  user_group: string;
 }
 
 export const unexpectedData = {

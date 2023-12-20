@@ -79,8 +79,10 @@ const Screen = () => {
       <View style={{ flex: 1, width: '100%', height: '100%' }}>
         {!isSearchingVisible && (
           <MapView
-            tracksViewChanges={false}
-            radius={70}
+          provider={'google'}
+
+            // tracksViewChanges={false}
+            // radius={70}
             ref={ref}
             style={{
               flex: 1,
