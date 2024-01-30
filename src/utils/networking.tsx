@@ -1,12 +1,9 @@
-import axios, { AxiosRequestConfig, AxiosResponse } from 'axios';
+import axios, { AxiosRequestConfig } from 'axios';
 import NetInfo, {
   NetInfoState,
   NetInfoSubscription,
 } from '@react-native-community/netinfo';
-import Toast from 'react-native-toast-message';
-import { storage } from '@utils/storage';
 import { APPKEY } from '@constants/appKey';
-import { useEffect, useState } from 'react';
 import { fetch } from 'react-native-ssl-pinning';
 
 export const checkInternetConnectivity = async (): Promise<boolean> => {
